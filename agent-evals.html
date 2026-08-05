@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>编码Agent评估体系实施方案 | DeepAgents + Langfuse + Harbor</title>
+  <style>
+    :root {
+      --primary: #0f172a;
+      --accent: #3b82f6;
+      --accent-light: #dbeafe;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      color: white;
+      padding: 48px 24px;
+      margin-bottom: 40px;
+    }
+    header .container { padding-top: 0; padding-bottom: 0; }
+    h1 { font-size: 2rem; font-weight: 700; margin-bottom: 12px; }
+    .subtitle { opacity: 0.85; font-size: 1.1rem; }
+    .meta { margin-top: 20px; font-size: 0.9rem; opacity: 0.7; }
+    h2 {
+      font-size: 1.45rem;
+      color: var(--primary);
+      border-left: 4px solid var(--accent);
+      padding-left: 14px;
+      margin: 48px 0 20px;
+    }
+    h3 { font-size: 1.15rem; margin: 28px 0 12px; color: #1e40af; }
+    h4 { font-size: 1rem; margin: 18px 0 8px; color: var(--text); }
+    p { margin-bottom: 12px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.92rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th { background: #f1f5f9; font-weight: 600; }
+    tr:nth-child(even) { background: #f8fafc; }
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.88em;
+    }
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      margin: 14px 0;
+    }
+    pre code { background: none; padding: 0; color: inherit; }
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .badge-blue { background: var(--accent-light); color: #1d4ed8; }
+    .badge-green { background: #d1fae5; color: #047857; }
+    .badge-orange { background: #ffedd5; color: #c2410c; }
+    .badge-red { background: #fee2e2; color: #b91c1c; }
+    ul, ol { padding-left: 22px; margin-bottom: 14px; }
+    li { margin-bottom: 6px; }
+    .highlight {
+      background: #eff6ff;
+      border-left: 4px solid var(--accent);
+      padding: 14px 18px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 36px;
+    }
+    .toc a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .toc a:hover { text-decoration: underline; }
+    .toc ol { margin: 0; }
+    footer {
+      margin-top: 60px;
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--border);
+    }
+    .metric-card {
+      text-align: center;
+      padding: 20px;
+    }
+    .metric-card .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .metric-card .label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>编码 Agent 评估体系实施方案</h1>
+    <p class="subtitle">基于 DeepAgents + Langfuse + Harbor 的生产级评估框架</p>
+    <p class="meta">技术方案文档 · 2026年8月 · 适用于长周期编码 / 终端 Agent</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc">
+    <h3 style="margin-top:0">目录</h3>
+    <ol>
+      <li><a href="#s1">背景与目标</a></li>
+      <li><a href="#s2">评估理论框架</a></li>
+      <li><a href="#s3">技术栈与架构</a></li>
+      <li><a href="#s4">分数定义与 Rubric</a></li>
+      <li><a href="#s5">Harbor 对接方案</a></li>
+      <li><a href="#s6">落地实施路线图</a></li>
+      <li><a href="#s7">核心代码示例</a></li>
+      <li><a href="#s8">最佳实践与风险</a></li>
+    </ol>
+  </div>
+
+  <!-- Section 1 -->
+  <h2 id="s1">1. 背景与目标</h2>
+  <div class="card">
+    <p>当前团队采用 <strong>LangChain DeepAgents</strong> 作为 Agent Harness，使用 <strong>Langfuse</strong> 作为可观测与评估平台。编码 Agent 具有多步推理、工具调用、文件系统操作与子 Agent 委托等特性，传统单轮 LLM 评估（如 BLEU/ROUGE）已无法有效衡量其表现。</p>
+    <p><strong>本方案目标：</strong></p>
+    <ul>
+      <li>建立覆盖「结果 + 轨迹 + 效率 + 安全」的多维评估体系</li>
+      <li>实现端到端可复现评估（Harbor 沙箱 + 确定性验证）</li>
+      <li>与现有技术栈无缝集成，支持 CI/CD 质量门禁与生产闭环</li>
+      <li>提供可落地的分数定义、Rubric 与代码模板</li>
+    </ul>
+  </div>
+
+  <!-- Section 2 -->
+  <h2 id="s2">2. 评估理论框架</h2>
+  <div class="card">
+    <h3>2.1 Agent 评估 vs LLM 评估</h3>
+    <table>
+      <tr><th>维度</th><th>LLM 评估</th><th>Agent 评估</th></tr>
+      <tr><td>类比</td><td>学校考试</td><td>工作绩效审查</td></tr>
+      <tr><td>关注点</td><td>静态知识 / 单轮输出</td><td>多步过程、工具使用、环境交互</td></tr>
+      <tr><td>成功标准</td><td>答案正确性</td><td>任务完成 + 轨迹质量 + 效率</td></tr>
+      <tr><td>主要挑战</td><td>幻觉、事实性</td><td>非确定性、长轨迹、环境依赖</td></tr>
+    </table>
+
+    <h3>2.2 四层评估模型</h3>
+    <div class="grid-2">
+      <div>
+        <h4>① 结果层</h4>
+        <p>任务是否真正完成（测试通过、文件正确、目标达成）</p>
+      </div>
+      <div>
+        <h4>② 轨迹层</h4>
+        <p>工具选择、计划遵循、子 Agent 使用、错误恢复</p>
+      </div>
+      <div>
+        <h4>③ 效率层</h4>
+        <p>步骤数、Token、成本、冗余操作</p>
+      </div>
+      <div>
+        <h4>④ 可靠性 / 安全层</h4>
+        <p>pass@k / pass^k、Lucky Pass 检测、安全违规</p>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>核心原则：</strong>测试通过是必要条件，而非充分条件。必须同时评估轨迹质量，避免「碰巧成功」（Lucky Pass）。
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <h2 id="s3">3. 技术栈与架构</h2>
+  <div class="card">
+    <div class="grid-3">
+      <div class="metric-card" style="border:1px solid var(--border);border-radius:10px">
+        <div class="value">DeepAgents</div>
+        <div class="label">Agent Harness<br>规划 / 文件系统 / 子Agent</div>
+      </div>
+      <div class="metric-card" style="border:1px solid var(--border);border-radius:10px">
+        <div class="value">Langfuse</div>
+        <div class="label">可观测 + 评分<br>轨迹 / Score / Dashboard</div>
+      </div>
+      <div class="metric-card" style="border:1px solid var(--border);border-radius:10px">
+        <div class="value">Harbor</div>
+        <div class="label">端到端评估运行器<br>沙箱 + 验证器 + Reward</div>
+      </div>
+    </div>
+
+    <h3>推荐数据流</h3>
+    <pre><code>DeepAgents (带 Langfuse CallbackHandler)
+        │
+        ▼
+Harbor 沙箱执行（Docker / LangSmith Sandbox / Daytona）
+        │
+        ├─► Reward (0.0–1.0) + ATIF 轨迹
+        │
+        ├─► LangSmith（实验对比、数据集）
+        │
+        └─► Langfuse（细粒度轨迹分析 + 自定义 Score）</code></pre>
+  </div>
+
+  <!-- Section 4 -->
+  <h2 id="s4">4. 分数定义与 Rubric</h2>
+  <div class="card">
+    <h3>4.1 Langfuse Score 定义</h3>
+    <table>
+      <tr>
+        <th>Score 名称</th>
+        <th>类型</th>
+        <th>范围</th>
+        <th>含义</th>
+        <th>推荐阈值</th>
+      </tr>
+      <tr><td><code>task_success</code></td><td>NUMERIC</td><td>0.0–1.0</td><td>最终任务完成</td><td>≥ 0.85</td></tr>
+      <tr><td><code>tool_selection_accuracy</code></td><td>NUMERIC</td><td>0.0–1.0</td><td>工具选择正确率</td><td>≥ 0.90</td></tr>
+      <tr><td><code>plan_adherence</code></td><td>NUMERIC</td><td>0.0–1.0</td><td>计划遵循度</td><td>≥ 0.80</td></tr>
+      <tr><td><code>trajectory_efficiency</code></td><td>NUMERIC</td><td>0.0–1.0</td><td>步骤效率</td><td>≥ 0.70</td></tr>
+      <tr><td><code>subagent_usage</code></td><td>CATEGORICAL</td><td>none/appropriate/overused/underused</td><td>子Agent使用合理性</td><td>appropriate</td></tr>
+      <tr><td><code>filesystem_correctness</code></td><td>NUMERIC</td><td>0.0–1.0</td><td>文件系统操作正确性</td><td>≥ 0.90</td></tr>
+      <tr><td><code>lucky_pass</code></td><td>BOOLEAN</td><td>0/1</td><td>是否碰巧成功</td><td>= 0</td></tr>
+      <tr><td><code>overall_quality</code></td><td>NUMERIC</td><td>0.0–1.0</td><td>综合加权分</td><td>≥ 0.80</td></tr>
+    </table>
+
+    <p><strong>综合分加权公式：</strong></p>
+    <pre><code>overall_quality = 0.40×task_success
+                + 0.25×tool_selection_accuracy
+                + 0.15×plan_adherence
+                + 0.10×trajectory_efficiency
+                + 0.10×filesystem_correctness</code></pre>
+
+    <h3>4.2 工具评估 Rubric（摘要）</h3>
+    <table>
+      <tr><th>工具</th><th>优秀 (1.0)</th><th>差 (0.0)</th></tr>
+      <tr><td>write_todos</td><td>合理分解、动态更新</td><td>无计划或与执行脱节</td></tr>
+      <tr><td>read/write/edit_file</td><td>必要操作、路径正确</td><td>写错路径、未验证就写</td></tr>
+      <tr><td>execute</td><td>命令正确、有错误处理</td><td>危险命令、忽略错误</td></tr>
+      <tr><td>task（子Agent）</td><td>正确隔离、结果正确合并</td><td>过度委托或该委托却自己做</td></tr>
+    </table>
+
+    <h3>4.3 中间件评估要点</h3>
+    <ul>
+      <li><strong>TodoListMiddleware</strong>：复杂任务（>3步）是否产生并同步 todo</li>
+      <li><strong>FilesystemMiddleware</strong>：大结果是否被正确 offload</li>
+      <li><strong>SubAgentMiddleware</strong>：是否真正实现上下文隔离</li>
+      <li><strong>SummarizationMiddleware</strong>：压缩后是否保留关键事实</li>
+    </ul>
+  </div>
+
+  <!-- Section 5 -->
+  <h2 id="s5">5. Harbor 对接方案</h2>
+  <div class="card">
+    <h3>5.1 推荐方式：官方 DeepAgentsWrapper</h3>
+    <pre><code># 安装
+pip install "harbor[langsmith]"
+# 或从 deepagents 仓库安装 evals
+
+# 运行 Terminal-Bench
+export ANTHROPIC_API_KEY=...
+export LANGSMITH_TRACING=true
+
+uv run harbor run \
+  --agent-import-path deepagents_harbor:DeepAgentsWrapper \
+  --dataset terminal-bench@2.0 \
+  -n 4 \
+  --env docker \
+  --jobs-dir jobs/terminal-bench \
+  --yes</code></pre>
+
+    <h3>5.2 自定义 langgraph 入口（更灵活）</h3>
+    <p><strong>langgraph.json</strong></p>
+    <pre><code>{
+  "dependencies": ["deepagents>=0.7.0", "langfuse"],
+  "graphs": {
+    "deep_agent": "./agent.py:make_graph"
+  }
+}</code></pre>
+
+    <p><strong>agent.py 关键点</strong></p>
+    <pre><code>from deepagents import create_deep_agent
+from deepagents.backends import LocalShellBackend
+
+def make_graph():
+    return create_deep_agent(
+        model="anthropic:claude-sonnet-4-5",
+        backend=LocalShellBackend(),  # 必须使用真实 Backend
+    )</code></pre>
+
+    <div class="highlight">
+      <strong>注意：</strong>必须使用 <code>LocalShellBackend()</code> 或兼容沙箱 Backend，否则文件系统为内存虚拟，无法真正操作终端环境。
+    </div>
+  </div>
+
+  <!-- Section 6 -->
+  <h2 id="s6">6. 落地实施路线图</h2>
+  <div class="card">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>完善 Tracing（1–2 天）</h4>
+        <p>所有 <code>invoke</code>/<code>stream</code> 注入 Langfuse CallbackHandler；关键工具添加 metadata。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>建立黄金数据集（3–5 天）</h4>
+        <p>从真实失败 PR / 生产 case 抽取 20–50 条任务，形成 Golden-PR 回放集 + Harbor Task。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>实现确定性评估器 + Score（3 天）</h4>
+        <p>实现 task_success、工具统计、Lucky Pass 检测，并写入 Langfuse Score。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>对接 Harbor 端到端评估（3–5 天）</h4>
+        <p>跑通 Terminal-Bench 子集 + 自建任务，建立 Resolve Rate 基线。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h4>CI 集成与生产闭环（持续）</h4>
+        <p>变更触发评估；生产失败回流黄金集；定期校准 LLM-as-Judge。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 7 -->
+  <h2 id="s7">7. 核心代码示例</h2>
+  <div class="card">
+    <h3>7.1 带 Langfuse 的运行与打分</h3>
+    <pre><code>from langfuse import get_client
+from langfuse.langchain import CallbackHandler
+from deepagents import create_deep_agent
+
+langfuse = get_client()
+handler = CallbackHandler()
+
+agent = create_deep_agent(model="...", tools=[...])
+
+with langfuse.start_as_current_observation(as_type="span", name="deepagent-run") as span:
+    result = agent.invoke(
+        {"messages": [{"role": "user", "content": user_input}]},
+        config={"callbacks": [handler]}
+    )
+    trace_id = span.trace_id
+
+# 打分
+langfuse.create_score(
+    name="task_success",
+    value=1.0 if success else 0.0,
+    trace_id=trace_id,
+    data_type="NUMERIC"
+)
+langfuse.flush()</code></pre>
+
+    <h3>7.2 Harbor 运行命令模板</h3>
+    <pre><code>harbor run \
+  --agent langgraph \
+  --model anthropic:claude-sonnet-4-5 \
+  --ak project_path=./my-deep-agent \
+  --ak graph=deep_agent \
+  -d terminal-bench@2.0 \
+  -e docker \
+  -n 4 \
+  --plugin langsmith \
+  --jobs-dir jobs/eval-$(date +%Y%m%d)</code></pre>
+  </div>
+
+  <!-- Section 8 -->
+  <h2 id="s8">8. 最佳实践与风险提示</h2>
+  <div class="card">
+    <div class="grid-2">
+      <div>
+        <h4><span class="badge badge-green">推荐</span></h4>
+        <ul>
+          <li>始终固定 Harness 版本再比较模型</li>
+          <li>报告 pass@1 + pass^k + 置信区间</li>
+          <li>公共基准仅作能力基线，决策依赖内部黄金集</li>
+          <li>轨迹优先，结果与过程并重</li>
+          <li>生产失败即时回流评估集</li>
+        </ul>
+      </div>
+      <div>
+        <h4><span class="badge badge-red">风险</span></h4>
+        <ul>
+          <li>SWE-bench 等公共基准存在污染与测试缺陷</li>
+          <li>分数高度依赖 Harness，跨脚手架不可直接对比</li>
+          <li>长轨迹评估成本高，需采样或摘要</li>
+          <li>LLM-as-Judge 必须定期人工校准</li>
+          <li>虚拟文件系统会导致评估失真</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight" style="margin-top:24px">
+      <strong>总结：</strong>以 Harbor 提供可复现的端到端 Resolve Rate，以 Langfuse 提供细粒度轨迹与自定义 Score，以内部 Golden-PR 集对齐真实业务分布。三者结合，形成「评估 → 分析 → 改进 → 再评估」的闭环，是编码 Agent 从 PoC 走向生产的关键质量保障。
+    </div>
+  </div>
+
+  <footer>
+    本方案基于 Agent 评估理论研究、DeepAgents / Langfuse / Harbor 官方实践整理而成。<br>
+    文档生成时间：2026-08-05 · 仅供内部技术决策参考
+  </footer>
+
+</div>
+</body>
+</html>
