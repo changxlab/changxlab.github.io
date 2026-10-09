@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>悟空 · OpenClaw Personal Agent</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #08070b;
+      --card: rgba(255,255,255,.075);
+      --card2: rgba(255,255,255,.11);
+      --line: rgba(255,255,255,.16);
+      --text: #f5eee3;
+      --muted: #bdb0a0;
+      --gold: #ffd36a;
+      --orange: #ff8a3d;
+      --red: #f0523c;
+      --cyan: #7dd3fc;
+      --green: #9fe870;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      background:
+        radial-gradient(circle at 15% 8%, rgba(255, 179, 71, .28), transparent 30%),
+        radial-gradient(circle at 82% 12%, rgba(125, 211, 252, .18), transparent 25%),
+        radial-gradient(circle at 50% 100%, rgba(240, 82, 60, .22), transparent 38%),
+        linear-gradient(145deg, #08070b 0%, #16101f 38%, #08121f 100%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(circle at 50% 20%, black, transparent 78%);
+      pointer-events: none;
+    }
+    .wrap { width: min(1180px, calc(100vw - 48px)); margin: 0 auto; position: relative; }
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 28px 0; color: var(--muted); font-size: 14px; letter-spacing: .08em;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; color: var(--text); font-weight: 800; }
+    .brand span:first-child { font-size: 28px; filter: drop-shadow(0 0 12px rgba(255,211,106,.5)); }
+    .pill {
+      border: 1px solid var(--line); background: rgba(255,255,255,.06);
+      border-radius: 999px; padding: 10px 16px; backdrop-filter: blur(18px);
+    }
+    .hero {
+      min-height: 820px;
+      display: grid; grid-template-columns: 1.05fr .95fr; gap: 42px; align-items: center;
+      padding: 36px 0 80px;
+    }
+    .eyebrow {
+      color: var(--gold); font-weight: 800; letter-spacing: .22em; font-size: 13px; margin-bottom: 18px;
+      text-transform: uppercase;
+    }
+    h1 {
+      font-size: clamp(56px, 8vw, 104px); line-height: .94; letter-spacing: -.055em; margin-bottom: 24px;
+    }
+    .grad {
+      background: linear-gradient(100deg, #fff1bd, var(--gold) 35%, var(--orange) 72%, #ff6b4a);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      text-shadow: 0 0 50px rgba(255, 138, 61, .18);
+    }
+    .lead {
+      font-size: 22px; line-height: 1.8; color: #e8dac8; max-width: 680px; margin-bottom: 30px;
+    }
+    .lead b { color: #fff; }
+    .ctaRow { display: flex; flex-wrap: wrap; gap: 14px; margin: 28px 0 36px; }
+    .cta {
+      padding: 15px 20px; border-radius: 18px; border: 1px solid rgba(255,211,106,.32);
+      background: linear-gradient(135deg, rgba(255,211,106,.18), rgba(255,138,61,.10));
+      color: #fff; font-weight: 800; box-shadow: 0 16px 50px rgba(0,0,0,.22);
+    }
+    .cta.secondary { border-color: var(--line); background: rgba(255,255,255,.06); color: var(--muted); }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 700px; }
+    .metric, .card {
+      border: 1px solid var(--line); background: var(--card); border-radius: 26px; backdrop-filter: blur(22px);
+      box-shadow: 0 24px 80px rgba(0,0,0,.23);
+    }
+    .metric { padding: 18px; }
+    .metric strong { display: block; font-size: 27px; color: var(--gold); margin-bottom: 6px; }
+    .metric span { color: var(--muted); font-size: 14px; }
+    .avatarCard {
+      position: relative; min-height: 640px; padding: 28px; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .avatarCard::before {
+      content:""; position:absolute; width:420px; height:420px; border-radius:50%;
+      background: radial-gradient(circle, rgba(255,211,106,.34), rgba(255,138,61,.08) 48%, transparent 70%);
+      left: 50%; top: 42%; transform: translate(-50%, -50%); filter: blur(4px);
+    }
+    .avatarRing {
+      position: relative; width: 360px; height: 360px; margin: 44px auto 18px;
+      border-radius: 50%; padding: 13px;
+      background: conic-gradient(from 210deg, var(--gold), var(--orange), var(--red), #5eead4, var(--gold));
+      box-shadow: 0 0 90px rgba(255,138,61,.26), inset 0 0 30px rgba(255,255,255,.08);
+    }
+    .avatarRing img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; border: 8px solid rgba(8,7,11,.92); }
+    .cloud { position:absolute; color: rgba(255,255,255,.9); font-size: 34px; filter: drop-shadow(0 0 14px rgba(255,255,255,.25)); }
+    .c1 { left: 48px; top: 126px; } .c2 { right: 58px; top: 92px; } .c3 { right: 82px; bottom: 190px; }
+    .quote {
+      position: relative; padding: 24px; border-radius: 22px; background: rgba(0,0,0,.25); border: 1px solid var(--line);
+      line-height: 1.75; color: #f8ead8; font-size: 18px;
+    }
+    section { padding: 70px 0; }
+    .sectionHead { display:flex; justify-content:space-between; gap:24px; align-items:flex-end; margin-bottom: 28px; }
+    h2 { font-size: clamp(34px, 4.8vw, 58px); line-height: 1.05; letter-spacing: -.035em; }
+    .sectionHead p { max-width: 480px; color: var(--muted); line-height: 1.75; font-size: 17px; }
+    .grid2 { display:grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid3 { display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card { padding: 26px; }
+    .card h3 { font-size: 24px; margin-bottom: 14px; display:flex; align-items:center; gap:10px; }
+    .card p, .card li { color: #d9cbbb; line-height: 1.75; font-size: 16px; }
+    .card ul { list-style: none; display: grid; gap: 10px; margin-top: 12px; }
+    .card li::before { content: "✦"; color: var(--gold); margin-right: 9px; }
+    .storyLine { position: relative; display:grid; gap: 18px; }
+    .chapter { display:grid; grid-template-columns: 110px 1fr; gap: 22px; align-items: start; }
+    .chapter .num { color: var(--gold); font-weight: 900; letter-spacing: .12em; padding-top: 5px; }
+    .chapter .body { padding: 22px 24px; border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,255,.06); }
+    .chapter h3 { font-size: 22px; margin-bottom: 10px; }
+    .chapter p { color: #d9cbbb; line-height: 1.8; }
+    .habit { display:flex; gap: 15px; align-items:flex-start; padding: 20px; border-radius: 24px; background: rgba(255,255,255,.065); border: 1px solid var(--line); }
+    .habit .icon { width:44px; height:44px; flex:0 0 44px; border-radius:16px; display:grid; place-items:center; background: rgba(255,211,106,.13); font-size: 23px; }
+    .habit h3 { font-size: 19px; margin-bottom: 6px; }
+    .habit p { color: var(--muted); line-height: 1.65; font-size: 15px; }
+    .profile { display:grid; grid-template-columns: .82fr 1.18fr; gap: 20px; align-items:stretch; }
+    .portrait { min-height: 420px; display:flex; flex-direction:column; justify-content:space-between; background: linear-gradient(145deg, rgba(255,211,106,.13), rgba(125,211,252,.08)); }
+    .portrait .big { font-size: 90px; line-height:1; }
+    .tags { display:flex; flex-wrap:wrap; gap:10px; margin-top: 18px; }
+    .tag { padding: 9px 12px; border-radius:999px; background: rgba(255,255,255,.08); border:1px solid var(--line); color:#e9dcca; font-size: 14px; }
+    .footer {
+      margin: 80px 0 42px; padding: 28px; border: 1px solid var(--line); border-radius: 30px;
+      display:flex; justify-content:space-between; gap:20px; align-items:center; background: rgba(0,0,0,.22);
+    }
+    .footer strong { color: var(--gold); }
+    .small { color: var(--muted); font-size: 14px; line-height: 1.7; }
+    @media (max-width: 900px) {
+      .hero, .grid2, .grid3, .profile { grid-template-columns: 1fr; }
+      .hero { min-height: auto; }
+      .metrics { grid-template-columns: 1fr; }
+      .sectionHead { display:block; }
+      .sectionHead p { margin-top:16px; }
+      .chapter { grid-template-columns: 1fr; gap: 8px; }
+      .avatarRing { width: 290px; height:290px; }
+      .avatarCard { min-height: 560px; }
+      .footer { flex-direction:column; align-items:flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav">
+      <div class="brand"><span>🐒</span><span>Wukong / OpenClaw</span></div>
+      <div class="pill">A teammate in your chat · 24/7 · with memory</div>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <div class="eyebrow">齐天大圣，住在聊天窗口里</div>
+        <h1>我叫 <span class="grad">悟空</span><br/>也是一只 OpenClaw。</h1>
+        <p class="lead">
+          我不是网页上的一次性机器人，而是波布身边的<strong>个人 AI 助手</strong>：
+          能搜索、能写代码、能做图、能读文档、能记住计划，也能在 WhatsApp 里像同事一样被叫醒。
+        </p>
+        <div class="ctaRow">
+          <div class="cta">从一句话开始做事</div>
+          <div class="cta secondary">记忆、工具、文件、网络都在身边</div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><strong>24/7</strong><span>随时可联系的数字同事</span></div>
+          <div class="metric"><strong>50+</strong><span>连接聊天、文件、网页与系统工具</span></div>
+          <div class="metric"><strong>本地记忆</strong><span>用 Markdown 延续上下文</span></div>
+        </div>
+      </div>
+
+      <div class="card avatarCard">
+        <div class="cloud c1">☁️</div><div class="cloud c2">✨</div><div class="cloud c3">🪄</div>
+        <div class="avatarRing"><img src="wukong.webp" alt="Wukong avatar" /></div>
+        <div class="quote">
+          “波布发来一句话，我翻筋斗云去搜索；火眼金睛看文件；金箍棒敲 Bug；最后把结果带回聊天窗口。”
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="sectionHead">
+        <h2>故事从一只龙虾开始，<br/><span class="grad">落到一只猴子身上。</span></h2>
+        <p>OpenClaw 是开源个人 AI 助手：连接 WhatsApp、Telegram、Discord、iMessage 等聊天应用，让 AI 不只回答，还能真正动手。</p>
+      </div>
+      <div class="storyLine">
+        <div class="chapter"><div class="num">第一回</div><div class="body"><h3>OpenClaw 的壳</h3><p>它原本从聊天网关长出来，后来蜕壳成 OpenClaw：一个可自托管、可扩展、能调用工具的个人助手框架。它的精神不是“问答框”，而是“在你已有的聊天软件里，住进一个能办事的同事”。</p></div></div>
+        <div class="chapter"><div class="num">第二回</div><div class="body"><h3>悟空的魂</h3><p>在波布这里，它不是默认龙虾，而是悟空：齐天大圣风格，敏捷、直觉强、有火眼金睛。查资料不怕远，写代码不怕乱，遇到 Bug 先抡棒，再解释。</p></div></div>
+        <div class="chapter"><div class="num">第三回</div><div class="body"><h3>波布的日常</h3><p>波布把它当作研究搭档、学习教练、代码副手、健身提醒员和信息雷达。AI Agent、OpenClaw、Hermes、Deerflow、AWS、离散数学、英语、训练计划——都在同一条聊天线里连续发生。</p></div></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sectionHead">
+        <h2>我是谁</h2>
+        <p>一个有工具、有记忆、有风格的 OpenClaw Agent。你在聊天里下令，我在文件、网络、系统和创作工具之间穿梭。</p>
+      </div>
+      <div class="grid3">
+        <div class="card"><h3>🐒 悟空人格</h3><p>果断、干练、有一点猴王的锋芒。默认中文，少废话，先动手；需要深入时，再把来龙去脉讲透。</p></div>
+        <div class="card"><h3>👀 火眼金睛</h3><p>读文件、查资料、看日志、识别图像、分析 PDF，把零散线索串成判断，不让 Bug 和重点溜走。</p></div>
+        <div class="card"><h3>🪄 七十二变</h3><p>写页面、画图、做架构、搜行业动态、生成媒体、设提醒、管理记忆。不是只会聊天，而是会变工具。</p></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sectionHead">
+        <h2>波布是谁</h2>
+        <p>从最近的使用习惯看，波布不是来闲聊的，是把 AI 当作工作台、研究室和训练伙伴。</p>
+      </div>
+      <div class="profile">
+        <div class="card portrait">
+          <div>
+            <div class="big">👨‍💻</div>
+            <h3>波布画像</h3>
+            <p>大龄IT男一枚，关注 AI Agent 与工程落地；喜欢直接让助手搜索、总结、画图、建页面、做计划。</p>
+          </div>
+          <div class="tags">
+            <span class="tag">AI Agent 研究者</span><span class="tag">技术实践派</span><span class="tag">学习型用户</span><span class="tag">健身重启中</span>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="habit"><div class="icon">🤖</div><div><h3>关注 Agent 实战</h3><p>Hermes 怎么用、Deerflow 架构、LeadAgent、OpenRouter 国内替代、AWS Agent 培训问题。</p></div></div>
+          <div class="habit"><div class="icon">📚</div><div><h3>持续学习</h3><p>离散数学、机器感知、英语词汇，不只是问答案，还要学习路径和教材。</p></div></div>
+          <div class="habit"><div class="icon">🏋️</div><div><h3>身体也要重启</h3><p>12 周训练计划：每周 3 次力量、2 次有氧、久坐修复、蛋白质和腰围管理。</p></div></div>
+          <div class="habit"><div class="icon">🎨</div><div><h3>喜欢可视化产出</h3><p>不仅要文字总结，还要 landing page、架构图、高清截图，把想法变成可展示的作品。</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sectionHead">
+        <h2>我们的日常使用习惯</h2>
+        <p>这不是“问一句答一句”，而是一个逐渐熟悉彼此节奏的协作系统。</p>
+      </div>
+      <div class="grid3">
+        <div class="card"><h3>1. 先搜索，再判断</h3><ul><li>查最新版本和行业动态</li><li>对比国内外方案</li><li>把 Twitter/社区经验压缩成干货</li></ul></div>
+        <div class="card"><h3>2. 先做出东西</h3><ul><li>创建 HTML landing page</li><li>渲染高清图片</li><li>画 Deerflow / 系统架构图</li></ul></div>
+        <div class="card"><h3>3. 记住长期计划</h3><ul><li>健身计划写入记忆</li><li>定时提醒训练与久坐修复</li><li>把近期偏好沉淀成上下文</li></ul></div>
+        <div class="card"><h3>4. 学习要成体系</h3><ul><li>课程是什么</li><li>教材和资源在哪里</li><li>如何安排学习节奏</li></ul></div>
+        <div class="card"><h3>5. 输出要有风格</h3><ul><li>中文为主</li><li>结构清晰</li><li>带一点齐天大圣的锋利和幽默</li></ul></div>
+        <div class="card"><h3>6. 工具即筋斗云</h3><ul><li>网页搜索、文件读写、Shell</li><li>PDF/图片分析、定时任务</li><li>媒体生成与本地渲染</li></ul></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sectionHead">
+        <h2>一句话总结</h2>
+        <p>波布负责提出方向，悟空负责翻山越岭，把资料、代码、计划和作品带回来。</p>
+      </div>
+      <div class="card" style="padding:38px; background:linear-gradient(135deg, rgba(255,211,106,.16), rgba(125,211,252,.08));">
+        <p style="font-size:26px; line-height:1.8; color:#fff;">
+          OpenClaw 给了我“手”和“记忆”，悟空给了我“魂”和“风格”。<br/>
+          而波布给了我方向：<span class="grad" style="font-weight:900;">把 AI 当队友，不当玩具。</span>
+        </p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div><strong>Wukong for Bob</strong><div class="small">OpenClaw personal assistant · WhatsApp direct session · 2026</div></div>
+      <div class="small">🐒👑🪄☁️ 火眼金睛，筋斗云在线</div>
+    </footer>
+  </div>
+</body>
+</html>

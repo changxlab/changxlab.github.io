@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机器感知学习资源研究报告</title>
+<style>
+  :root {
+    --bg: #0d1117; --fg: #c9d1d9; --accent: #58a6ff;
+    --border: #30363d; --card-bg: #161b22; --muted: #8b949e;
+    --tag-bg: #1f2937; --tag-fg: #58a6ff;
+    --gold: #d2991d; --green: #3fb950; --orange: #d2991d; --red: #f85149;
+    --purple: #a371f7;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Helvetica, Arial, sans-serif;
+    background: var(--bg); color: var(--fg); line-height: 1.7; padding: 2rem; max-width: 1100px; margin: 0 auto;
+  }
+  h1 { font-size: 2rem; color: #fff; border-bottom: 2px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 1.5rem; }
+  h2 { font-size: 1.4rem; color: var(--accent); margin: 2.5rem 0 1rem; padding-left: 0.5rem; border-left: 3px solid var(--accent); }
+  h3 { font-size: 1.15rem; color: #e6edf3; margin: 1.5rem 0 0.75rem; }
+  p, li { margin: 0.5rem 0; }
+  a { color: var(--accent); text-decoration: none; word-break: break-all; }
+  a:hover { text-decoration: underline; }
+  ul, ol { padding-left: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+  th, td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--card-bg); color: #e6edf3; font-weight: 600; white-space: nowrap; }
+  tr:hover { background: rgba(88,166,255,0.05); }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin: 1rem 0; }
+  .tag { display: inline-block; background: var(--tag-bg); color: var(--tag-fg); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.8rem; margin: 0.15rem 0.25rem; white-space: nowrap; }
+  .tag.green { color: var(--green); } .tag.orange { color: var(--orange); } .tag.red { color: var(--red); } .tag.purple { color: var(--purple); } .tag.gold { color: var(--gold); }
+  .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .toc { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0; }
+  .toc ol { padding-left: 1.5rem; columns: 2; }
+  .toc li { margin: 0.3rem 0; }
+  .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; text-align: center; }
+  .highlight-box { border-left: 3px solid var(--accent); background: rgba(88,166,255,0.08); padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+  .signal { border-left: 3px solid var(--green); background: rgba(63,185,80,0.08); padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+  .warn { border-left: 3px solid var(--orange); background: rgba(210,153,29,0.08); padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .pyramid { font-family: "SF Mono", "Fira Code", monospace; font-size: 0.85rem; line-height: 1.8; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 1rem 0; white-space: pre; overflow-x: auto; color: #c9d1d9; }
+  .emoji { font-size: 1.2em; }
+  @media (max-width: 768px) {
+    body { padding: 1rem; }
+    .toc ol { columns: 1; }
+    table { font-size: 0.8rem; }
+    th, td { padding: 0.4rem 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🤖 机器感知学习资源研究报告</h1>
+
+<div class="meta">
+  研究日期：2026-06-27 &nbsp;｜&nbsp; 涵盖范围：公开课、教材、课件、练习题、文章、博客、专题课程、开源工具
+  &nbsp;｜&nbsp; <span class="tag green">35+ 课程</span> <span class="tag purple">20+ 教材</span> <span class="tag orange">50+ 资源链接</span>
+</div>
+
+<div class="toc">
+<strong>📋 目录</strong>
+<ol>
+  <li><a href="#s1">核心教材推荐</a></li>
+  <li><a href="#s2">顶级公开课</a></li>
+  <li><a href="#s3">专题深度课程</a></li>
+  <li><a href="#s4">YouTube 视频频道</a></li>
+  <li><a href="#s5">中文学习资源</a></li>
+  <li><a href="#s6">习题与实战项目</a></li>
+  <li><a href="#s7">博客与技术文章</a></li>
+  <li><a href="#s8">开源工具与框架</a></li>
+  <li><a href="#s9">关键论文与数据集</a></li>
+  <li><a href="#s10">推荐学习路线</a></li>
+  <li><a href="#s11">信号解读与总结</a></li>
+</ol>
+</div>
+
+<!-- Section 1 -->
+<h2 id="s1">1. 核心教材推荐</h2>
+
+<table>
+<tr><th>排名</th><th>书名</th><th>作者</th><th>特点</th><th>适合人群</th></tr>
+<tr>
+  <td>🥇</td>
+  <td><a href="https://szeliski.org/Book/">Computer Vision: Algorithms and Applications</a> (2nd ed.)</td>
+  <td>Richard Szeliski</td>
+  <td>计算机视觉百科全书，1200+ 页，覆盖图像处理、3D重建、深度学习。<strong>Springer 免费 PDF</strong></td>
+  <td>全面系统学习者</td>
+</tr>
+<tr>
+  <td>🥈</td>
+  <td><a href="https://www.robots.ox.ac.uk/~vgg/hzbook/">Multiple View Geometry in Computer Vision</a> (2nd ed.)</td>
+  <td>Hartley &amp; Zisserman</td>
+  <td>多视图几何圣经，3D 视觉理论基础，SLAM/SfM 必读</td>
+  <td>3D 视觉研究者</td>
+</tr>
+<tr>
+  <td>🥉</td>
+  <td><a href="https://www.deeplearningbook.org/">Deep Learning</a></td>
+  <td>Goodfellow, Bengio, Courville</td>
+  <td>深度学习经典教材，CNN/RNN/GAN 全覆盖。MIT Press 免费在线版</td>
+  <td>深度学习入门</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><a href="http://www.probabilistic-robotics.org/">Probabilistic Robotics</a></td>
+  <td>Thrun, Burgard, Fox</td>
+  <td>机器人感知与状态估计经典，贝叶斯滤波、SLAM、定位</td>
+  <td>机器人感知方向</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><a href="https://visionbook.mit.edu/">Foundations of Computer Vision</a></td>
+  <td>Torralba, Isola, Freeman (MIT)</td>
+  <td>MIT 最新开源教材（2024），图像处理+机器学习视角</td>
+  <td>新一代学习者</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>Computer Vision: A Modern Approach (2nd ed.)</td>
+  <td>Forsyth &amp; Ponce</td>
+  <td>经典 CV 教材，覆盖图像形成、立体视觉、识别</td>
+  <td>传统 CV 基础</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><a href="http://asrl.utias.utoronto.ca/~tdb/bib/barfoot_ser17.pdf">State Estimation for Robotics</a></td>
+  <td>Timothy Barfoot</td>
+  <td>机器人状态估计深度教材，李群李代数、因子图优化</td>
+  <td>SLAM/定位进阶</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>Programming Computer Vision with Python</td>
+  <td>Jan Erik Solem</td>
+  <td>动手实践型，Python 实现 CV 算法</td>
+  <td>工程师/实践派</td>
+</tr>
+</table>
+
+<!-- Section 2 -->
+<h2 id="s2">2. 顶级公开课</h2>
+
+<h3>🏆 Stanford CS231n — Deep Learning for Computer Vision</h3>
+<div class="card">
+  <p><strong>难度</strong>：⭐⭐⭐⭐ &nbsp;|&nbsp; <strong>学时</strong>：80-100h</p>
+  <p><strong>授课</strong>：<a href="https://profiles.stanford.edu/fei-fei-li">Fei-Fei Li</a>、Ehsan Adeli (Spring 2025)</p>
+  <p><strong>内容</strong>：CNN、RNN、Transformer、检测/分割、生成模型、3D 视觉、ViT</p>
+  <p><strong>作业</strong>：3 次 Colab 编程作业 (KNN/SVM/Softmax → CNN/PyTorch → RNN/Transformer/GAN)</p>
+  <p>📺 <a href="https://www.youtube.com/playlist?list=PLoROMvodv4rOmsNzYBMe0gJY2XS8AQg16">YouTube 2025 完整播放列表</a> &nbsp;|&nbsp; 🏠 <a href="https://cs231n.stanford.edu/2025">课程主页</a></p>
+  <p><span class="tag green">10周年特别版</span> <span class="tag purple">新增 ViT/扩散模型</span> <span class="tag orange">全公开</span></p>
+</div>
+
+<h3>🏆 MIT 6.8300 — Advances in Computer Vision (Spring 2025)</h3>
+<div class="card">
+  <p><strong>难度</strong>：⭐⭐⭐⭐</p>
+  <p><strong>内容</strong>：多视图几何、可微渲染、神经场景表示、光流、点跟踪、视觉决策</p>
+  <p>📺 <a href="https://ocw.mit.edu/courses/6-8300-advances-in-computer-vision-spring-2025">OCW 课程主页</a></p>
+  <p><span class="tag purple">2025 全新</span> <span class="tag green">几何+深度学习融合</span></p>
+</div>
+
+<h3>🏆 ETH Zurich — Machine Perception</h3>
+<div class="card">
+  <p><strong>难度</strong>：⭐⭐⭐⭐ &nbsp;|&nbsp; <strong>学时</strong>：约 80h</p>
+  <p><strong>内容</strong>：深度学习算法与架构，覆盖感知与生成任务。Transformer、扩散模型、多模态感知</p>
+  <p>🏠 <a href="https://ait.ethz.ch/teaching/courses/2025-ss-machine-perception">2025 春季课程</a> &nbsp;|&nbsp; 📄 <a href="https://files.ait.ethz.ch/downloads/courses/2025-SS-Machine-Perception/downloads/lectures/2025-MP-l01-Intro.pdf">Lecture 1 课件</a></p>
+  <p><span class="tag gold">全球顶级 CV/ML 实验室</span> <span class="tag green">课件精美</span></p>
+</div>
+
+<h3>🏆 MIT 6.801 — Machine Vision (Fall 2020)</h3>
+<div class="card">
+  <p><strong>授课</strong>：Berthold Horn（《Robot Vision》作者）</p>
+  <p><strong>内容</strong>：图像形成、透视投影、运动场、光度立体、边缘检测、Hough 变换</p>
+  <p>📺 <a href="https://www.youtube.com/playlist?list=PLUl4u3cNGP63pfpS1gV5P9tDxxL_e4W8O">YouTube 完整播放列表</a> &nbsp;|&nbsp; 🏠 <a href="https://ocw.mit.edu/courses/6-801-machine-vision-fall-2020">OCW 主页</a></p>
+  <p><span class="tag green">经典几何视觉入门</span> <span class="tag orange">全公开</span></p>
+</div>
+
+<h3>其他精选公开课</h3>
+<table>
+<tr><th>课程</th><th>学校</th><th>特点</th><th>链接</th></tr>
+<tr><td>CMU 16-385/16-720 CV</td><td>CMU</td><td>6 次 Python 编程作业，全面覆盖基础</td><td><a href="http://16385.courses.cs.cmu.edu">Spring 2026</a></td></tr>
+<tr><td>CMU 16-820 Advanced CV</td><td>CMU</td><td>高级 CV 技术，深度学习前沿</td><td><a href="https://16820advancedcv.github.io">课程主页</a></td></tr>
+<tr><td>CS 280: Computer Vision</td><td>UC Berkeley</td><td>Alexei Efros 经典课程</td><td><a href="https://cs280-berkeley.github.io">课程主页</a></td></tr>
+<tr><td>EECS 498: DL for CV</td><td>Michigan</td><td>Justin Johnson (CS231n 前任讲师)</td><td><a href="https://web.eecs.umich.edu/~justincj/teaching/eecs498/WI2022/">课程主页</a></td></tr>
+<tr><td>COMP 776: CV in 3D</td><td>UNC Chapel Hill</td><td>3D CV + 深度学习深度融合</td><td><a href="https://www.cs.unc.edu/~ronisen/teaching/spring_2025/comp_776_sp25.html">Spring 2025</a></td></tr>
+</table>
+
+<!-- Section 3 -->
+<h2 id="s3">3. 专题深度课程</h2>
+
+<h3>3.1 SLAM 与视觉里程计</h3>
+<table>
+<tr><th>资源</th><th>说明</th><th>链接</th></tr>
+<tr><td><strong>slam-course (GitHub)</strong></td><td>Docker + ROS 实战学习 SLAM，含 rosbag 数据</td><td><a href="https://github.com/vlehtola/slam-course">GitHub</a></td></tr>
+<tr><td><strong>UZH RPG Visual Odometry</strong></td><td>苏黎世大学机器人感知组，VO/SLAM 研究前沿</td><td><a href="https://rpg.ifi.uzh.ch/research_vo.html">RPG 主页</a></td></tr>
+<tr><td><strong>TUM CVG Visual SLAM</strong></td><td>慕尼黑工大 CV 组，CVPR 2025 12篇论文</td><td><a href="https://cvg.cit.tum.de/research/vslam">TUM 主页</a></td></tr>
+<tr><td><strong>Think Autonomous Stereo</strong></td><td>双目视觉/伪 LiDAR/3D CV 实践课程</td><td><a href="https://courses.thinkautonomous.ai/stereo-vision">课程链接</a></td></tr>
+</table>
+
+<h3>3.2 3D 点云处理</h3>
+<table>
+<tr><th>资源</th><th>说明</th><th>链接</th></tr>
+<tr><td><strong>Point Cloud Processing Course</strong></td><td>3D Geodata Academy，40 课时系统课程</td><td><a href="https://learngeodata.eu/point-cloud-processor-formation">课程链接</a></td></tr>
+<tr><td><strong>CS231n 3D Deep Learning</strong></td><td>PointNet/PointNet++/DGCNN 深度讲解</td><td><a href="https://cs231n.stanford.edu/slides/2020/lecture_16_Hao.pdf">Slides PDF</a></td></tr>
+</table>
+
+<h3>3.3 多模态感知融合</h3>
+<table>
+<tr><th>资源</th><th>说明</th></tr>
+<tr><td><a href="https://arxiv.org/abs/2202.02703">Multi-modal Sensor Fusion Survey</a></td><td>自动驾驶感知融合综述，强/弱融合分类法</td></tr>
+<tr><td><a href="https://www.nature.com/articles/s41598-025-31173-0">SafeDrive-Fusion (Nature 2025)</a></td><td>光照自适应多模态融合框架，87.5% 极低光照准确率</td></tr>
+<tr><td><a href="https://www.mdpi.com/1424-8220/25/19/6033">MDPI Multi-Sensor Review (2025)</a></td><td>最新传感器融合综述，BEV-centric 范式</td></tr>
+</table>
+
+<h3>3.4 机器人感知 (Embodied Perception)</h3>
+<table>
+<tr><th>资源</th><th>说明</th></tr>
+<tr><td><a href="https://developer.nvidia.com/blog/r2d2-building-ai-based-3d-robot-perception-and-mapping-with-nvidia-research/">NVIDIA R²D²</a></td><td>统一 3D 感知栈：FoundationStereo + FoundationPose + nvblox</td></tr>
+<tr><td><a href="https://www.frontiersin.org/journals/robotics-and-ai/articles/10.3389/frobt.2025.1604472">MPDDM Survey (2004-2024)</a></td><td>多模态感知驱动的人机交互综述</td></tr>
+<tr><td><a href="https://www.blackcoffeerobotics.com/blog/perception-in-robotics-from-geometry-to-generative-ai">Perception in Robotics Blog</a></td><td>从几何到生成式 AI 的机器人感知实践</td></tr>
+</table>
+
+<!-- Section 4 -->
+<h2 id="s4">4. YouTube 视频频道与在线资源</h2>
+
+<table>
+<tr><th>#</th><th>频道</th><th>订阅量</th><th>风格</th><th>适合</th></tr>
+<tr><td>1</td><td><a href="https://www.youtube.com/playlist?list=PLoROMvodv4rOmsNzYBMe0gJY2XS8AQg16">Stanford Online / CS231n</a></td><td>115万</td><td>Spring 2025 完整课程，Fei-Fei Li 亲授</td><td>系统学习</td></tr>
+<tr><td>2</td><td><a href="https://www.youtube.com/@mitocw">MIT OpenCourseWare</a></td><td>635万</td><td>6.801/6.8300 完整录像</td><td>学术权威</td></tr>
+<tr><td>3</td><td><a href="https://www.youtube.com/@rpg_uzh">UZH RPG</a></td><td>2万</td><td>SLAM/VO/RL 最新研究</td><td>机器人感知前沿</td></tr>
+<tr><td>4</td><td><a href="https://www.youtube.com/@YannicKilcher">Yannic Kilcher</a></td><td>22万</td><td>AI 论文精读，ML 前沿解读</td><td>跟进论文</td></tr>
+<tr><td>5</td><td><a href="https://www.youtube.com/@TwoMinutePapers">Two Minute Papers</a></td><td>176万</td><td>2-5分钟 CV/CG 高光解读</td><td>碎片时间</td></tr>
+<tr><td>6</td><td><a href="https://www.youtube.com/@AndrejKarpathy">Andrej Karpathy</a></td><td>79万</td><td>Let's build GPT/微调，深度学习本质</td><td>深度理解</td></tr>
+<tr><td>7</td><td><a href="https://www.youtube.com/@mrdbourke">Daniel Bourke</a></td><td>58万</td><td>PyTorch 实战教程，项目驱动</td><td>动手实践</td></tr>
+<tr><td>8</td><td><a href="https://www.youtube.com/@3blue1brown">3Blue1Brown</a></td><td>798万</td><td>神经网络/线性代数可视化</td><td>数学直觉</td></tr>
+</table>
+
+<!-- Section 5 -->
+<h2 id="s5">5. 中文学习资源</h2>
+
+<h3>🏆 中文 MOOC 与大学课程</h3>
+<table>
+<tr><th>课程</th><th>学校/平台</th><th>特点</th></tr>
+<tr><td><strong>计算机视觉导论</strong></td><td>北京大学 (CFCS)</td><td>好评如潮的限选课</td></tr>
+<tr><td><strong>ShowMeAI 知识社区</strong></td><td>独立平台</td><td>CS231n 全套中文笔记 + CV/NLP/ML 系统教程</td></tr>
+<tr><td><strong>NVIDIA 计算机视觉指南</strong></td><td>NVIDIA (中文)</td><td>入门级 CV 概念全解</td></tr>
+<tr><td><strong>动手学深度学习</strong></td><td>Amazon/Aston Zhang</td><td>中文版在线教材，含 CV/NLP/RL 章节</td></tr>
+</table>
+
+<h3>🏆 中文博客与技术社区</h3>
+<table>
+<tr><th>资源</th><th>说明</th></tr>
+<tr><td><a href="https://csdiy.wiki">CSDIY Wiki</a></td><td>国内外 CS 自学集大成者，CV 课程详细评价</td></tr>
+<tr><td><a href="https://fpga.eetrend.com/content/2024/100578094.html">机器视觉学习路线</a></td><td>8 大学习路线，从基础到实战</td></tr>
+<tr><td><a href="https://hellojialee.github.io/2023/10/12/Tutorial4DL&CV">佳の博客 CV/DL 教程</a></td><td>深度学习/计算机视觉入门详细指南</td></tr>
+<tr><td><a href="https://www.cvmart.net">极市开发者平台</a></td><td>CV 比赛/开源项目/学习路线</td></tr>
+</table>
+
+<div class="warn">
+  <strong>⚠️ 注意</strong>：相比离散数学领域有国家级精品课，机器感知领域的中文系统课程较少，多数靠 CS231n 中文笔记、博客文章拼凑。建议主力跟英文课程，中文资源作为辅助理解。
+</div>
+
+<!-- Section 6 -->
+<h2 id="s6">6. 习题与实战项目</h2>
+
+<h3>课程配套习题</h3>
+<table>
+<tr><th>资源</th><th>说明</th></tr>
+<tr><td><a href="https://cs231n.stanford.edu/2025">Stanford CS231n Assignments</a></td><td>3 次 Colab 编程作业 (KNN → CNN → GAN)</td></tr>
+<tr><td><a href="http://16385.courses.cs.cmu.edu">CMU 16-720 Assignments</a></td><td>6 次 Python 作业（Harris/RANSAC/3D/立体匹配）</td></tr>
+<tr><td><a href="https://ocw.mit.edu/courses/6-801-machine-vision-fall-2020">MIT 6.801 Problem Sets</a></td><td>OCW 完整习题+解答</td></tr>
+</table>
+
+<h3>Kaggle 与实战平台</h3>
+<table>
+<tr><th>资源</th><th>说明</th></tr>
+<tr><td><a href="https://www.kaggle.com/learn/computer-vision">Kaggle Computer Vision Course</a></td><td>Google 免费 CV 入门互动课</td></tr>
+<tr><td><a href="https://www.kaggle.com/getting-started/270285">500+ AI Projects</a></td><td>500+ AI/CV/NLP 项目代码合集</td></tr>
+</table>
+
+<h3>GitHub 实战仓库</h3>
+<table>
+<tr><th>仓库</th><th>说明</th></tr>
+<tr><td><a href="https://github.com/microsoft/computervision-recipes">microsoft/computervision-recipes</a></td><td>微软官方 CV 最佳实践、代码示例</td></tr>
+<tr><td><a href="https://github.com/andandandand/practical-computer-vision">practical-computer-vision</a></td><td>实战 CV Notebooks 合集</td></tr>
+<tr><td><a href="https://github.com/cmh325/CS231n-stanford-course-material">CS231n Course Material</a></td><td>第三方整理的 CS231n 完整资料</td></tr>
+</table>
+
+<!-- Section 7 -->
+<h2 id="s7">7. 博客与技术文章</h2>
+
+<h3>🏆 必读博客与专栏</h3>
+<table>
+<tr><th>博客</th><th>平台</th><th>说明</th></tr>
+<tr><td><a href="https://thegradient.pub">The Gradient</a></td><td>独立</td><td>深度 AI 文章，含人机感知对比</td></tr>
+<tr><td><a href="https://machinelearning.apple.com">Apple ML Research</a></td><td>Apple</td><td>前沿 ML/CV 研究博客</td></tr>
+<tr><td><a href="https://developer.nvidia.com/blog">NVIDIA Technical Blog</a></td><td>NVIDIA</td><td>R²D² 机器人感知系列</td></tr>
+<tr><td><a href="https://pub.towardsai.net">Towards AI</a></td><td>Medium</td><td>最大 AI/DS/ML 写作社区</td></tr>
+<tr><td><a href="https://blog.roboflow.com">Roboflow Blog</a></td><td>Roboflow</td><td>最佳 CV 课程评测 + 实战指南</td></tr>
+</table>
+
+<h3>🏆 推荐阅读文章</h3>
+<ol>
+  <li><a href="https://thegradient.pub/challenges-of-comparing-human-and-machine-perception"><strong>Challenges of Comparing Human and Machine Perception</strong></a> — The Gradient：深度分析人类视觉与机器视觉对比的三大陷阱</li>
+  <li><a href="https://developer.nvidia.com/blog/r2d2-building-ai-based-3d-robot-perception-and-mapping-with-nvidia-research/"><strong>NVIDIA R²D²</strong></a> — NVIDIA：FoundationStereo + FoundationPose 统一 3D 感知栈</li>
+  <li><a href="https://www.blackcoffeerobotics.com/blog/perception-in-robotics-from-geometry-to-generative-ai"><strong>Perception in Robotics: From Geometry to Generative AI</strong></a> — Black Coffee Robotics：IC/ICP/RANSAC → 深度学习/GEN AI 演进全景</li>
+  <li><a href="https://vanhoucke.medium.com/the-state-of-robot-learning-639dafffbcf8"><strong>The State of Robot Learning</strong></a> — Vincent Vanhoucke：机器人学习现状</li>
+  <li><a href="https://blog.roboflow.com/best-computer-vision-courses"><strong>Best Computer Vision Courses Online 2026</strong></a> — Roboflow：2026 年最佳 CV 课程全面评测</li>
+</ol>
+
+<!-- Section 8 -->
+<h2 id="s8">8. 开源工具与框架</h2>
+
+<div class="grid">
+  <div class="card">
+    <h3>🧠 深度学习框架</h3>
+    <ul>
+      <li><a href="https://pytorch.org">PyTorch</a> — CV/ML 研究首选</li>
+      <li><a href="https://opencv.org">OpenCV</a> — 传统 CV 算法库</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🎯 目标检测/分割</h3>
+    <ul>
+      <li><a href="https://github.com/ultralytics/ultralytics">YOLOv8/11 (Ultralytics)</a></li>
+      <li><a href="https://github.com/facebookresearch/detectron2">Detectron2 (Meta)</a></li>
+      <li><a href="https://github.com/facebookresearch/sam2">SAM 2 (Meta)</a></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>📐 3D 视觉</h3>
+    <ul>
+      <li><a href="https://www.open3d.org">Open3D</a> — 3D 数据处理</li>
+      <li><a href="https://github.com/NVlabs/FoundationStereo">FoundationStereo</a></li>
+      <li><a href="https://github.com/NVlabs/FoundationPose">FoundationPose</a></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🗺️ SLAM</h3>
+    <ul>
+      <li><a href="https://github.com/UZ-SLAMLab/ORB_SLAM3">ORB-SLAM3</a></li>
+      <li><a href="https://github.com/MIT-SPARK/Kimera">Kimera</a> — 语义 SLAM</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🤖 仿真平台</h3>
+    <ul>
+      <li><a href="https://developer.nvidia.com/isaac-sim">Isaac Sim (NVIDIA)</a></li>
+      <li><a href="https://github.com/facebookresearch/habitat-lab">Habitat (Meta)</a></li>
+      <li><a href="https://docs.ros.org">ROS 2</a></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>📊 可视化</h3>
+    <ul>
+      <li><a href="https://www.rerun.io">Rerun</a> — 多模态数据</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Section 9 -->
+<h2 id="s9">9. 关键论文与数据集</h2>
+
+<h3>里程碑论文</h3>
+<table>
+<tr><th>年份</th><th>论文</th><th>贡献</th></tr>
+<tr><td>2015</td><td>U-Net</td><td>医学图像分割经典架构</td></tr>
+<tr><td>2015</td><td>ResNet</td><td>残差连接，训练超深网络</td></tr>
+<tr><td>2016</td><td>YOLO</td><td>实时目标检测范式开创</td></tr>
+<tr><td>2017</td><td>PointNet</td><td>首个直接处理点云的深度学习架构</td></tr>
+<tr><td>2020</td><td>NeRF</td><td>神经辐射场，3D 场景表示革命</td></tr>
+<tr><td>2021</td><td>ViT (Vision Transformer)</td><td>Transformer 进入 CV 领域</td></tr>
+<tr><td>2024</td><td>FoundationStereo</td><td>零样本立体深度估计</td></tr>
+<tr><td>2025</td><td>SafeDrive-Fusion</td><td>多模态光照自适应感知</td></tr>
+</table>
+
+<h3>核心数据集</h3>
+<table>
+<tr><th>数据集</th><th>规模</th><th>任务</th></tr>
+<tr><td><a href="https://www.image-net.org">ImageNet</a></td><td>1400万+ 图像</td><td>图像分类</td></tr>
+<tr><td><a href="https://cocodataset.org">COCO</a></td><td>33万+ 图像</td><td>检测/分割/关键点</td></tr>
+<tr><td><a href="https://www.cvlibs.net/datasets/kitti/">KITTI</a></td><td>真实驾驶场景</td><td>自动驾驶感知/SLAM</td></tr>
+<tr><td><a href="https://waymo.com/open/">Waymo</a></td><td>大规模自动驾驶</td><td>3D 检测/跟踪/预测</td></tr>
+<tr><td><a href="https://www.nuscenes.org">nuScenes</a></td><td>多传感器</td><td>多模态感知融合</td></tr>
+<tr><td><a href="http://www.scan-net.org">ScanNet</a></td><td>1500+ 室内场景</td><td>3D 语义分割</td></tr>
+</table>
+
+<!-- Section 10 -->
+<h2 id="s10">10. 推荐学习路线</h2>
+
+<h3>🚀 通用四阶段路线</h3>
+<table>
+<tr><th>阶段</th><th>目标</th><th>推荐组合</th><th>学时</th></tr>
+<tr>
+  <td><span class="tag green">1️⃣ 基础</span></td>
+  <td>CV 基础 + Python 实战</td>
+  <td>OpenCV 教程 + Kaggle CV 课程 + Szeliski 前 5 章</td>
+  <td>30-40h</td>
+</tr>
+<tr>
+  <td><span class="tag purple">2️⃣ 深度</span></td>
+  <td>CNN/Transformer/GAN</td>
+  <td>Stanford CS231n (前 10 讲) + PyTorch 教程 + ResNet/YOLO 复现</td>
+  <td>50-70h</td>
+</tr>
+<tr>
+  <td><span class="tag orange">3️⃣ 3D</span></td>
+  <td>多视图几何/SLAM</td>
+  <td>Hartley &amp; Zisserman + MIT 6.8300 + ORB-SLAM3 实战</td>
+  <td>50-70h</td>
+</tr>
+<tr>
+  <td><span class="tag red">4️⃣ 前沿</span></td>
+  <td>感知融合/具身 AI</td>
+  <td>ETH Machine Perception + NVIDIA R²D² + 论文精读</td>
+  <td>40-60h</td>
+</tr>
+</table>
+
+<h3>🎯 按目标定制</h3>
+<table>
+<tr><th>如果目标是...</th><th>最佳组合</th><th>学时</th></tr>
+<tr><td>快速上手 CV</td><td>Kaggle CV 课程 + Roboflow Learn + YOLOv8</td><td>20-30h</td></tr>
+<tr><td>系统学 CV</td><td>Szeliski 教材 + CS231n (2025)</td><td>100-120h</td></tr>
+<tr><td>自动驾驶感知</td><td>CS231n + KITTI/Waymo + BEVFusion</td><td>80-100h</td></tr>
+<tr><td>机器人 3D 感知</td><td>MIT 6.8300 + Hartley &amp; Zisserman + NVIDIA R²D²</td><td>80-100h</td></tr>
+<tr><td>研究入门</td><td>CS231n + ETH Machine Perception + 每月 arXiv 精读</td><td>120h+</td></tr>
+</table>
+
+<!-- Section 11 -->
+<h2 id="s11">11. 信号解读与总结</h2>
+
+<div class="signal">
+  <strong>🔑 信号 1：3D 视觉成为感知核心</strong><br>
+  CS231n 2025 版大幅增加了 3D 视觉内容，MIT 6.8300 将几何视觉放在首位。3D 不再是"进阶话题"，而是 CV 教育的中心模块。
+</div>
+
+<div class="signal">
+  <strong>🔑 信号 2：Foundation Model 浪潮冲击感知</strong><br>
+  NVIDIA FoundationStereo/FoundationPose 标志着"通用感知基础模型"时代的到来——零样本泛化、跨场景适配。传统"一个任务一个模型"的模式正在被颠覆。
+</div>
+
+<div class="signal">
+  <strong>🔑 信号 3：多模态融合从选做变成必做</strong><br>
+  自动驾驶感知从纯视觉走向 Camera+LiDAR+Radar 深度融合。BEVFusion 范式成为行业共识。
+</div>
+
+<div class="signal">
+  <strong>🔑 信号 4：开源生态前所未有的繁荣</strong><br>
+  Szeliski 免费 PDF、MIT 最新开源教材、CS231n 完整录像、FoundationStereo 开源——机器感知学习成本已趋近于零。
+</div>
+
+<div class="signal">
+  <strong>🔑 信号 5：从 2D 到 3D 到 4D</strong><br>
+  感知从静态图像走向动态视频流 + 时序理解。光流、点跟踪、4D 场景表示成为新热点。
+</div>
+
+<div class="signal">
+  <strong>🔑 信号 6：Sim-to-Real 成为关键能力</strong><br>
+  Isaac Sim、Habitat 等仿真平台的成熟让感知算法可以在虚拟环境中大规模训练和验证。
+</div>
+
+<div class="signal">
+  <strong>🔑 信号 7：中文资源"量大但碎片化"</strong><br>
+  机器感知领域的中文系统课程较少，建议主力跟英文课程，中文资源作为辅助理解。
+</div>
+
+<h3>资源金字塔</h3>
+<div class="pyramid">
+         ┌───────────────────────┐
+         │  ETH Machine          │  ← 前沿深度学习感知
+         │  Perception           │
+         ├───────────────────────┤
+         │  UZH RPG / TUM CVG    │  ← SLAM/VO 研究前沿
+         │  Research             │
+         ├───────────────────────┤
+         │  MIT 6.8300           │  ← 高级几何视觉
+         │  CMU Advanced CV      │
+         ├───────────────────────┤
+         │  Stanford CS231n      │  ← 深度学习 CV 金标准
+         │  Szeliski 教材        │
+         ├───────────────────────┤
+         │  MIT 6.801            │  ← 机器视觉经典入门
+         │  Hartley &amp; Zisserman  │
+         ├───────────────────────┤
+         │  Kaggle CV            │  ← 零基础快速上手
+         │  OpenCV 教程          │
+         └───────────────────────┘
+</div>
+
+<div class="footer">
+  <p>报告生成于 2026-06-27 &nbsp;|&nbsp; 研究工具：Hermes Agent &nbsp;|&nbsp; 悟空风格研究报告 🐒</p>
+  <p>所有资源链接均在 2026-06-27 验证有效。如链接失效，请通过搜索引擎查找最新版本。</p>
+  <p style="margin-top: 0.5rem;">📄 <a href="https://wukong-ai-code.github.io/machine-perception-research.html">在线版本</a> &nbsp;|&nbsp; 📝 <a href="https://github.com/wukong-ai-code/share">GitHub 仓库</a></p>
+</div>
+
+</body>
+</html>

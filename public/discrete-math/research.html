@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>离散数学学习资源研究报告</title>
+<style>
+  :root {
+    --bg: #0d1117; --fg: #c9d1d9; --accent: #58a6ff;
+    --border: #30363d; --card-bg: #161b22; --muted: #8b949e;
+    --tag-bg: #1f2937; --tag-fg: #58a6ff;
+    --green: #3fb950; --orange: #d2991d; --red: #f85149;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; padding: 2rem; max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 2rem; color: #fff; border-bottom: 2px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 1.5rem; }
+  h2 { font-size: 1.4rem; color: var(--accent); margin: 2rem 0 1rem; padding-left: 0.5rem; border-left: 3px solid var(--accent); }
+  h3 { font-size: 1.1rem; color: #e6edf3; margin: 1.5rem 0 0.75rem; }
+  p, li { margin: 0.5rem 0; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  ul { padding-left: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th, td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--card-bg); color: #e6edf3; font-weight: 600; }
+  tr:hover { background: rgba(88,166,255,0.05); }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin: 1rem 0; }
+  .tag { display: inline-block; background: var(--tag-bg); color: var(--tag-fg); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.8rem; margin: 0.15rem 0.25rem; }
+  .tag.green { color: var(--green); } .tag.orange { color: var(--orange); } .tag.red { color: var(--red); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .rating { color: var(--orange); font-weight: bold; }
+  .meta { color: var(--muted); font-size: 0.85rem; }
+  .toc { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0; }
+  .toc ol { padding-left: 1.5rem; columns: 2; }
+  .toc li { margin: 0.3rem 0; }
+  .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; text-align: center; }
+  .highlight-box { border-left: 3px solid var(--accent); background: rgba(88,166,255,0.08); padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+  .signal { border-left: 3px solid var(--green); background: rgba(63,185,80,0.08); padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+</style>
+</head>
+<body>
+
+<h1>📐 离散数学学习资源研究报告</h1>
+
+<div class="meta">
+  研究日期：2026-06-27 ｜ 涵盖范围：公开课、教材、视频教程、交互平台、习题库、博客笔记、中文资源
+</div>
+
+<div class="toc">
+<strong>📋 目录</strong>
+<ol>
+  <li><a href="#s1">核心教材推荐</a></li>
+  <li><a href="#s2">顶级公开课</a></li>
+  <li><a href="#s3">YouTube 视频频道</a></li>
+  <li><a href="#s4">中文 MOOC 资源</a></li>
+  <li><a href="#s5">交互式学习平台</a></li>
+  <li><a href="#s6">习题与练习资源</a></li>
+  <li><a href="#s7">博客与学习笔记</a></li>
+  <li><a href="#s8">推荐学习路线</a></li>
+  <li><a href="#s9">信号解读与总结</a></li>
+</ol>
+</div>
+
+<h2 id="s1">1. 核心教材推荐</h2>
+
+<table>
+<tr><th>排名</th><th>书名</th><th>作者</th><th>特点</th><th>适合人群</th></tr>
+<tr>
+  <td>🥇</td>
+  <td><a href="https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-spring-2015/">Mathematics for Computer Science (MCS)</a></td>
+  <td>Eric Lehman, Tom Leighton, Albert R. Meyer (MIT)</td>
+  <td>MIT 6.042J 官方教材，CS 取向最强。免费 PDF，覆盖证明方法、数论、图论、概率。MIT 王牌课程配套，Tom Leighton (Akamai 联合创始人) 授课。</td>
+  <td>CS 专业学生、算法工程师</td>
+</tr>
+<tr>
+  <td>🥈</td>
+  <td><a href="https://www.mheducation.com/highered/product/discrete-mathematics-applications-rosen/M9781259676512.html">Discrete Mathematics and Its Applications</a></td>
+  <td>Kenneth H. Rosen</td>
+  <td>全球最广泛使用的离散数学教材（第7/8版），内容全面，例题丰富，有中文译本。Stanford CS103、Harvard CS20 参考书。</td>
+  <td>系统学习者、考研/面试准备</td>
+</tr>
+<tr>
+  <td>🥉</td>
+  <td><a href="https://discrete.openmathbooks.org/">Discrete Mathematics: An Open Introduction</a></td>
+  <td>Oscar Levin</td>
+  <td>免费开源教材（第4版 2024），Runestone Academy 互动练习 + Sage/Python 代码，AIM 背书。</td>
+  <td>自学者、低成本入门</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Concrete Mathematics</td>
+  <td>Graham, Knuth, Patashnik</td>
+  <td>经典中的经典，高阶内容。Knuth 出品，深度覆盖组合数学、递推、生成函数。</td>
+  <td>进阶、算法竞赛</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Discrete Mathematics: Elementary and Beyond</td>
+  <td>Lovász, Pelikán, Vesztergombi</td>
+  <td>耶鲁讲义，注重直觉和趣味性，适合培养数学品味。</td>
+  <td>数学爱好者</td>
+</tr>
+</table>
+
+<div class="highlight-box">
+<strong>六校教材对应参考（HackWay）</strong><br>
+Stanford CS103 → Rosen + 课程讲义 + Sipser ｜ MIT 6.042 → MCS 原版 ｜ Harvard CS20 → Rosen/Sipser + 讲义 ｜ Berkeley CS70 → 讲义自成体系(概率很强) ｜ Princeton COS240 → Sipser/Rosen ｜ CMU → Rosen/Lovasz/自编讲义
+</div>
+
+<h2 id="s2">2. 顶级公开课</h2>
+
+<div class="grid">
+<div class="card">
+  <h3>MIT 6.042J / 6.1200J</h3>
+  <p><strong>Mathematics for Computer Science</strong></p>
+  <p>难度 ⭐⭐⭐ ｜ 学时 50-70h</p>
+  <p>Tom Leighton 授课，OCW 全免费。涵盖证明方法、数论、图论、组合、概率。2024 新版有 Zachary Abel 的 YouTube 视频。</p>
+  <p><a href="https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-spring-2015/">Spring 2015</a> ｜ <a href="https://ocw.mit.edu/courses/6-1200j-mathematics-for-computer-science-spring-2024/">Spring 2024</a></p>
+  <p><span class="tag green">强烈推荐</span></p>
+</div>
+<div class="card">
+  <h3>Stanford CS103</h3>
+  <p><strong>Mathematical Foundations of Computing</strong></p>
+  <p>难度 ⭐⭐⭐⭐ ｜ 由 Keith Schwarz / Cynthia Bailey Lee 讲授</p>
+  <p>极其注重证明训练，不单纯讲离散结构，还包括可计算性理论入门。PDF 讲义 <a href="https://web.stanford.edu/class/archive/cs/cs103/cs103.1184/notes/Mathematical%20Foundations%20of%20Computing.pdf">完整可下载</a>。</p>
+  <p>📌 <a href="https://cs103.stanford.edu">课程主页</a> ｜ <a href="https://rosikand.github.io/notes/courses/cs103">学生笔记</a></p>
+  <p><span class="tag green">证明强化</span></p>
+</div>
+<div class="card">
+  <h3>Coursera: Discrete Mathematics (上交大)</h3>
+  <p><strong>Dominik Scheder | 上海交通大学</strong></p>
+  <p>难度 ⭐⭐ ｜ 约 30h</p>
+  <p>英文授课，配有中文字幕。覆盖集合/函数/关系、组合数学、图论、网络流与匹配。YouTube 有 5.5h 完整视频。</p>
+  <p><a href="https://www.coursera.org/learn/discrete-mathematics-ch">Coursera</a> ｜ <a href="https://www.youtube.com/watch?v=UwYJUKVc-Hs">YouTube 完整版</a></p>
+</div>
+<div class="card">
+  <h3>Berkeley CS70</h3>
+  <p><strong>Discrete Mathematics and Probability Theory</strong></p>
+  <p>难度 ⭐⭐⭐⭐</p>
+  <p>离散数学+概率论一体化，自成体系，概率部分非常强。讲义质量极高。</p>
+  <p><a href="https://www.eecs70.org">课程网站</a></p>
+  <p><span class="tag orange">进阶</span></p>
+</div>
+</div>
+
+<h2 id="s3">3. YouTube 视频频道 TOP 10</h2>
+
+<table>
+<tr><th>#</th><th>频道</th><th>订阅</th><th>风格</th><th>适合</th></tr>
+<tr><td>1</td><td><a href="https://www.youtube.com/@Trevtutor">TrevTutor</a></td><td>32.4万</td><td>幽默、清晰、覆盖全面（DM1+DM2 完整播放列表）</td><td>系统学习首选</td></tr>
+<tr><td>2</td><td><a href="https://www.youtube.com/@SawFinMath">Kimberly Brehm</a></td><td>12.6万</td><td>细致讲解，按 Rosen 教材章节，19h 完整课程</td><td>配合 Rosen 教材使用</td></tr>
+<tr><td>3</td><td><a href="https://www.youtube.com/@mitocw">MIT OpenCourseWare</a></td><td>635万</td><td>6.042J / 6.1200J 正课录像，学术权威</td><td>深度、正规学习</td></tr>
+<tr><td>4</td><td><a href="https://www.youtube.com/@TheMathSorcerer">The Math Sorcerer</a></td><td>132万</td><td>教材推荐、学习方法、题目精讲</td><td>选书迷茫时</td></tr>
+<tr><td>5</td><td><a href="https://www.youtube.com/@gajendrapurohit">Dr. Gajendra Purohit</a></td><td>180万</td><td>印式教学，题量大，覆盖考试题型</td><td>应试刷题</td></tr>
+<tr><td>6</td><td><a href="https://www.youtube.com/@DrTrefor">Dr. Trefor Bazett</a></td><td>69.2万</td><td>可视化强、动画精美、直观解释</td><td>概念理解</td></tr>
+<tr><td>7</td><td><a href="https://www.youtube.com/@WrathofMath">Wrath of Math</a></td><td>38.9万</td><td>短小精悍，5-15min 单个概念精讲</td><td>碎片时间查漏补缺</td></tr>
+<tr><td>8</td><td><a href="https://www.youtube.com/@nesoacademy">Neso Academy</a></td><td>317万</td><td>系统完整，从零开始，适合完全入门</td><td>零基础入门</td></tr>
+<tr><td>9</td><td><a href="https://www.youtube.com/@FrankStajanoExplains">Frank Stajano Explains</a></td><td>0.8万</td><td>剑桥教授，小众精品，深度好</td><td>进阶理解</td></tr>
+<tr><td>10</td><td><a href="https://www.youtube.com/@education4uofficial">Education 4u</a></td><td>95.3万</td><td>印式教学，知识点拆解，量大管饱</td><td>快速覆盖考试大纲</td></tr>
+</table>
+
+<h2 id="s4">4. 中文 MOOC 与大学资源</h2>
+
+<div class="grid">
+<div class="card">
+  <h3>🏆 电子科技大学</h3>
+  <p><strong>离散数学</strong> — 国家精品课 / 首批国家级线上一流课程</p>
+  <p>主讲：傅彦、王庆先等 ｜ 覆盖：集合论、数理逻辑、关系理论、图论</p>
+  <p>教材：《离散数学及其应用》(傅彦)、《离散数学（微课版）》</p>
+  <p>📌 <a href="https://www.icourse163.org/course/uestc-1002268006">中国大学MOOC</a></p>
+  <p><span class="tag green">国家级精品</span></p>
+</div>
+<div class="card">
+  <h3>🏆 北京交通大学</h3>
+  <p><strong>离散数学</strong> — 首批国家级线上一流课程</p>
+  <p>主讲：刘铎团队 ｜ 选课人次超14万，231段视频，2663分钟，575道自测题</p>
+  <p>配套教材：《离散数学及应用（第3版）》获评北京高等学校优质本科教材</p>
+  <p>📌 <a href="https://www.icourse163.org/learn/NJTU-1002530017">中国大学MOOC</a> ｜ <a href="https://dm.lilingkun.com/2024">2024秋课程主页</a></p>
+  <p><span class="tag green">AI助教+数智创新</span></p>
+</div>
+<div class="card">
+  <h3>北京大学</h3>
+  <p><strong>离散数学</strong> — 屈婉玲经典课程体系</p>
+  <p>教材：屈婉玲《离散数学》(高教社)、石纯一《数理逻辑与集合论》</p>
+  <p>📌 <a href="https://resource.pku.edu.cn/index.php?r=course%2Fdetail&id=295">北大媒体资源平台</a></p>
+</div>
+<div class="card">
+  <h3>北京大学 MOOC</h3>
+  <p><strong>离散数学概论</strong> — 中国大学MOOC</p>
+  <p>适合入门，系统性讲解集合、关系、图论、逻辑推理</p>
+  <p>📌 <a href="http://www.todayartmuseum.com/surpah/20260615/98083734900.html">中国大学MOOC</a></p>
+</div>
+<div class="card">
+  <h3>北京科技大学</h3>
+  <p><strong>离散数学</strong> — 罗熊团队，国家十二五规划教材</p>
+  <p>覆盖数理逻辑、集合论、代数结构、图论 + 课程综合实验</p>
+  <p>📌 <a href="https://www.icourse163.org/learn/USTB-1206407811">中国大学MOOC</a></p>
+</div>
+<div class="card">
+  <h3>上海师范大学</h3>
+  <p><strong>离散数学 2024</strong> — 杨启哲</p>
+  <p>完整课程网站，含 handout PDF、作业。教材：屈婉玲《离散数学》。</p>
+  <p>📌 <a href="https://www.dm2024w.spacepenguin.com.cn">课程主页</a></p>
+</div>
+<div class="card">
+  <h3>中科大 USTC</h3>
+  <p><strong>离散数学 — 秦晓卫</strong></p>
+  <p>涵盖数理逻辑、集合论、图论、初等数论和代数结构</p>
+  <p>📌 <a href="https://icourse.club/course/22485">USTC评课社区</a></p>
+</div>
+<div class="card">
+  <h3>台湾清华大学</h3>
+  <p><strong>離散數學 (English)</strong> — 韩永楷教授 (3次杰出教学奖)</p>
+  <p>英文授课，覆盖资料结构、离散数学完整体系</p>
+  <p>📌 <a href="https://ocw.nthu.edu.tw/ocw/index.php?page=course&cid=129">开放式课程</a></p>
+</div>
+</div>
+
+<h2 id="s5">5. 交互式学习平台</h2>
+
+<div class="grid">
+<div class="card">
+  <h3>Runestone Academy</h3>
+  <p>承载 <em>Discrete Mathematics: An Open Introduction</em> 第3/4版</p>
+  <p><strong>亮点</strong>：互动式练习 + 即时反馈 + Sage/Python 代码演示 + 教师可建课追踪</p>
+  <p><strong>完全免费</strong>。适合自学或教师使用。</p>
+  <p>📌 <a href="https://runestone.academy/ns/books/published/dmoi/sec_intro-intro.html">立即开始</a></p>
+  <p><span class="tag green">强烈推荐</span></p>
+</div>
+<div class="card">
+  <h3>Brilliant.org</h3>
+  <p><strong>亮点</strong>：游戏化交互学习、无视频纯动手、AI 导师 Koji 实时引导</p>
+  <p>相关课程：Logic、Probability、Math for Computer Science</p>
+  <p>收费（$13-25/月），但体验极佳。适合培养直觉和数学思维。</p>
+  <p>📌 <a href="https://brilliant.org">Brilliant</a></p>
+  <p><span class="tag orange">付费精品</span></p>
+</div>
+<div class="card">
+  <h3>Khan Academy</h3>
+  <p>免费，基础全面。虽无独立离散数学课，但有逻辑、概率、组合等子模块。</p>
+  <p>📌 <a href="https://www.khanacademy.org">Khan Academy</a></p>
+  <p><span class="tag">免费基础</span></p>
+</div>
+</div>
+
+<h2 id="s6">6. 习题与练习资源</h2>
+
+<table>
+<tr><th>资源</th><th>类型</th><th>说明</th><th>链接</th></tr>
+<tr>
+  <td>MIT 6.042J Problem Sets</td>
+  <td>全套习题+解答</td>
+  <td>MIT 官方作业，难度较高，含完整答案</td>
+  <td><a href="https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-spring-2015/pages/assignments/">OCW</a></td>
+</tr>
+<tr>
+  <td>Stanford CS103 讲义习题</td>
+  <td>PDF 讲义 + 习题</td>
+  <td>每章附有 Chapter Exercises，证明题为主</td>
+  <td><a href="https://web.stanford.edu/class/archive/cs/cs103/cs103.1184/notes/Mathematical%20Foundations%20of%20Computing.pdf">PDF (260+页)</a></td>
+</tr>
+<tr>
+  <td>Rosen Student Solutions Guide</td>
+  <td>教材习题解答</td>
+  <td>奇数题官方解答，配合 Rosen 教材</td>
+  <td><a href="https://s3-eu-west-1.amazonaws.com/s3-euw1-ap-pe-ws4-cws-documents.ri-prod/9781498730655/student_solutions_guide.pdf">PDF</a></td>
+</tr>
+<tr>
+  <td>ILSTU DIS300 习题集</td>
+  <td>分类习题</td>
+  <td>按主题分类的大量练习题及解答</td>
+  <td><a href="https://itk.ilstu.edu/faculty/chungli/DIS300/dis300v1.pdf">PDF</a></td>
+</tr>
+<tr>
+  <td>UVic Math 222 练习</td>
+  <td>综合习题+解答</td>
+  <td>加拿大维多利亚大学 OER 资源</td>
+  <td><a href="https://www.uvic.ca/science/math-statistics/assets/docs/oer/math222-problems-solutions.pdf">PDF</a></td>
+</tr>
+<tr>
+  <td>北交大 MOOC 自测题</td>
+  <td>在线题库</td>
+  <td>575道自测题覆盖全大纲</td>
+  <td><a href="https://www.icourse163.org/learn/NJTU-1002530017">中国大学MOOC</a></td>
+</tr>
+<tr>
+  <td>TrevTutor 期中/期末讲解</td>
+  <td>视频讲解</td>
+  <td>带完整解答过程的考试真题视频</td>
+  <td><a href="https://www.youtube.com/watch?v=8LGzMw1P0Xo">YouTube</a></td>
+</tr>
+</table>
+
+<h2 id="s7">7. 博客与学习笔记</h2>
+
+<div class="grid">
+<div class="card">
+  <h3>CSDIY Wiki</h3>
+  <p>国内外 CS 自学的集大成者，离散数学部分收录 MIT 6.042J 详细信息（含难度、学时、资源链接）</p>
+  <p>📌 <a href="https://csdiy.wiki">csdiy.wiki</a></p>
+</div>
+<div class="card">
+  <h3>HackWay 离散数学教材指南</h3>
+  <p>中文社区最全面的教材对比：5本推荐 + 六校对应 + 选书建议。语言精炼，信息密度高。</p>
+  <p>📌 <a href="https://hackway.org/docs/math/book/discrete">hackway.org</a></p>
+</div>
+<div class="card">
+  <h3>CSDN 离散数学专栏</h3>
+  <p>大量中文学习笔记，四块经典划分：数理逻辑、集合论、图论、代数系统。博主持续更新。</p>
+  <p>📌 <a href="https://blog.csdn.net/myRealization/article/details/119997004">CSDN</a></p>
+</div>
+<div class="card">
+  <h3>博客园 RioTian 笔记</h3>
+  <p>按章节整理的系统性学习笔记，适合跟随教材复习。</p>
+  <p>📌 <a href="https://www.cnblogs.com/RioTian/p/14709573.html">博客园</a></p>
+</div>
+<div class="card">
+  <h3>GitHub: MiddleSunshine/DiscreteMath</h3>
+  <p>《离散数学及其应用》学习笔记，Markdown 格式，Latex 公式，可本地 Typora 查看。</p>
+  <p>📌 <a href="https://github.com/MiddleSunshine/DiscreteMath">GitHub</a></p>
+</div>
+<div class="card">
+  <h3>mem.ac 离散数学笔记</h3>
+  <p>按 Rosen 教材章节整理的中文笔记，包含课程信息、作业节奏、Quiz 安排。</p>
+  <p>📌 <a href="https://mem.ac/course/dm">mem.ac</a></p>
+</div>
+<div class="card">
+  <h3>Rohan Sikand CS103 笔记</h3>
+  <p>Stanford CS103 的精美学生笔记，涵盖前半部分离散数学 + 后半部分可计算性理论。</p>
+  <p>📌 <a href="https://rosikand.github.io/notes/courses/cs103">GitHub Pages</a></p>
+</div>
+<div class="card">
+  <h3>learncs.site 学习笔记</h3>
+  <p>推荐 Lovász 耶鲁离散数学讲座笔记 + 各大学课程资源汇总。</p>
+  <p>📌 <a href="https://www.learncs.site">learncs.site</a></p>
+</div>
+</div>
+
+<h2 id="s8">8. 推荐学习路线</h2>
+
+<div class="highlight-box">
+<p><strong>🚀 零基础 → 系统掌握 的三阶段路线</strong></p>
+<table>
+<tr><th>阶段</th><th>目标</th><th>推荐组合</th><th>预计学时</th></tr>
+<tr>
+  <td>1️⃣ 入门</td>
+  <td>建立直觉，覆盖全貌</td>
+  <td>Neso Academy 视频 + <em>Discrete Mathematics: An Open Introduction</em> (Runestone 互动版)</td>
+  <td>30-40h</td>
+</tr>
+<tr>
+  <td>2️⃣ 系统</td>
+  <td>深度理解，掌握证明</td>
+  <td>MIT 6.042J (OCW) 或 北交大 MOOC (中文) + Rosen 教材习题</td>
+  <td>50-70h</td>
+</tr>
+<tr>
+  <td>3️⃣ 进阶</td>
+  <td>证明强化 / 算法衔接</td>
+  <td>Stanford CS103 讲义 + <em>Concrete Mathematics</em> 选读 + Berkeley CS70 概率部分</td>
+  <td>40-60h</td>
+</tr>
+</table>
+
+<h3 style="margin-top:1.25rem">📌 中文学习者专属路线</h3>
+<table>
+<tr><th>阶段</th><th>推荐</th><th>说明</th></tr>
+<tr><td>入门</td><td>电子科技大学 MOOC (中国大学MOOC)</td><td>国家级精品课，质量最高</td></tr>
+<tr><td>系统</td><td>北交大 MOOC + 屈婉玲教材</td><td>AI 助教辅助，575道自测题</td></tr>
+<tr><td>练习</td><td>Rosen 教材习题 + CSDN/博客园笔记</td><td>题目量 + 中文笔记对照</td></tr>
+<tr><td>加深</td><td>MIT 6.042J (英文) + Stanford CS103 讲义</td><td>国际化视野，证明能力飞跃</td></tr>
+</table>
+</div>
+
+<h2 id="s9">9. 信号解读与总结</h2>
+
+<div class="signal">
+<h3>📊 关键发现 (Key Signals)</h3>
+<ol>
+  <li><strong>开源教材崛起</strong>：Oscar Levin 的 <em>Open Introduction</em> 第4版 + Runestone 互动化，标志着离散数学教育从纸质教材向「免费 + 互动 + 代码演示」全面过渡。</li>
+  <li><strong>MIT 6.042J 仍是金标准</strong>：Tom Leighton 的课程录像 + OCW 全套资料是离散数学 CS 应用取向的最佳选择；2024 新版 6.1200J 有 Zachary Abel 讲授，内容更新。</li>
+  <li><strong>中文 MOOC 生态成熟</strong>：电子科技大学、北交大双双入选国家级一流课程，北交大 14万+ 选课、AI 助教、三维知识图谱——中文学习者已有世界级免费资源。</li>
+  <li><strong>视频化的两极分化</strong>：短平快 (TrevTutor, Wrath of Math, 10min) vs 深度学习 (MIT OCW, 50min) 并存。推荐组合使用。</li>
+  <li><strong>Rosen 教材的不可替代性</strong>：尽管开源教材增长，Rosen 仍被 Stanford/Harvard/Princeton/CMU 等多所顶级高校作为参考书，其习题库和覆盖面无可匹敌。</li>
+  <li><strong>交互式学习成为标配</strong>：Runestone、Brilliant 代表的 "learn by doing" 模式在数学教育中越来越主流，纯视频/纯文字学习在退潮。</li>
+  <li><strong>证明能力是核心分水岭</strong>：Stanford CS103、HackWay 社区共识——离散数学的终极目标不是"记住公式"，而是"学会证明和形式化表达"。</li>
+</ol>
+</div>
+
+<div class="highlight-box">
+<h3>🎯 最终推荐组合</h3>
+<table>
+<tr><th>如果目标是...</th><th>最佳组合</th></tr>
+<tr><td>CS 面试/算法学习</td><td>MIT 6.042J (OCW) + TrevTutor + Rosen 习题 (30-50h)</td></tr>
+<tr><td>系统学习+中文</td><td>北交大 MOOC + 屈婉玲教材 + CSDN 笔记 (40-60h)</td></tr>
+<tr><td>数学品味养成</td><td>Lovász 教材 + MIT 6.042J + Concrete Mathematics 选读 (80h+)</td></tr>
+<tr><td>快速扫盲</td><td>Runestone 互动版 + Kimberly Brehm 视频 (20-30h)</td></tr>
+<tr><td>证明能力强化</td><td>Stanford CS103 讲义 + Berkeley CS70 概率部分 (60h+)</td></tr>
+</table>
+</div>
+
+<div class="footer">
+  <p>报告生成于 2026-06-27 ｜ 研究工具：Hermes Agent ｜ 悟空风格研究报告 🐒</p>
+  <p>数据来源：MIT OCW、Stanford CS103、中国大学MOOC、HackWay、CSDIY、YouTube、GitHub、Reddit 等</p>
+  <p><em>资源链接均为 2026-06-27 验证有效，如链接失效请通过搜索引擎查找最新版本。</em></p>
+</div>
+
+</body>
+</html>

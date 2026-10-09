@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenRouter 最佳模型组合 · 2026.06 · 波布研究笔记</title>
+<style>
+:root{
+  --bg:#0b1020;
+  --bg-2:#0f1730;
+  --panel:#121b3a;
+  --panel-2:#16224a;
+  --line:#1f2c5c;
+  --line-2:#2a3a78;
+  --ink:#e6ecff;
+  --ink-2:#a9b6e0;
+  --ink-3:#7689bf;
+  --accent:#7c9cff;
+  --accent-2:#5eead4;
+  --accent-3:#fbbf24;
+  --good:#34d399;
+  --warn:#fbbf24;
+  --bad:#f87171;
+  --free:#a78bfa;
+  --cn:#f472b6;
+  --code:#9ce3ff;
+  --code-bg:#0a1228;
+  --shadow:0 10px 30px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:48px 32px 96px}
+header.hero{background:linear-gradient(135deg,#0f1730 0%,#16224a 60%,#1a2c66 100%);border:1px solid var(--line);border-radius:18px;padding:36px 40px;box-shadow:var(--shadow);margin-bottom:36px;position:relative;overflow:hidden}
+header.hero::before{content:"";position:absolute;right:-80px;top:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(124,156,255,.25),transparent 70%);border-radius:50%}
+h1{margin:0 0 8px;font-size:30px;letter-spacing:-.5px}
+.subtitle{color:var(--ink-2);font-size:14px;margin-bottom:24px}
+.meta{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--ink-3)}
+.meta b{color:var(--ink-2);font-weight:600}
+.meta .dot{width:4px;height:4px;background:var(--ink-3);border-radius:50%;align-self:center}
+.tldr{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent-2);border-radius:10px;padding:18px 22px;margin-top:24px;font-size:14.5px;color:var(--ink-2)}
+.tldr b{color:var(--accent-2)}
+
+section{margin-top:48px}
+h2{font-size:22px;margin:0 0 6px;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+h2 .idx{display:inline-block;background:var(--panel-2);color:var(--accent);width:30px;height:30px;border-radius:8px;line-height:30px;text-align:center;font-size:13px;font-weight:700;font-family:ui-monospace,"SF Mono",monospace;border:1px solid var(--line-2)}
+h3{font-size:16px;margin:24px 0 10px;color:var(--ink);font-weight:600}
+.lede{color:var(--ink-2);font-size:14px;margin:0 0 22px}
+
+.grid{display:grid;gap:18px}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;box-shadow:var(--shadow)}
+.card h4{margin:0 0 14px;font-size:15px;display:flex;align-items:center;gap:8px}
+.tier{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:6px;letter-spacing:.4px;font-weight:700;text-transform:uppercase}
+.tier.A{background:rgba(94,234,212,.15);color:var(--accent-2);border:1px solid rgba(94,234,212,.3)}
+.tier.B{background:rgba(251,191,36,.15);color:var(--accent-3);border:1px solid rgba(251,191,36,.3)}
+.tier.C{background:rgba(248,113,113,.15);color:var(--bad);border:1px solid rgba(248,113,113,.3)}
+.tier.pro{background:rgba(124,156,255,.18);color:var(--accent);border:1px solid rgba(124,156,255,.35)}
+.tier.free{background:rgba(167,139,250,.18);color:var(--free);border:1px solid rgba(167,139,250,.35)}
+
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--panel);border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{background:var(--panel-2);color:var(--ink-2);font-weight:600;font-size:11.5px;letter-spacing:.4px;text-transform:uppercase;position:sticky;top:0}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(124,156,255,.04)}
+td.num{font-family:ui-monospace,"SF Mono",monospace;font-variant-numeric:tabular-nums}
+td.model{font-weight:600;color:var(--ink)}
+td.model small{display:block;color:var(--ink-3);font-weight:400;font-size:11px;margin-top:1px}
+.mono{font-family:ui-monospace,"SF Mono",monospace;font-size:12px;color:var(--code)}
+.tag{display:inline-block;font-size:10.5px;padding:1.5px 7px;border-radius:5px;background:var(--code-bg);color:var(--code);border:1px solid var(--line-2);font-family:ui-monospace,"SF Mono",monospace}
+.tag.cn{background:rgba(244,114,182,.1);color:var(--cn);border-color:rgba(244,114,182,.3)}
+.tag.best{background:rgba(94,234,212,.12);color:var(--accent-2);border-color:rgba(94,234,212,.3)}
+.tag.warn{background:rgba(251,191,36,.12);color:var(--accent-3);border-color:rgba(251,191,36,.3)}
+
+.bar{position:relative;height:8px;background:var(--code-bg);border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.bar > span{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:4px}
+.bar.full > span{background:linear-gradient(90deg,var(--accent-2),var(--good))}
+
+.signal{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 22px;display:flex;gap:16px;align-items:flex-start;margin-bottom:12px}
+.signal .ico{flex-shrink:0;width:32px;height:32px;border-radius:8px;background:var(--panel-2);display:flex;align-items:center;justify-content:center;font-size:16px;border:1px solid var(--line-2)}
+.signal.good .ico{background:rgba(94,234,212,.15);color:var(--accent-2);border-color:rgba(94,234,212,.3)}
+.signal.warn .ico{background:rgba(251,191,36,.15);color:var(--accent-3);border-color:rgba(251,191,36,.3)}
+.signal.bad .ico{background:rgba(248,113,113,.15);color:var(--bad);border-color:rgba(248,113,113,.3)}
+.signal b{color:var(--ink)}
+.signal p{margin:4px 0 0;color:var(--ink-2);font-size:13.5px}
+
+.combo{background:linear-gradient(135deg,var(--panel) 0%,var(--panel-2) 100%);border:1px solid var(--line-2);border-radius:14px;padding:24px 26px;margin-bottom:18px;box-shadow:var(--shadow);position:relative}
+.combo .verdict{position:absolute;top:18px;right:22px;font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--accent-2);font-weight:700}
+.combo.A{border-left:4px solid var(--accent-2)}
+.combo.B{border-left:4px solid var(--accent)}
+.combo.C{border-left:4px solid var(--accent-3)}
+.combo h3{margin:0 0 4px;font-size:18px}
+.combo .cost{margin:0 0 16px;color:var(--ink-2);font-size:13px}
+.combo table{background:transparent;border:none;box-shadow:none;font-size:12.5px}
+.combo th{background:rgba(255,255,255,.03);font-size:10.5px;padding:8px 10px}
+.combo td{padding:8px 10px;border-color:rgba(255,255,255,.05)}
+
+pre{background:var(--code-bg);color:var(--code);padding:16px 20px;border-radius:10px;overflow-x:auto;font-size:12.5px;line-height:1.55;font-family:ui-monospace,"SF Mono",monospace;border:1px solid var(--line-2)}
+code{background:var(--code-bg);color:var(--code);padding:1px 6px;border-radius:4px;font-family:ui-monospace,"SF Mono",monospace;font-size:12.5px}
+.k{color:#a78bfa}.s{color:#86efac}.n{color:#fbbf24}.c{color:#64748b;font-style:italic}
+
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:18px 0 0}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.kpi .lbl{font-size:11.5px;color:var(--ink-3);letter-spacing:.4px;text-transform:uppercase}
+.kpi .val{font-size:24px;font-weight:700;color:var(--ink);margin-top:4px;font-family:ui-monospace,"SF Mono",monospace}
+.kpi .val small{font-size:13px;color:var(--ink-3);font-weight:400;margin-left:4px}
+.kpi.acc .val{color:var(--accent-2)}
+
+footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);color:var(--ink-3);font-size:12px;line-height:1.7}
+footer a{color:var(--accent);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+.note{background:rgba(124,156,255,.05);border:1px solid var(--line-2);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-2);margin:14px 0}
+.note b{color:var(--accent)}
+
+@media (max-width:680px){
+  .wrap{padding:24px 16px}
+  header.hero{padding:24px 22px}
+  h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>🦞 OpenRouter 最佳模型组合 · 2026.06</h1>
+  <div class="subtitle">研究目标:在 OpenRouter 上,既省钱又好用的"主力 + 兜底 + 工具"三层模型组合</div>
+  <div class="meta">
+    <span>📅 <b>2026-06-15</b> 数据快照</span>
+    <span class="dot"></span>
+    <span>💰 价格: <b>morphllm.com 2026-06-09 验证</b></span>
+    <span class="dot"></span>
+    <span>🧪 实战参考: <b>Tyler Folkman 2,415 turn 实测</b></span>
+    <span class="dot"></span>
+    <span>🎯 适用:个人 / 团队 / 创业 / Agent 路由</span>
+  </div>
+  <div class="tldr">
+    <b>核心结论:</b>OpenRouter 上"省钱 + 好用"的真正解法不是找一个万能模型,而是按任务分 3 档(默认 / 难任务 / 兜底)路由。编码默认 <b>Kimi K2.6 / DeepSeek V4 Pro</b>,中文/通用 <b>Qwen3.5-Plus / GLM-5.1</b>,超长文 <b>MiniMax M3</b>,极简任务 <b>DeepSeek V4 Flash($0.14/M)</b>,兜底留 <b>Claude Sonnet 4.6 或 GPT-5.4</b>。实测这套组合比"全用 GPT-5.5"省 94% 成本,质量反而更好。
+  </div>
+</header>
+
+<!-- 1. 关键 KPI -->
+<section>
+  <h2><span class="idx">1</span> 关键数据快照</h2>
+  <p class="lede">先把"价格-质量"的断层看清楚,后面的组合才有依据。</p>
+  <div class="kpi-row">
+    <div class="kpi acc">
+      <div class="lbl">Tyler 实测节省</div>
+      <div class="val">94%<small>vs 全 GPT-5.5</small></div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">DeepSeek V4 Flash 价</div>
+      <div class="val">$0.14<small>/M input</small></div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">SWE-bench Pro pts/$</div>
+      <div class="val">564<small>Flash vs 17.7 Opus</small></div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">OpenRouter 平台</div>
+      <div class="val">627+<small>模型数</small></div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">免费层额度(充$10后)</div>
+      <div class="val">1000<small>次/天</small></div>
+    </div>
+    <div class="kpi acc">
+      <div class="lbl">价格区间</div>
+      <div class="val">179×<small>从 $0.28 到 $50/M</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 价格全景表 -->
+<section>
+  <h2><span class="idx">2</span> 价格全景表(2026-06-09 验证)</h2>
+  <p class="lede">按 Input 价格升序。注意 <b>SWE-bench Pro</b> 分数(编码能力);中文列 <b>A++→D</b> 是综合中文能力评分。</p>
+  <div style="overflow-x:auto;border-radius:10px">
+  <table>
+    <thead>
+      <tr>
+        <th>模型</th>
+        <th>厂商</th>
+        <th class="num">In $/M</th>
+        <th class="num">Out $/M</th>
+        <th>Context</th>
+        <th class="num">SWE-Pro</th>
+        <th>中文</th>
+        <th>适用</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="model">GLM-4.7-Flash <small>免费层</small></td><td>Z.AI</td><td class="num"><b style="color:var(--free)">0.00</b></td><td class="num"><b style="color:var(--free)">0.00</b></td><td>—</td><td class="num">—</td><td><span class="tag cn">A+</span></td><td>免费实验 / 中文</td></tr>
+      <tr><td class="model">DeepSeek V4 Flash <small>性价比之王</small></td><td>DeepSeek</td><td class="num"><b style="color:var(--accent-2)">0.14</b></td><td class="num"><b style="color:var(--accent-2)">0.28</b></td><td>1M</td><td class="num"><b>79.0</b></td><td><span class="tag cn">A++</span></td><td>日常编码 / 分类 / 抽取</td></tr>
+      <tr><td class="model">GPT-5.4-nano</td><td>OpenAI</td><td class="num">0.20</td><td class="num">1.25</td><td>—</td><td class="num">—</td><td><span class="tag">A-</span></td><td>分类 / 抽取</td></tr>
+      <tr><td class="model">Gemini 3.1 Flash-Lite</td><td>Google</td><td class="num">0.25</td><td class="num">1.50</td><td>—</td><td class="num">—</td><td><span class="tag">B+</span></td><td>批量低延迟</td></tr>
+      <tr><td class="model">MiniMax M3 <small>1M context</small></td><td>MiniMax</td><td class="num">0.30</td><td class="num">1.20</td><td>1M</td><td class="num">—</td><td><span class="tag">A</span></td><td>1M context / 多模态</td></tr>
+      <tr><td class="model">Qwen3.5-Plus <small>1M tiered</small></td><td>Alibaba</td><td class="num">0.40</td><td class="num">2.40</td><td>1M</td><td class="num">—</td><td><span class="tag cn">A+</span></td><td>中文 / 通用</td></tr>
+      <tr style="background:rgba(94,234,212,.06)"><td class="model">DeepSeek V4 Pro <small>甜区</small></td><td>DeepSeek</td><td class="num"><b>0.435</b></td><td class="num"><b>0.87</b></td><td>1M</td><td class="num"><b>80.6</b></td><td><span class="tag cn best">A++</span></td><td>中文编码 / 推理</td></tr>
+      <tr><td class="model">Gemini 3 Flash</td><td>Google</td><td class="num">0.50</td><td class="num">3.00</td><td>—</td><td class="num">—</td><td><span class="tag">B+</span></td><td>平衡 chat / 工具</td></tr>
+      <tr><td class="model">Kimi K2.5 <small>1T MoE</small></td><td>Moonshot</td><td class="num">0.60</td><td class="num">3.00</td><td>256K</td><td class="num">—</td><td><span class="tag">A</span></td><td>1T MoE 多模态</td></tr>
+      <tr><td class="model">Qwen3.5-397B <small>open</small></td><td>Alibaba</td><td class="num">0.60</td><td class="num">3.60</td><td>256K</td><td class="num">—</td><td><span class="tag cn">A+</span></td><td>开源大参数 MoE</td></tr>
+      <tr><td class="model">GLM-4.7</td><td>Z.AI</td><td class="num">0.60</td><td class="num">2.20</td><td>—</td><td class="num">—</td><td><span class="tag cn">A+</span></td><td>中文日常</td></tr>
+      <tr style="background:rgba(94,234,212,.10)"><td class="model">Kimi K2.6 <small>Tyler 实测 82% 默认</small></td><td>Moonshot</td><td class="num"><b>0.95</b></td><td class="num"><b>4.00</b></td><td>262K</td><td class="num">58.6</td><td><span class="tag best">A</span></td><td>默认编码 / PR review</td></tr>
+      <tr><td class="model">Kimi K2.7 Code <small>新 06-12</small></td><td>Moonshot</td><td class="num">0.95</td><td class="num">4.00</td><td>262K</td><td class="num">—</td><td><span class="tag">A</span></td><td>编码专项 / 长上下文</td></tr>
+      <tr style="background:rgba(94,234,212,.04)"><td class="model">GLM-5 <small>中文市场强</small></td><td>Z.AI</td><td class="num">1.00</td><td class="num">3.20</td><td>200K</td><td class="num">—</td><td><span class="tag cn">A+</span></td><td>中文 / 多语言 / 编码</td></tr>
+      <tr><td class="model">Claude Haiku 4.5</td><td>Anthropic</td><td class="num">1.00</td><td class="num">5.00</td><td>200K</td><td class="num">—</td><td><span class="tag">A-</span></td><td>中等任务 / 小尺寸</td></tr>
+      <tr><td class="model">GLM-5.1</td><td>Z.AI</td><td class="num">1.40</td><td class="num">4.40</td><td>—</td><td class="num">—</td><td><span class="tag cn">A+</span></td><td>中文市场 / 多语言</td></tr>
+      <tr><td class="model">GPT-5.3-Codex</td><td>OpenAI</td><td class="num">1.75</td><td class="num">14.00</td><td>—</td><td class="num">59.1</td><td><span class="tag">B+</span></td><td>OpenAI 编码</td></tr>
+      <tr><td class="model">Gemini 3.1 Pro <small>长文贵</small></td><td>Google</td><td class="num">2.00</td><td class="num">12.00</td><td>1M</td><td class="num">—</td><td><span class="tag">B+</span></td><td>长上下文(≤200K)</td></tr>
+      <tr><td class="model">GPT-5.4</td><td>OpenAI</td><td class="num">2.50</td><td class="num">15.00</td><td>1M</td><td class="num">—</td><td><span class="tag">A-</span></td><td>工具调用 / agent</td></tr>
+      <tr><td class="model">Claude Sonnet 4.6</td><td>Anthropic</td><td class="num">3.00</td><td class="num">15.00</td><td>1M</td><td class="num">—</td><td><span class="tag">A</span></td><td>质量优先的默认</td></tr>
+      <tr style="background:rgba(251,113,113,.06)"><td class="model">Claude Opus 4.8</td><td>Anthropic</td><td class="num"><b>5.00</b></td><td class="num"><b>25.00</b></td><td>1M</td><td class="num">88.6</td><td><span class="tag">A-</span></td><td>重质量编码 / agent</td></tr>
+      <tr style="background:rgba(251,113,113,.06)"><td class="model">GPT-5.5</td><td>OpenAI</td><td class="num">5.00</td><td class="num">30.00</td><td>1M</td><td class="num">—</td><td><span class="tag">A-</span></td><td>Terminal / 最复杂</td></tr>
+      <tr><td class="model">Claude Fable 5 <small>前沿顶配</small></td><td>Anthropic</td><td class="num">10.00</td><td class="num">50.00</td><td>1M</td><td class="num">95.0</td><td><span class="tag">B+</span></td><td>前沿推理 / 复杂决策</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="note">
+    💡 <b>价格陷阱提示:</b>Gemini 3.1 Pro 在 &gt;200K tokens 时升到 $4/$18;MiniMax M3 &gt;512K 翻倍;Qwen3.5-Plus 在 256K-1M 区间升到 $0.50/$3.00;Anthropic Opus 4.7+ 新 tokenizer,同文本多 35% tokens;DeepSeek cache hit 50× 折扣($0.0028/M)。
+  </div>
+</section>
+
+<!-- 3. 性价比曲线 -->
+<section>
+  <h2><span class="idx">3</span> 性价比曲线:为什么"贵的不是更好的"</h2>
+  <p class="lede">用 <b>SWE-bench Pro 分数 / Input 价格</b> 作为简化指标,1 美元能在 DeepSeek V4 Flash 上换 564 分,在 Claude Fable 5 上只能换 9.5 分 —— 差距 60 倍。</p>
+
+  <div class="card" style="padding:24px">
+    <h4>📊 SWE-bench Pro pts per $1 (input)</h4>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span><b>DeepSeek V4 Flash</b> · 79.0 SWE-Pro · $0.14</span><span class="mono" style="color:var(--accent-2)">564.3</span></div><div class="bar full"><span style="width:100%"></span></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span><b>DeepSeek V4 Pro</b> · 80.6 SWE-Pro · $0.435</span><span class="mono" style="color:var(--accent-2)">185.3</span></div><div class="bar full"><span style="width:33%"></span></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span><b>Kimi K2.6</b> · 58.6 SWE-Pro · $0.95</span><span class="mono">61.7</span></div><div class="bar"><span style="width:11%"></span></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span><b>GPT-5.3-Codex</b> · 59.1 SWE-Pro · $1.75</span><span class="mono">33.8</span></div><div class="bar"><span style="width:6%"></span></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span><b>Claude Opus 4.8</b> · 88.6 SWE-Pro · $5.00</span><span class="mono">17.7</span></div><div class="bar"><span style="width:3%"></span></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span><b>Claude Fable 5</b> · 95.0 SWE-Pro · $10.00</span><span class="mono" style="color:var(--ink-3)">9.5</span></div><div class="bar"><span style="width:1.7%"></span></div></div>
+    </div>
+    <p class="lede" style="margin-top:18px;font-size:13px">⚠️ 这个指标<b>不等于</b>"便宜的就够用"——它只是说钱花得值不值。<b>真正能用的判断</b>是看你的任务是不是"Opus 能干、Flash 也能干 80%"。如果你的任务是"Flash 真干不了的"(架构级调试、Terminal 反复失败、研究/写作的精修),那 Opus 4.8 的 18 分/$ 依然合理,但应该<b>只在这些场景用</b>。</p>
+  </div>
+</section>
+
+<!-- 4. Tyler Folkman 实战数据 -->
+<section>
+  <h2><span class="idx">4</span> 实战金标准:Tyler Folkman 2,415 turn 实验</h2>
+  <p class="lede">Tyler Folkman (2026-05) 用 6 个模型 + 3 个 provider 跑了 <b>2,415 个 agent turn</b>,总成本 <b>$76.77</b>。如果全部用 GPT-5.5 走一遍,要 <b>$1,272.77</b>——省了 <b>94%</b>。</p>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h4>📈 路由分布(实跑数据)</h4>
+      <table>
+        <thead><tr><th>模型</th><th class="num">Turn</th><th class="num">%</th><th class="num">Input</th><th class="num">$</th></tr></thead>
+        <tbody>
+          <tr><td class="model">Kimi K2.6</td><td class="num">1,984</td><td class="num">82.2%</td><td class="num">243M</td><td class="num">$64.79</td></tr>
+          <tr><td class="model">GPT-5.5</td><td class="num">238</td><td class="num">9.9%</td><td class="num">1.1M</td><td class="num">$11.04</td></tr>
+          <tr><td class="model">Qwen 3.6 27B (本地)</td><td class="num">106</td><td class="num">4.4%</td><td class="num">255K</td><td class="num">$0.00</td></tr>
+          <tr><td class="model">DeepSeek V4 Flash</td><td class="num">38</td><td class="num">1.6%</td><td class="num">1.8M</td><td class="num">$0.26</td></tr>
+          <tr><td class="model">DeepSeek V4 Pro</td><td class="num">28</td><td class="num">1.2%</td><td class="num">1.2M</td><td class="num">$0.52</td></tr>
+          <tr><td class="model">GLM 5.1</td><td class="num">21</td><td class="num">0.9%</td><td class="num">743K</td><td class="num">$0.15</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h4>🎯 6 条任务路由</h4>
+      <table>
+        <thead><tr><th>指令</th><th>主模型</th><th>任务</th></tr></thead>
+        <tbody>
+          <tr><td><code>/cheap</code></td><td>DeepSeek V4 Flash</td><td>日志 / 简单编辑</td></tr>
+          <tr><td><code>/ask</code></td><td>Qwen 3.6 Plus</td><td>解释 / 摘要 / 研究</td></tr>
+          <tr><td><code>/workhorse</code></td><td><b>Kimi K2.6</b></td><td>默认:编码/PR review/重构</td></tr>
+          <tr><td><code>/max</code></td><td>GPT-5.5</td><td>架构 / 反复失败 / terminal</td></tr>
+          <tr><td><code>/max fallback</code></td><td>Claude Opus 4.7</td><td>最难工作 / 冗余</td></tr>
+          <tr><td><code>/local</code></td><td>Qwen 3.6 27B (本地)</td><td>私密 / 离线</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note">
+    💡 <b>核心结论:</b>"Kimi K2.6 拿 82% 的 turn"不是空话——编码默认就用它,只在"便宜模型解决不了"时才升级到 GPT-5.5 / Opus。这套分层让 <b>$200/月不是起步</b>,而是 <b>$70/月</b> 就够重度 agent 用户用。
+  </div>
+</section>
+
+<!-- 5. 三档组合方案 -->
+<section>
+  <h2><span class="idx">5</span> 三档组合方案(直接抄)</h2>
+  <p class="lede">按预算和场景给三套直接可用的组合。所有模型 ID 均为 OpenRouter 风格(provider/model),可直接粘到代码里。</p>
+
+  <div class="combo A">
+    <div class="verdict">A · 极致省钱</div>
+    <h3>💚 主力月成本 &lt; $5</h3>
+    <p class="cost">适合:个人学习、轻度 Coding、聊天/写作、对成本极度敏感。所有"难任务"自动 fallback 到主力。</p>
+    <table>
+      <thead><tr><th>角色</th><th>模型</th><th>ID</th><th>价格</th><th>用在哪</th></tr></thead>
+      <tbody>
+        <tr><td><b>默认</b></td><td>DeepSeek V4 Flash</td><td><code>deepseek/deepseek-v4-flash</code></td><td class="num">$0.14 / $0.28</td><td>80% 日常:聊天、摘要、改写、简单代码</td></tr>
+        <tr><td><b>编码</b></td><td>Kimi K2.6</td><td><code>moonshotai/kimi-k2.6</code></td><td class="num">$0.95 / $4.00</td><td>需要"真的能跑"的代码改动</td></tr>
+        <tr><td><b>长文</b></td><td>MiniMax M3</td><td><code>minimax/minimax-m3</code></td><td class="num">$0.30 / $1.20</td><td>1M context 长文档</td></tr>
+        <tr><td><b>中文增强</b></td><td>Qwen3.5-Plus</td><td><code>qwen/qwen3.5-plus</code></td><td class="num">$0.40 / $2.40</td><td>中文写作/翻译/文化语境</td></tr>
+        <tr><td><b>顶配兜底</b></td><td>Claude Haiku 4.5</td><td><code>anthropic/claude-haiku-4.5</code></td><td class="num">$1.00 / $5.00</td><td>少数需要"小 Anthropic"的场景</td></tr>
+        <tr><td><b>免费日常</b></td><td>Nemotron 3 Ultra (free)</td><td><code>nvidia/nemotron-3-ultra-550b-a55b:free</code></td><td class="num">$0 / $0</td><td>每日 1000 次免费额度</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="combo B">
+    <div class="verdict">B · 均衡主力</div>
+    <h3>💙 主力月成本 $5 ~ $30</h3>
+    <p class="cost">适合:独立开发者、中等团队、Agent 工具、严肃编码 / 写作。对应 Tyler 实测的 $76.77/月 那种用量级别。</p>
+    <table>
+      <thead><tr><th>角色</th><th>模型</th><th>ID</th><th>价格</th><th>用在哪</th></tr></thead>
+      <tbody>
+        <tr><td><b>默认编码</b></td><td><b>Kimi K2.6</b></td><td><code>moonshotai/kimi-k2.6</code></td><td class="num">$0.95 / $4.00</td><td>日常编码 / PR review / 重构(Tyler 82% 走它)</td></tr>
+        <tr><td><b>中文编码</b></td><td><b>DeepSeek V4 Pro</b></td><td><code>deepseek/deepseek-v4-pro</code></td><td class="num">$0.435 / $0.87</td><td>中文项目 / 复杂推理 / 工具调用</td></tr>
+        <tr><td><b>工具 / Agent</b></td><td>GPT-5.4</td><td><code>openai/gpt-5.4</code></td><td class="num">$2.50 / $15.00</td><td>复杂工具流、function calling</td></tr>
+        <tr><td><b>高质量写作</b></td><td>Claude Sonnet 4.6</td><td><code>anthropic/claude-sonnet-4.6</code></td><td class="num">$3.00 / $15.00</td><td>对外内容、PRD、长文写作</td></tr>
+        <tr><td><b>长文</b></td><td>MiniMax M3</td><td><code>minimax/minimax-m3</code></td><td class="num">$0.30 / $1.20</td><td>1M context(整本 PDF / 整库代码)</td></tr>
+        <tr><td><b>极简任务</b></td><td>DeepSeek V4 Flash</td><td><code>deepseek/deepseek-v4-flash</code></td><td class="num">$0.14 / $0.28</td><td>分类 / 抽取 / 翻译简单句</td></tr>
+        <tr><td><b>最难任务</b></td><td>Claude Opus 4.8</td><td><code>anthropic/claude-opus-4.8</code></td><td class="num">$5.00 / $25.00</td><td>架构设计、Terminal 反复失败、关键决策</td></tr>
+        <tr><td><b>智能路由</b></td><td><code>openrouter/auto</code></td><td>NotDiamond 选模</td><td class="num">不额外收费</td><td>不确定选谁时,让 OpenRouter 选</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="combo C">
+    <div class="verdict">C · 高质量</div>
+    <h3>💛 主力月成本 $50 ~ $200</h3>
+    <p class="cost">适合:商业产品、对质量不妥协、企业场景。仍要做路由,但每个角色都是旗舰。</p>
+    <table>
+      <thead><tr><th>角色</th><th>模型</th><th>ID</th><th>价格</th><th>用在哪</th></tr></thead>
+      <tbody>
+        <tr><td><b>默认</b></td><td>Claude Sonnet 4.6</td><td><code>anthropic/claude-sonnet-4.6</code></td><td class="num">$3.00 / $15.00</td><td>日常对话 / 写作 / 编码 / 工具</td></tr>
+        <tr><td><b>重编码</b></td><td>Claude Opus 4.8</td><td><code>anthropic/claude-opus-4.8</code></td><td class="num">$5.00 / $25.00</td><td>多文件重构、复杂 bug、深度推理</td></tr>
+        <tr><td><b>顶配</b></td><td>Claude Fable 5 / GPT-5.5</td><td><code>anthropic/claude-fable-5</code> · <code>openai/gpt-5.5</code></td><td class="num">$10/$50 · $5/$30</td><td>最难的"决策级"任务</td></tr>
+        <tr><td><b>工具/agent</b></td><td>GPT-5.4</td><td><code>openai/gpt-5.4</code></td><td class="num">$2.50 / $15.00</td><td>主流工具调用生态</td></tr>
+        <tr><td><b>长文</b></td><td>Gemini 3.1 Pro</td><td><code>google/gemini-3.1-pro</code></td><td class="num">$2.00 / $12.00</td><td>≤200K 长文档</td></tr>
+        <tr><td><b>超长文</b></td><td>MiniMax M3</td><td><code>minimax/minimax-m3</code></td><td class="num">$0.30 / $1.20</td><td>1M context(便宜得多)</td></tr>
+        <tr><td><b>中文</b></td><td>GLM-5.1</td><td><code>z-ai/glm-5.1</code></td><td class="num">$1.40 / $4.40</td><td>中文市场 / 多语言</td></tr>
+        <tr><td><b>日常降本</b></td><td>Kimi K2.6</td><td><code>moonshotai/kimi-k2.6</code></td><td class="num">$0.95 / $4.00</td><td>不重要的批量任务</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 6. 任务路由决策表 -->
+<section>
+  <h2><span class="idx">6</span> 任务路由决策表</h2>
+  <p class="lede">按"任务类型"直接给推荐 + 兜底,不用自己想。</p>
+  <div style="overflow-x:auto;border-radius:10px">
+  <table>
+    <thead>
+      <tr><th>任务</th><th>首选</th><th>兜底 1</th><th>兜底 2</th><th>为什么</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>日常对话 / 写作</b></td><td>DeepSeek V4 Flash</td><td>Kimi K2.6</td><td>Claude Sonnet 4.6</td><td>Flash 已经足够,贵的不必要</td></tr>
+      <tr><td><b>中文写作 / 翻译</b></td><td>Qwen3.5-Plus</td><td>GLM-5.1</td><td>DeepSeek V4 Pro</td><td>中文生态 A+ 级别,价格低</td></tr>
+      <tr><td><b>日常编码</b></td><td>Kimi K2.6</td><td>DeepSeek V4 Pro</td><td>GPT-5.3-Codex</td><td>Tyler 实测 82% 默认走 Kimi</td></tr>
+      <tr><td><b>复杂编码 (架构/调试)</b></td><td>Claude Opus 4.8</td><td>GPT-5.5</td><td>Claude Sonnet 4.6</td><td>SWE-bench 88.6%,质量优先</td></tr>
+      <tr><td><b>工具调用 / Agent</b></td><td>GPT-5.4</td><td>Kimi K2.7 Code</td><td>DeepSeek V4 Pro</td><td>OpenAI 工具生态最成熟</td></tr>
+      <tr><td><b>深度推理 (数学/逻辑)</b></td><td>DeepSeek V4 Pro</td><td>Claude Opus 4.8</td><td>GLM-5</td><td>Pro 80.6% SWE + 推理整合工具调用</td></tr>
+      <tr><td><b>超长文档 (≥200K)</b></td><td>MiniMax M3</td><td>Gemini 3.1 Pro</td><td>Qwen3.5-Plus</td><td>1M context,M3 最便宜</td></tr>
+      <tr><td><b>长文档 (≤200K)</b></td><td>Gemini 3.1 Pro</td><td>Claude Sonnet 4.6</td><td>MiniMax M3</td><td>Google 长文传统强项</td></tr>
+      <tr><td><b>多模态 (图+文)</b></td><td>MiniMax M3</td><td>Kimi K2.5</td><td>Gemini 3 Flash</td><td>原生多模态 / 1M context</td></tr>
+      <tr><td><b>分类 / 抽取 / JSON</b></td><td>DeepSeek V4 Flash</td><td>GPT-5.4-nano</td><td>Gemini 3.1 Flash-Lite</td><td>这类任务 Flash 几乎不会错</td></tr>
+      <tr><td><b>私密 / 不上云</b></td><td>Qwen3.5-397B (本地)</td><td>GLM-4.7 (本地)</td><td>Nemotron 3 Ultra (免费)</td><td>本地 0 元成本 + 数据自留</td></tr>
+      <tr><td><b>实验 / 学习</b></td><td>GLM-4.7-Flash (免费)</td><td>Nemotron 3 Ultra (免费)</td><td>OpenRouter Owl Alpha</td><td>不花一分钱试遍风格</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- 7. 中文能力专项 -->
+<section>
+  <h2><span class="idx">7</span> 中文能力专项</h2>
+  <p class="lede">OpenRouter 上中文最强的几乎都来自中国厂。按场景再选一遍。</p>
+  <div class="grid grid-2">
+    <div class="card">
+      <h4>🇨🇳 中文生态排名</h4>
+      <table>
+        <thead><tr><th>模型</th><th>中文</th><th>价格</th></tr></thead>
+        <tbody>
+          <tr><td class="model">DeepSeek V4 Pro</td><td><span class="tag cn best">A++</span></td><td class="num">$0.44 / $0.87</td></tr>
+          <tr><td class="model">DeepSeek V4 Flash</td><td><span class="tag cn best">A++</span></td><td class="num">$0.14 / $0.28</td></tr>
+          <tr><td class="model">Qwen3.5-Plus</td><td><span class="tag cn">A+</span></td><td class="num">$0.40 / $2.40</td></tr>
+          <tr><td class="model">Qwen3.5-397B</td><td><span class="tag cn">A+</span></td><td class="num">$0.60 / $3.60</td></tr>
+          <tr><td class="model">GLM-5 / 5.1 / 4.7</td><td><span class="tag cn">A+</span></td><td class="num">$1.0~$1.4 / $2.2~$4.4</td></tr>
+          <tr><td class="model">Kimi K2.5/2.6/2.7</td><td><span class="tag">A</span></td><td class="num">$0.6~$0.95 / $3~$4</td></tr>
+          <tr><td class="model">MiniMax M3</td><td><span class="tag">A</span></td><td class="num">$0.30 / $1.20</td></tr>
+          <tr><td class="model">Claude Sonnet 4.6</td><td><span class="tag">A</span></td><td class="num">$3.00 / $15.00</td></tr>
+          <tr><td class="model">GPT-5.4/5.5</td><td><span class="tag">A-</span></td><td class="num">$2.5~$5 / $15~$30</td></tr>
+          <tr><td class="model">Claude Opus 4.8</td><td><span class="tag">A-</span></td><td class="num">$5.00 / $25.00</td></tr>
+          <tr><td class="model">Llama 系列</td><td><span class="tag warn">B</span></td><td class="num">—</td><td>不推荐用于中文</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h4>📝 中文场景的最优搭配</h4>
+      <ul style="font-size:13.5px;color:var(--ink-2);line-height:1.8;padding-left:18px;margin:0">
+        <li><b>中文日常对话:</b>DeepSeek V4 Flash(便宜到可以乱用)</li>
+        <li><b>中文写作 / 营销文:</b>GLM-5.1 / Qwen3.5-Plus</li>
+        <li><b>中文代码:</b>DeepSeek V4 Pro / Kimi K2.6</li>
+        <li><b>中文长文档:</b>MiniMax M3 (1M context)</li>
+        <li><b>中文推理/数学:</b>DeepSeek V4 Pro / GLM-5</li>
+        <li><b>中文创意 / 网文:</b>Qwen3.5-Plus(文化梗、地道表达)</li>
+        <li><b>中文翻译:</b>DeepSeek V4 Flash(便宜到爆)</li>
+        <li><b>中文搜索 / 摘要:</b>Kimi K2.5(1T MoE 多模态)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 8. 免费层使用 -->
+<section>
+  <h2><span class="idx">8</span> 免费层 26 个模型 · 怎么用才不亏</h2>
+  <p class="lede">OpenRouter 免费模型 2026/06 共 <b>26 个</b>。规则:<b>余额 &lt;$10 时 50 次/天;余额 ≥$10 时 1000 次/天;每分钟 20 次</b>。提示词会被用于训练(这是免费的代价)。</p>
+  <div style="overflow-x:auto;border-radius:10px">
+  <table>
+    <thead><tr><th>免费模型</th><th>厂商</th><th>Context</th><th>能力</th><th>推荐场景</th></tr></thead>
+    <tbody>
+      <tr><td class="model">Nemotron 3 Ultra (550B MoE)</td><td>NVIDIA</td><td>1M</td><td>推理/编码/全能</td><td><b>主力免费</b>·不限场景</td></tr>
+      <tr><td class="model">Nemotron 3 Super (120B)</td><td>NVIDIA</td><td>262K</td><td>推理</td><td>Nemotron Ultra 备选</td></tr>
+      <tr><td class="model">Nemotron 3 Nano 30B A3B</td><td>NVIDIA</td><td>256K</td><td>工具调用</td><td>轻量 agent</td></tr>
+      <tr><td class="model">Nemotron 3 Nano Omni</td><td>NVIDIA</td><td>256K</td><td>多模态 + 工具</td><td>免费多模态</td></tr>
+      <tr><td class="model">Gemma 4 31B (free)</td><td>Google</td><td>262K</td><td>多模态 + 工具</td><td>Google 系中文友好</td></tr>
+      <tr><td class="model">Gemma 4 26B A4B (free)</td><td>Google</td><td>262K</td><td>多模态 + 工具</td><td>Google 系轻量</td></tr>
+      <tr><td class="model">gpt-oss-20b (free)</td><td>OpenAI</td><td>131K</td><td>工具调用</td><td>OpenAI 开源</td></tr>
+      <tr><td class="model">Seedream 4.5</td><td>ByteDance</td><td>—</td><td>图像生成</td><td>免费生图</td></tr>
+      <tr><td class="model">Owl Alpha (auto-router)</td><td>OpenRouter</td><td>200K</td><td>多模态 + 工具</td><td>让 OpenRouter 选免费模型</td></tr>
+      <tr><td class="model">poolside 系列 (free)</td><td>poolside</td><td>262K</td><td>编码</td><td>poolside 开源</td></tr>
+      <tr><td class="model">venice/uncensored</td><td>Venice</td><td>—</td><td>无审查</td><td>特殊场景(注意合规)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="signal warn" style="margin-top:18px">
+    <div class="ico">⚠</div>
+    <div>
+      <b>免费层 3 个代价,别忽略:</b>
+      <p>1. <b>提示词被用于训练</b>(几乎全部免费模型)——<b>商业机密、用户隐私、合同内容不要走免费层</b>。<br>
+      2. <b>阉割版常见</b>(context window 缩小最普遍)——实测能力低于同名付费版。<br>
+      3. <b>稳定性 / 路由差</b>——高峰时段排队、provider 切换可能影响生产。<br>
+      <b>最佳用法:</b>实验、学习、内部低风险草稿,任何对外 / 商业场景都用付费层。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9. 平台特性 -->
+<section>
+  <h2><span class="idx">9</span> OpenRouter 平台特性 · 怎么用更省</h2>
+  <div class="grid grid-2">
+    <div class="card">
+      <h4>🤖 Auto Router (自动选模型)</h4>
+      <p style="color:var(--ink-2);font-size:13.5px;margin:0 0 12px">设置 <code>model: "openrouter/auto"</code>,由 NotDiamond 智能选择。每次响应里会带 <code>model</code> 字段,告诉你实际用了哪个。带 <code>session_id</code> 可锁定会话内一致路由(对 agent 多轮对话很重要)。</p>
+      <pre><span class="c">// JS SDK</span>
+<span class="k">const</span> r = <span class="k">await</span> openRouter.chat.<span class="n">send</span>({
+  <span class="n">model</span>: <span class="s">"openrouter/auto"</span>,
+  <span class="n">session_id</span>: <span class="s">"user-42-conv-7"</span>,
+  <span class="n">messages</span>: [...]
+});
+<span class="n">console</span>.log(r.<span class="n">model</span>); <span class="c">// e.g. "anthropic/claude-sonnet-4.5"</span></pre>
+    </div>
+    <div class="card">
+      <h4>🔁 Model Fallbacks (自动失败切换)</h4>
+      <p style="color:var(--ink-2);font-size:13.5px;margin:0 0 12px">在 <code>models</code> 数组里写一组模型,主模型失败(provider down、rate limit、moderation)自动试下一个。OpenRouter 自己实现,不用你写 try/catch。</p>
+      <pre><span class="c">// OpenAI 兼容 extra_body</span>
+{
+  <span class="n">"model"</span>: <span class="s">"anthropic/claude-opus-4.8"</span>,
+  <span class="n">"messages"</span>: [...],
+  <span class="n">"models"</span>: [
+    <span class="s">"anthropic/claude-opus-4.8"</span>,
+    <span class="s">"openai/gpt-5.5"</span>,
+    <span class="s">"moonshotai/kimi-k2.6"</span>,
+    <span class="s">"deepseek/deepseek-v4-pro"</span>
+  ]
+}</pre>
+    </div>
+    <div class="card">
+      <h4>💸 成本优化 4 件套</h4>
+      <ul style="font-size:13.5px;color:var(--ink-2);line-height:1.8;padding-left:18px;margin:0">
+        <li><b>Prompt Caching</b>:OpenAI cached input 10× 折扣;Anthropic cache reads 0.1×;DeepSeek cache hit 50×</li>
+        <li><b>Batch API</b>:Anthropic 50% off;Gemini 半价;DeepSeek 也有 batch 折扣</li>
+        <li><b>Provider 路由</b>:同一模型可能有多个 provider,OpenRouter 自动选最便宜的</li>
+        <li><b>BYOK 自带 Key</b>:&gt; 1M 月请求可带自己的 provider key,免 OpenRouter 通道费</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>⚠️ 平台限制 / 坑</h4>
+      <ul style="font-size:13.5px;color:var(--ink-2);line-height:1.8;padding-left:18px;margin:0">
+        <li><b>信用卡手续费</b>:充值有手续费,大额考虑直接买官方</li>
+        <li><b>1M 请求后 BYOK 费</b>:超过 1M 月请求,带自己 key 才省通道费</li>
+        <li><b>每跳有 ~10-50ms 延迟</b>:延迟敏感场景考虑 self-hosted (Bifrost 等)</li>
+        <li><b>多模态阉割:</b>实测"阉割严重、生图超时 6-10s"——图文业务慎用</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 10. 信号解读 -->
+<section>
+  <h2><span class="idx">10</span> 信号解读(给你决策用的)</h2>
+
+  <div class="signal good">
+    <div class="ico">✓</div>
+    <div>
+      <b>信号 1:OpenRouter 不再只是"懒人聚合",已经是个有 routing/fallback/auto 的完整网关</b>
+      <p>200+ 模型、统一 OpenAI 兼容 API、Auto Router、Model Fallbacks、Prompt Caching——对于不想在 5 个 provider 间手写重试的人来说,OpenRouter 是目前最省心的入口。但生产级"≤10ms 额外延迟"就别指望了,这是 SaaS 路由的代价。</p>
+    </div>
+  </div>
+
+  <div class="signal good">
+    <div class="ico">✓</div>
+    <div>
+      <b>信号 2:2026 H1 的"价格-质量"曲线已经极度倾斜——便宜模型越来越好</b>
+      <p>DeepSeek V4 Flash $0.14/M input 拿到 SWE-bench Pro 79 分(同价位 OpenAI/Anthropic 都做不到);DeepSeek V4 Pro 80.6 分(优于 Kimi K2.6,与 Opus 4.8 差距 9%);GLM-5 在 Artificial Analysis 公开榜单上排第一。"一分钱一分货" 正在变成"一分钱八分货"。</p>
+    </div>
+  </div>
+
+  <div class="signal warn">
+    <div class="ico">!</div>
+    <div>
+      <b>信号 3:中文生态不是"附属品",而是性价比的真正主战场</b>
+      <p>DeepSeek、Qwen、GLM、Kimi 四家中国厂的模型,在 OpenRouter 上比同档国外模型便宜 3-10×,中文/编码能力却更好。波布这种中文用户,几乎没理由把日常任务给 GPT-5.4 跑。</p>
+    </div>
+  </div>
+
+  <div class="signal warn">
+    <div class="ico">!</div>
+    <div>
+      <b>信号 4:免费模型的"免费"是隐性付费——你的提示词被训练</b>
+      <p>所有 OpenRouter 免费模型(2026 状态)几乎都用你的输入做训练数据。这意味着<b>任何商业机密、客户隐私、未公开代码、合同内容都不能走免费层</b>。"1000 次/天"听起来多,但本质是你用数据换 token。</p>
+    </div>
+  </div>
+
+  <div class="signal bad">
+    <div class="ico">✕</div>
+    <div>
+      <b>信号 5:"全用旗舰模型"已经是反模式</b>
+      <p>GPT-5.5 ($5/$30) vs DeepSeek V4 Flash ($0.14/$0.28) 单价差 35-100×。Tyler 实测把 82% 任务给 Kimi K2.6 ($0.95/$4) 走,难任务才升级到 GPT-5.5,总成本省 94%。<b>不要让单点模型打所有仗</b>——这是 2026 年最值得调整的工程习惯。</p>
+    </div>
+  </div>
+
+  <div class="signal warn">
+    <div class="ico">!</div>
+    <div>
+      <b>信号 6:长上下文 ≠ 唯一解,要算单价 + 缓存折扣</b>
+      <p>1M context 的旗舰(Gemini 3.1 Pro)超出 200K 后价格翻倍($4/$18);MiniMax M3 超出 512K 翻倍。Anthropic Opus 4.7+ 用了新 tokenizer,同文本 token 数+35%——长文本的实际成本比标价高。<b>实际工作</b>:能拆短就别硬塞 1M context。</p>
+    </div>
+  </div>
+
+  <div class="signal good">
+    <div class="ico">✓</div>
+    <div>
+      <b>信号 7:工具调用(Agent)领域,Kimi K2.7 / GPT-5.3-Codex / DeepSeek V4 Pro 是 2026 主力</b>
+      <p>DeepSeek V4 Pro 第一次把 reasoning 整合到 tool-use(支持 thinking + non-thinking 模式),SWE-bench 80.6%,价格只有 Opus 4.8 的 1/11——这是 agent 路由的"主力"位置真正应该属于的模型。Kimi K2.7 Code (06-12 新) 走长上下文编码专项。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11. 实操建议 -->
+<section>
+  <h2><span class="idx">11</span> 给波布的实操建议</h2>
+  <p class="lede">基于你的偏好(中文优先、结构化、爱沉淀为技能)。</p>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h4>🎯 起步组合(立即可用)</h4>
+      <pre><span class="c"># ~/.hermes/router.json (示意)</span>
+{
+  <span class="n">"default"</span>: <span class="s">"deepseek/deepseek-v4-flash"</span>,
+  <span class="n">"routes"</span>: {
+    <span class="n">"chat"</span>:     <span class="s">"deepseek/deepseek-v4-flash"</span>,
+    <span class="n">"code"</span>:     <span class="s">"moonshotai/kimi-k2.6"</span>,
+    <span class="n">"zh-write"</span>: <span class="s">"qwen/qwen3.5-plus"</span>,
+    <span class="n">"long-doc"</span>: <span class="s">"minimax/minimax-m3"</span>,
+    <span class="n">"hard"</span>:     <span class="s">"anthropic/claude-opus-4.8"</span>,
+    <span class="n">"auto"</span>:     <span class="s">"openrouter/auto"</span>
+  },
+  <span class="n">"fallback"</span>: [<span class="s">"deepseek/deepseek-v4-pro"</span>, <span class="s">"anthropic/claude-sonnet-4.6"</span>]
+}</pre>
+    </div>
+    <div class="card">
+      <h4>📋 5 步落地</h4>
+      <ol style="font-size:13.5px;color:var(--ink-2);line-height:1.8;padding-left:20px;margin:0">
+        <li>注册 OpenRouter 账号,<b>充 $10</b>(解锁 1000 次/天免费)</li>
+        <li>用 <code>openrouter/auto</code> 试 1-2 天,看路由倾向</li>
+        <li>替换最常用的 2-3 个任务为"主力 + 兜底"</li>
+        <li>用 <code>models</code> fallback 数组加容错</li>
+        <li>每月看账单,把"用得多但没必要的"再降一档</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h4>🚫 不要做的事</h4>
+      <ul style="font-size:13.5px;color:var(--ink-2);line-height:1.8;padding-left:18px;margin:0">
+        <li>❌ 全部用 GPT-5.5 / Claude Opus("$200/月只是首付")</li>
+        <li>❌ 免费层跑商业数据(被训练)</li>
+        <li>❌ 把 OpenRouter 当唯一接入点(延迟敏感场景自建)</li>
+        <li>❌ 凭"哪个贵"判断质量(性价比表要反向读)</li>
+        <li>❌ 不做 prompt caching(尤其 Anthropic、DeepSeek)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>🔍 验证清单(每月一次)</h4>
+      <ul style="font-size:13.5px;color:var(--ink-2);line-height:1.8;padding-left:18px;margin:0">
+        <li>✓ 主力模型是不是还是当前性价比最高的</li>
+        <li>✓ OpenRouter 有没有出新模型(如 Qwen3.6、GPT-5.6)</li>
+        <li>✓ 账单最大的 3 个模型是不是任务真的需要</li>
+        <li>✓ 哪些任务被降到了"便宜但够用"档</li>
+        <li>✓ 哪些任务"降档后失败率明显上升"要回滚</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 12. 数据来源 -->
+<section>
+  <h2><span class="idx">12</span> 数据来源 & 验证状态</h2>
+  <div class="card" style="font-size:12.5px;color:var(--ink-2);line-height:1.7">
+    <p style="margin:0 0 8px">📅 <b>快照日期:</b>2026-06-15 · <b>价格验证:</b>morphllm.com 2026-06-09 交叉验证</p>
+    <p style="margin:0 0 6px"><b>主要来源:</b></p>
+    <ul style="margin:0;padding-left:18px">
+      <li>OpenRouter 官方:openrouter.ai/models(627+ 模型实时列表)</li>
+      <li>OpenRouter 文档:Auto Router、Model Fallbacks、Provider Sticky Routing</li>
+      <li>morphllm.com:12 API 提供商价格对比(2026-06-09 验证)</li>
+      <li>telnyx.com:4 个开源大模型(DeepSeek V3.2 / Kimi K2.5 / GLM-5 / MiniMax M2.5)对比</li>
+      <li>Tyler Folkman (substack):2,415 agent turn 跨 6 模型路由实测</li>
+      <li>Artificial Analysis (X):SWE-bench Pro 公开榜单</li>
+      <li>crazyrouter.com:2026 模型选用综合指南</li>
+      <li>teamday.ai:Top AI Models on OpenRouter 2026</li>
+      <li>blog.kyomind.tw:OpenRouter 免费模型深度分析(繁体中文)</li>
+      <li>知乎 zhuanlan / p/2008475216876179853:DeepSeek 性价比独一档(中文社区共识)</li>
+    </ul>
+    <p style="margin:14px 0 0;color:var(--accent-3)">⚠️ <b>数据时效性提示:</b>AI 模型生态变化快(月级别),建议每 1-2 个月重新评估。本报告基于 2026-06 数据快照。</p>
+  </div>
+</section>
+
+<footer>
+  <p>📁 <b>文件位置:</b><code>/Users/wukong/tmp/openrouter-model-combo-20260615/openrouter-combo-report.html</code></p>
+  <p>🦞 <b>研究方法:</b>收集来源(morphllm / OpenRouter 官方 / telnyx / Tyler Folkman) → 交叉验证价格 → 按任务分类 → 提取信号 → 输出三档组合方案</p>
+  <p>🐒 <b>下次更新建议:</b>2026-08,重点关注:GPT-5.6、Claude Fable 6、DeepSeek V5、Qwen3.7 进展</p>
+</footer>
+
+</div>
+</body>
+</html>

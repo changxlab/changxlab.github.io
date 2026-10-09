@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI 编码工具选型评估 · 正式汇报版（Opus 4.7 v3）</title>
+<style>
+  :root{
+    --bg:#0b1020; --panel:#11172b; --ink:#e9edf7; --muted:#9aa3bf;
+    --line:#1f2742; --accent:#7aa2ff; --warn:#ffb84d; --ok:#7ee0b8; --bad:#ff7a7a;
+    --chip:#1a2347;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",
+    "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.65;font-size:15.5px}
+  .wrap{max-width:1180px;margin:0 auto;padding:48px 32px 80px}
+  header.cover{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:36px}
+  .eyebrow{color:var(--accent);font-size:12px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px}
+  h1{font-size:30px;line-height:1.25;margin:0 0 10px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .meta span{background:var(--chip);color:#cfd6ee;padding:6px 10px;border-radius:6px;font-size:12px}
+  h2{font-size:20px;margin:36px 0 14px;padding-left:12px;border-left:3px solid var(--accent)}
+  h3{font-size:16px;margin:22px 0 8px;color:#dbe2f7}
+  p{margin:8px 0}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:14px 0}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:880px){.grid3,.grid2{grid-template-columns:1fr}}
+  .tool{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}
+  .tool h3{margin-top:0}
+  .tool .vendor{color:var(--muted);font-size:12px;margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top;text-align:left}
+  th{background:#162042;color:#cfd6ee;font-weight:600}
+  td.dim{color:var(--muted)}
+  .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;margin-right:6px}
+  .tag.ok{background:rgba(126,224,184,.12);color:var(--ok);border:1px solid rgba(126,224,184,.35)}
+  .tag.warn{background:rgba(255,184,77,.12);color:var(--warn);border:1px solid rgba(255,184,77,.4)}
+  .tag.bad{background:rgba(255,122,122,.12);color:var(--bad);border:1px solid rgba(255,122,122,.4)}
+  .tag.info{background:rgba(122,162,255,.12);color:var(--accent);border:1px solid rgba(122,162,255,.4)}
+  .callout{border:1px solid var(--line);border-left:3px solid var(--warn);background:#1a1d2e;padding:14px 16px;border-radius:8px;margin:14px 0;font-size:14px}
+  .callout.ok{border-left-color:var(--ok)}
+  .callout.bad{border-left-color:var(--bad)}
+  .callout b{color:#fff}
+  ul{margin:6px 0 6px 20px;padding:0}
+  li{margin:4px 0}
+  code{background:#1a2347;padding:1px 6px;border-radius:4px;font-size:12.5px;color:#cfd6ee}
+  .src{font-size:12px;color:var(--muted)}
+  .src a{color:var(--accent);text-decoration:none}
+  footer{margin-top:48px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12px}
+  .kpi{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .kpi span{background:var(--chip);padding:4px 10px;border-radius:6px;font-size:12px;color:#cfd6ee}
+  .legend{font-size:12px;color:var(--muted);margin-top:8px}
+  .hl{background:rgba(122,162,255,.12);padding:2px 6px;border-radius:4px;border:1px solid rgba(122,162,255,.35)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="cover">
+    <div class="eyebrow">Internal Briefing · For Executive / Architecture / Procurement Review</div>
+    <h1>AI 编码工具选型评估：GitHub Copilot · Qoder · TRAE</h1>
+    <div class="sub">面向工程落地的事实性对比 — 强调官方条款、计费模式、部署边界与服务能力</div>
+    <div class="meta">
+      <span>版本：Opus 4.7 · v3</span>
+      <span>日期：2026-05-27</span>
+      <span>口径：仅采用厂商官方公开条款</span>
+      <span>保留旧版：v2 不变</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>一、执行摘要</h2>
+    <div class="panel">
+      <p>三款工具在企业落地中代表三类不同选型路径：<b>GitHub Copilot</b> 代表大企业默认选项，条款体系最成熟、企业控制项最完整；<b>Qoder（阿里巴巴）</b>面向 Agentic 编码，目前以 SaaS 订阅 + Credits 计费，<span class="hl">官方公开材料中未发现 VPC/On-Prem 部署承诺</span>；<b>TRAE（字节跳动）</b>定位免费/低价 IDE，工程落地最敏感的是数据与合规边界。</p>
+      <p>本版重点修正三件事：</p>
+      <ul>
+        <li><b>区分 Qoder 与 Qodo</b>：Qoder 是阿里巴巴产品；Qodo 是另一家独立公司，二者不可混用。</li>
+        <li><b>VPC 能力据实标注</b>：仅当存在官方公开条款时标"已核实"，否则标"未核实公开支持"。</li>
+        <li><b>明确订阅 / 按量两种计费在企业财务上的差异</b>，并把"工程落地服务和经验"列为关键对比维度。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>二、三款工具官方依据与关键能力</h2>
+    <div class="grid3">
+
+      <div class="tool">
+        <h3>GitHub Copilot</h3>
+        <div class="vendor">厂商：GitHub / Microsoft</div>
+        <div class="kpi">
+          <span>Business $19/座位/月</span>
+          <span>Enterprise $39/座位/月</span>
+          <span>2026-06 起转 usage-based</span>
+        </div>
+        <p>面向企业的成熟产品线，提供 Business / Enterprise 两档企业计划，文档涵盖数据使用、IP 赔付、SSO/SCIM 等条款。</p>
+        <ul>
+          <li><span class="tag ok">已核实</span>企业计划默认<b>不将客户提示词与代码用于训练</b>。</li>
+          <li><span class="tag ok">已核实</span><b>SSO / SCIM / 审计日志 / 策略管理</b>等企业控制项。</li>
+          <li><span class="tag ok">已核实</span><b>IP Indemnification</b>（开启过滤后，对训练数据相关索赔提供赔付）。</li>
+          <li><span class="tag info">部署</span>云服务（GitHub.com）；<b>无 VPC/独立部署版</b>，但有 GHES/GHEC 路径与 Models 治理选项。</li>
+        </ul>
+        <p class="src">来源：GitHub Copilot Trust Center / Docs（docs.github.com/copilot）。</p>
+      </div>
+
+      <div class="tool">
+        <h3>Qoder</h3>
+        <div class="vendor">厂商：阿里巴巴（Alibaba）</div>
+        <div class="kpi">
+          <span>Free（含日限）</span>
+          <span>Pro $20/月起</span>
+          <span>Teams Plan（已上线）</span>
+        </div>
+        <p>面向 Agentic 编码的 IDE 产品。计费以订阅 + Credits 形式呈现，团队版提供集中计费、SSO 与共享 credits 等管控能力。</p>
+        <ul>
+          <li><span class="tag info">计费</span>订阅 + <b>Credits 按量</b>消耗，超出按 credit 计费。</li>
+          <li><span class="tag ok">已核实</span>Teams Plan 支持<b>集中计费 / SSO / 共享 credits</b>。</li>
+          <li><span class="tag warn">未核实公开支持</span><b>VPC / On-Prem / Air-Gapped 部署</b>：在 Qoder 官网与官方文档可访问范围内，<u>未见明确公开承诺</u>。需要直接向阿里商务确认 SLA 与部署边界。</li>
+          <li><span class="tag warn">需评估</span>数据出境、训练数据使用、IP 赔付等条款，企业法务侧应单独走条款审阅。</li>
+        </ul>
+        <p class="src">来源：qoder.com / qoder.com/product-service（公开页面）。第三方博客中的"on-prem"提法不构成官方承诺。</p>
+      </div>
+
+      <div class="tool">
+        <h3>TRAE</h3>
+        <div class="vendor">厂商：字节跳动（ByteDance）</div>
+        <div class="kpi">
+          <span>免费档</span>
+          <span>$3 / $10 档位</span>
+          <span>定位个人 / 小团队</span>
+        </div>
+        <p>低价/免费 IDE，定位面向个人与小团队，企业控制项与合规条款相对薄弱，是工程落地中合规面最需要谨慎的选项。</p>
+        <ul>
+          <li><span class="tag ok">价格优势</span>免费档 + 低价订阅，吸引轻量场景。</li>
+          <li><span class="tag warn">合规需评估</span>数据流向、训练数据使用与跨境合规需独立审阅。</li>
+          <li><span class="tag warn">企业控制项不足</span>SSO/SCIM/审计日志等公开材料覆盖较弱。</li>
+          <li><span class="tag bad">不建议</span>承载敏感代码 / 受监管业务。</li>
+        </ul>
+        <p class="src">来源：trae.ai 公开页面。</p>
+      </div>
+
+    </div>
+    <div class="legend">说明：标注 <span class="tag ok">已核实</span> 仅当对应内容能在厂商官方文档中找到明确表述；<span class="tag warn">未核实公开支持</span> 表示当前公开渠道未发现明确条款，应通过商务/法务渠道确认。</div>
+  </section>
+
+  <section>
+    <h2>三、订阅费用 vs 按量模式（财务侧）</h2>
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:18%">维度</th>
+            <th>GitHub Copilot</th>
+            <th>Qoder</th>
+            <th>TRAE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>计费形态</td>
+            <td>按座位订阅；2026-06 起转 <b>usage-based</b></td>
+            <td>订阅 + <b>Credits 按量</b></td>
+            <td>免费 + 低价订阅</td>
+          </tr>
+          <tr>
+            <td>典型档位</td>
+            <td>Business $19 / Enterprise $39（座/月）</td>
+            <td>Pro $20/月起；Teams Plan 集中计费</td>
+            <td>$3 / $10 档</td>
+          </tr>
+          <tr>
+            <td>预算可预测性</td>
+            <td><span class="tag ok">高</span>座位制成本明确</td>
+            <td><span class="tag warn">中</span>Credits 重度使用易超支</td>
+            <td><span class="tag ok">高</span>金额低</td>
+          </tr>
+          <tr>
+            <td>规模化采购</td>
+            <td>企业合同 + IP 赔付</td>
+            <td>Teams Plan + 商务议价</td>
+            <td><span class="tag warn">弱</span>企业采购体系不完善</td>
+          </tr>
+          <tr>
+            <td>长期 TCO 风险</td>
+            <td>转 usage-based 后需关注流量峰值</td>
+            <td>Agent 类任务高频调用，Credits 支出可能显著</td>
+            <td>低，但能力上限受限</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout"><b>关键提醒：</b>Copilot 在 2026-06 转 usage-based 后，企业需要重新建模 token / 请求级流量预算；Qoder 的 Credits 模型在 Agentic 高频任务下波动更大，建议先按团队抽样跑 4 周得到真实消耗曲线再做规模化预算。</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>四、VPC / 部署边界（合规与数据出境）</h2>
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:18%">部署能力</th>
+            <th>GitHub Copilot</th>
+            <th>Qoder</th>
+            <th>TRAE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>VPC 部署</td>
+            <td><span class="tag bad">不提供</span>云服务形态</td>
+            <td><span class="tag warn">未核实公开支持</span>官方公开材料未见承诺</td>
+            <td><span class="tag bad">不提供</span></td>
+          </tr>
+          <tr>
+            <td>On-Prem / Air-Gapped</td>
+            <td><span class="tag bad">不提供</span></td>
+            <td><span class="tag warn">未核实公开支持</span></td>
+            <td><span class="tag bad">不提供</span></td>
+          </tr>
+          <tr>
+            <td>数据出境</td>
+            <td>Microsoft 云（区域化可控，企业版条款明确）</td>
+            <td>阿里云体系，需就具体租户与区域确认</td>
+            <td>字节体系，需独立合规评估</td>
+          </tr>
+          <tr>
+            <td>不用于训练</td>
+            <td><span class="tag ok">企业版默认承诺</span></td>
+            <td>需逐条核实条款</td>
+            <td>需逐条核实条款</td>
+          </tr>
+          <tr>
+            <td>SSO / SCIM / 审计</td>
+            <td><span class="tag ok">完整</span></td>
+            <td><span class="tag ok">Teams Plan 提供 SSO</span></td>
+            <td><span class="tag warn">薄弱</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout bad"><b>VPC 关键澄清：</b>之前流传的"Qoder 支持 VPC / on-prem"在官方公开材料中<u>未找到对应条款</u>。建议在任何敏感场景上线前，通过阿里官方商务渠道获取书面 SLA 与部署边界说明，再决策。</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>五、工程落地服务与经验（决定项目能否真正跑起来）</h2>
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%">维度</th>
+            <th>GitHub Copilot</th>
+            <th>Qoder</th>
+            <th>TRAE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>企业实施服务</td>
+            <td>GitHub Professional Services + MSFT 服务体系，落地参考案例丰富</td>
+            <td>阿里云服务体系可介入；公开案例以国内大客户为主</td>
+            <td><span class="tag warn">薄弱</span>企业实施体系不成熟</td>
+          </tr>
+          <tr>
+            <td>培训 / 启用</td>
+            <td>官方学院 + 大量第三方课程</td>
+            <td>厂商培训 + 国内社区活跃</td>
+            <td>主要靠社区</td>
+          </tr>
+          <tr>
+            <td>集成工具链</td>
+            <td>VS Code / JetBrains / GitHub 全栈最深</td>
+            <td>独立 IDE，Agentic 路径完整</td>
+            <td>独立 IDE</td>
+          </tr>
+          <tr>
+            <td>大规模团队治理</td>
+            <td><span class="tag ok">最成熟</span></td>
+            <td><span class="tag info">Teams Plan 已具雏形</span></td>
+            <td><span class="tag warn">弱</span></td>
+          </tr>
+          <tr>
+            <td>失败/回退路径</td>
+            <td>体量大、可平稳退订</td>
+            <td>需评估 Credits 沉没成本</td>
+            <td>低成本、易退出</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout ok"><b>结论：</b>"工程落地服务和经验"是这次评估的胜负手。能不能真正跑起来，比单点能力更重要。Copilot 在大型组织中胜在<b>条款 + 治理 + 服务</b>三件事都成熟；Qoder 在 Agentic 能力上有差异化，但企业落地的<b>VPC / 合规边界 / 实施服务</b>需在采购前书面落实；TRAE 适合个人与轻量场景，不建议承载受监管业务。</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>六、推荐路径</h2>
+    <div class="grid2">
+      <div class="panel">
+        <h3>路径 A · 大企业默认</h3>
+        <p><b>主选 GitHub Copilot Business / Enterprise</b>，原因：</p>
+        <ul>
+          <li>条款最成熟（不训练、IP 赔付、SSO/SCIM）</li>
+          <li>财务侧最可预测（短期座位制；usage-based 来临前可建模）</li>
+          <li>实施与培训体系完善</li>
+        </ul>
+        <p>风险点：2026-06 转 usage-based 后流量预算需重新建模。</p>
+      </div>
+      <div class="panel">
+        <h3>路径 B · Agentic 试点</h3>
+        <p><b>Qoder 作为受控试点</b>，前提：</p>
+        <ul>
+          <li>书面确认 VPC / 数据出境 / 不用于训练等条款</li>
+          <li>限定试点团队与代码库范围（非敏感）</li>
+          <li>跑 4 周 Credits 真实消耗曲线，再决策是否扩产</li>
+        </ul>
+        <p>不建议在条款未落实前承载核心代码与受监管业务。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>七、修正记录（vs 旧版本）</h2>
+    <div class="panel">
+      <ul>
+        <li>修正 <b>Qoder ≠ Qodo</b>：旧版混用了两家公司，本版按厂商分别核实。</li>
+        <li>修正 <b>Qoder VPC 表述</b>：从"支持"改为"未核实公开支持"，避免事实性误导。</li>
+        <li>新增 <b>订阅 / 按量计费财务建模</b>章节。</li>
+        <li>新增 <b>工程落地服务与经验</b>作为关键对比维度。</li>
+        <li>明确 <b>Copilot 2026-06 转 usage-based</b> 的 TCO 影响。</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    内部汇报材料 · 仅引用厂商官方公开条款 · 任何不确定条款必须通过商务/法务渠道书面确认后再决策<br/>
+    生成模型：anthropic/claude-opus-4.7 · 完成后切回默认模型 · 旧版本 v2 保留不变
+  </footer>
+
+</div>
+</body>
+</html>

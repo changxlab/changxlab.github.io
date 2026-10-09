@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>离散数学 · 10 页练习题（在线版）</title>
+<style>
+  :root {
+    --bg: #0f1320;
+    --bg-soft: #171c2e;
+    --panel: #1d2438;
+    --panel-2: #232c45;
+    --ink: #e8ecf6;
+    --ink-soft: #aab4cf;
+    --ink-dim: #7a85a3;
+    --line: #2c3553;
+    --brand: #6ea8fe;
+    --brand-2: #9b8cff;
+    --good: #4ade80;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --chip: #2a3550;
+    --radius: 16px;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(110,168,254,.12), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(155,140,255,.10), transparent 55%),
+      var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Layout ---------- */
+  .wrap { max-width: 920px; margin: 0 auto; padding: 28px 20px 120px; }
+
+  header.hero {
+    text-align: center;
+    padding: 18px 0 10px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12.5px; letter-spacing: .04em;
+    color: var(--ink-soft);
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line);
+    padding: 6px 12px; border-radius: 999px;
+  }
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px rgba(74,222,128,.18); }
+  h1.title {
+    font-size: clamp(26px, 4.4vw, 40px);
+    margin: 16px 0 6px;
+    letter-spacing: -.01em;
+    background: linear-gradient(120deg, #fff, var(--brand) 55%, var(--brand-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .subtitle { color: var(--ink-soft); font-size: 15px; margin: 0; }
+  .meta-row { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .meta-row .chip {
+    font-size: 12px; color: var(--ink-soft);
+    background: var(--panel); border: 1px solid var(--line);
+    padding: 5px 10px; border-radius: 8px;
+  }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    position: sticky; top: 0; z-index: 50;
+    margin: 22px 0 0;
+    backdrop-filter: blur(10px);
+    background: rgba(15,19,32,.72);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px;
+    box-shadow: var(--shadow);
+  }
+  .progress {
+    height: 6px; border-radius: 999px; background: var(--panel-2); overflow: hidden; margin-bottom: 10px;
+  }
+  .progress > span { display: block; height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--brand), var(--brand-2)); transition: width .3s ease; }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab {
+    font-size: 12.5px; color: var(--ink-soft);
+    background: var(--panel); border: 1px solid var(--line);
+    padding: 6px 10px; border-radius: 9px; cursor: pointer; user-select: none;
+    transition: .15s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .tab:hover { color: var(--ink); border-color: #3a466b; transform: translateY(-1px); }
+  .tab.active { color: #0c1020; background: linear-gradient(180deg, #cfe0ff, var(--brand)); border-color: transparent; font-weight: 600; }
+  .tab .n { font-variant-numeric: tabular-nums; opacity: .8; }
+  .tab.done::after { content: "✓"; color: var(--good); font-weight: 700; }
+  .tab.active.done::after { color: #0c5132; }
+
+  .actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .btn {
+    font-size: 12.5px; color: var(--ink);
+    background: var(--panel-2); border: 1px solid var(--line);
+    padding: 7px 12px; border-radius: 9px; cursor: pointer; transition: .15s;
+  }
+  .btn:hover { border-color: var(--brand); color: #fff; }
+  .btn.primary { background: linear-gradient(180deg, var(--brand), #4f86e8); border-color: transparent; color: #08111f; font-weight: 600; }
+
+  /* ---------- Pages ---------- */
+  .page { display: none; animation: fade .35s ease; }
+  .page.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .page-head {
+    margin: 26px 0 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  }
+  .page-head .pno {
+    font-family: var(--mono); font-size: 13px; color: #08111f; font-weight: 700;
+    background: linear-gradient(180deg, var(--brand), var(--brand-2));
+    padding: 4px 10px; border-radius: 8px;
+  }
+  .page-head h2 { font-size: 22px; margin: 0; letter-spacing: -.01em; }
+  .page-head .tag { font-size: 12px; color: var(--ink-dim); }
+
+  /* ---------- Question card ---------- */
+  .q {
+    background: linear-gradient(180deg, var(--panel), var(--bg-soft));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 18px 16px;
+    margin: 0 0 16px;
+    box-shadow: 0 1px 0 rgba(255,255,255,.02) inset;
+  }
+  .q-head { display: flex; align-items: flex-start; gap: 12px; }
+  .q-num {
+    flex: none; font-family: var(--mono); font-size: 12.5px; font-weight: 700;
+    color: var(--brand); background: rgba(110,168,254,.10);
+    border: 1px solid rgba(110,168,254,.30);
+    width: 30px; height: 30px; border-radius: 9px;
+    display: grid; place-items: center;
+  }
+  .q-type {
+    font-size: 11px; color: var(--ink-dim); letter-spacing: .03em;
+    border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; margin-left: 8px;
+    vertical-align: middle; white-space: nowrap;
+  }
+  .q-body { flex: 1; }
+  .q-body .stem { margin: 0 0 4px; }
+  .q-body ol.opts { margin: 8px 0 0; padding-left: 22px; }
+  .q-body ol.opts li { margin: 2px 0; color: var(--ink-soft); }
+
+  code, .m {
+    font-family: var(--mono);
+    background: rgba(155,140,255,.10);
+    border: 1px solid rgba(155,140,255,.18);
+    padding: 1px 6px; border-radius: 6px; font-size: .92em; color: #d8d2ff;
+  }
+  pre {
+    font-family: var(--mono); font-size: 12.5px; color: var(--ink);
+    background: #11162a; border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; overflow-x: auto; margin: 10px 0 0;
+  }
+
+  .toggle {
+    margin-top: 12px;
+    font-size: 12.5px; color: var(--brand);
+    background: transparent; border: 1px dashed rgba(110,168,254,.4);
+    padding: 6px 12px; border-radius: 9px; cursor: pointer; transition: .15s;
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .toggle:hover { background: rgba(110,168,254,.08); border-style: solid; }
+  .toggle .arr { transition: transform .2s; }
+  .toggle.open .arr { transform: rotate(90deg); }
+
+  .ans {
+    display: none; margin-top: 12px;
+    border-left: 3px solid var(--good);
+    background: rgba(74,222,128,.06);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 14px;
+  }
+  .ans.show { display: block; animation: fade .25s ease; }
+  .ans .lbl { font-size: 11.5px; letter-spacing: .05em; color: var(--good); font-weight: 700; margin-bottom: 4px; }
+  .ans p { margin: 4px 0; color: var(--ink); }
+  .ans .why { color: var(--ink-soft); font-size: 13.5px; }
+
+  table.tt { border-collapse: collapse; margin: 8px 0 0; font-family: var(--mono); font-size: 12.5px; }
+  table.tt th, table.tt td { border: 1px solid var(--line); padding: 4px 10px; text-align: center; }
+  table.tt th { background: var(--panel-2); color: var(--ink-soft); }
+
+  .page-foot { display: flex; justify-content: space-between; gap: 12px; margin: 26px 0 0; }
+  .navbtn {
+    font-size: 13px; color: var(--ink);
+    background: var(--panel-2); border: 1px solid var(--line);
+    padding: 10px 16px; border-radius: 11px; cursor: pointer; transition: .15s;
+  }
+  .navbtn:hover:not(:disabled) { border-color: var(--brand); color: #fff; transform: translateY(-1px); }
+  .navbtn:disabled { opacity: .35; cursor: not-allowed; }
+
+  footer.site { text-align: center; color: var(--ink-dim); font-size: 12px; margin-top: 40px; }
+  footer.site a { color: var(--ink-soft); }
+
+  ::selection { background: rgba(110,168,254,.35); }
+  @media (max-width: 560px) {
+    .wrap { padding: 18px 12px 110px; }
+    .q { padding: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="badge"><span class="dot"></span> 同等学力硕士 · 离散数学</span>
+    <h1 class="title">离散数学 10 页练习题</h1>
+    <p class="subtitle">基于李昊老师 8 讲课件（v2）· 命题逻辑 → 集合论 → 代数结构 全覆盖</p>
+    <div class="meta-row">
+      <span class="chip">10 页 · 70 题</span>
+      <span class="chip">含详细解析</span>
+      <span class="chip">可隐藏/显示答案</span>
+      <span class="chip">2026-06-27</span>
+    </div>
+  </header>
+
+  <nav class="toolbar">
+    <div class="progress"><span id="bar"></span></div>
+    <div class="tabs" id="tabs"></div>
+    <div class="actions">
+      <button class="btn primary" id="revealAll">显示本页答案</button>
+      <button class="btn" id="hideAll">隐藏本页答案</button>
+      <button class="btn" id="markDone">标记本页已完成 ✓</button>
+      <button class="btn" id="resetAll">重置进度</button>
+    </div>
+  </nav>
+
+  <main id="pages"></main>
+
+  <footer class="site">
+    本练习题由学习课件 v2 整理生成 · 仅供复习使用 ·
+    <a href="离散数学-20页学习课件-v2.md">查看配套课件</a>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   题库数据：10 页，每页约 7 题
+   type: 题型；stem: 题干(HTML)；ans: 答案(HTML)
+   ============================================================ */
+const PAGES = [
+  {
+    title: "第 1 页 · 命题逻辑基础",
+    tag: "第1讲 · 命题 / 联结词 / 真值表 / 合式公式",
+    questions: [
+      { type:"判断", stem:`下列哪些是命题？为每句判断真假或说明原因：<br>① <code>2+2=3</code> ② “华盛顿是美国首都” ③ “请关门！” ④ “x&gt;3” ⑤ “我正在说假话”`,
+        ans:`①是命题（假）；②是命题（真）；③祈使句，<b>不是</b>命题；④含自由变量 x，真假不定，<b>不是</b>命题；⑤悖论，<b>不是</b>命题。<div class="why">命题须是能唯一确定真假的陈述句。</div>` },
+      { type:"真值表", stem:`写出 <code>P→Q</code> 的真值表，并指出它何时为假。`,
+        ans:`<table class="tt"><tr><th>P</th><th>Q</th><th>P→Q</th></tr><tr><td>T</td><td>T</td><td>T</td></tr><tr><td>T</td><td>F</td><td>F</td></tr><tr><td>F</td><td>T</td><td>T</td></tr><tr><td>F</td><td>F</td><td>T</td></tr></table><p class="why">仅当 P=T 且 Q=F 时为假，其余皆真。</p>` },
+      { type:"优先级", stem:`按联结词优先级为下式加全部括号：<code>¬P ∨ Q ∧ R → S</code>`,
+        ans:`优先级 <code>¬ &gt; ∧ &gt; ∨ &gt; → &gt; ↔</code>，故为 <code>((¬P) ∨ (Q ∧ R)) → S</code>。` },
+      { type:"分类", stem:`判断下列公式属于永真式 / 永假式 / 可满足式：<br>① <code>P ∨ ¬P</code> ② <code>P ∧ ¬P</code> ③ <code>P → Q</code>`,
+        ans:`①永真式（重言式）；②永假式（矛盾式）；③可满足式（非永真非永假，如 P=F 时为真）。` },
+      { type:"合式公式", stem:`下列哪些是合式公式（wff）？<br>① <code>(P∧Q)</code> ② <code>¬¬P</code> ③ <code>P∧∨Q</code> ④ <code>(P→(Q∨R))</code>`,
+        ans:`①②④ 是 wff；③ <code>P∧∨Q</code> 连用两个二元联结词，<b>不是</b> wff。` },
+      { type:"符号化", stem:`将“只有努力学习，才能通过考试”符号化（P：努力学习；Q：通过考试）。`,
+        ans:`“只有 P 才 Q”即 P 是 Q 的必要条件：<code>Q → P</code>（等价 <code>¬P → ¬Q</code>）。<div class="why">区别于“只要 P 就 Q”= <code>P→Q</code>。</div>` },
+      { type:"异或", stem:`用真值表说明 <code>P ⊕ Q</code> 与 <code>¬(P ↔ Q)</code> 等值。`,
+        ans:`两者真值表完全相同：仅当 P、Q 真值不同时为 T。故 <code>P⊕Q ⇔ ¬(P↔Q)</code>。` },
+    ]
+  },
+  {
+    title: "第 2 页 · 等值式与等值演算",
+    tag: "第2讲 · 24 个等值式 / 化归 / 等值证明",
+    questions: [
+      { type:"化归", stem:`化简并仅用 <code>¬, ∧, ∨</code> 表示：<code>P → (Q → P)</code>`,
+        ans:`<code>P→(Q→P) ⇔ ¬P ∨ (¬Q ∨ P) ⇔ ¬P ∨ P ∨ ¬Q ⇔ T</code>。该式为<b>永真式</b>。` },
+      { type:"等值演算", stem:`证明 <code>P → (Q∧R)</code> ⇔ <code>(P→Q) ∧ (P→R)</code>。`,
+        ans:`左 = <code>¬P∨(Q∧R)</code>；由分配律 = <code>(¬P∨Q)∧(¬P∨R)</code> = <code>(P→Q)∧(P→R)</code> = 右。证毕。` },
+      { type:"德摩根", stem:`化简 <code>¬(P ∨ (¬P ∧ Q))</code>。`,
+        ans:`<code>¬(P∨(¬P∧Q)) ⇔ ¬P ∧ ¬(¬P∧Q) ⇔ ¬P ∧ (P∨¬Q) ⇔ (¬P∧P)∨(¬P∧¬Q) ⇔ ¬P∧¬Q</code>。` },
+      { type:"吸收律", stem:`化简 <code>(P∧Q) ∨ (P∧¬Q) ∨ (¬P∧Q)</code>。`,
+        ans:`前两项 = <code>P∧(Q∨¬Q) = P</code>；故原式 = <code>P ∨ (¬P∧Q) = P∨Q</code>（用 <code>P∨(¬P∧Q)=P∨Q</code>）。` },
+      { type:"逆否", stem:`写出 <code>P → ¬Q</code> 的逆否命题，并说明二者关系。`,
+        ans:`逆否命题为 <code>Q → ¬P</code>。逆否等价：<code>P→¬Q ⇔ ¬(¬Q)→¬P ⇔ Q→¬P</code>，二者恒等值。` },
+      { type:"等价化归", stem:`将 <code>P ↔ Q</code> 用两种不同方式展开。`,
+        ans:`① <code>(P→Q)∧(Q→P)</code>；② <code>(P∧Q)∨(¬P∧¬Q)</code>。两者都等值于 <code>P↔Q</code>。` },
+      { type:"判定", stem:`判断 <code>(P→Q) → (¬Q→¬P)</code> 是否永真。`,
+        ans:`<code>¬Q→¬P ⇔ P→Q</code>，故整式 = <code>(P→Q)→(P→Q) ⇔ T</code>，<b>永真式</b>。` },
+    ]
+  },
+  {
+    title: "第 3 页 · 重言蕴涵与推理",
+    tag: "第2讲 · MP / MT / HS / 析取三段论 / CP 规则",
+    questions: [
+      { type:"推理", stem:`用推理规则证明：前提 <code>P→Q, Q→R, P</code>，结论 <code>R</code>。`,
+        ans:`<pre>(1) P        P
+(2) P→Q      P
+(3) Q        T(1)(2) MP
+(4) Q→R      P
+(5) R        T(3)(4) MP</pre>` },
+      { type:"析取三段论", stem:`已知 <code>P∨Q</code> 与 <code>¬P</code>，可推出什么？写出规则名。`,
+        ans:`推出 <code>Q</code>。规则：<b>析取三段论</b> <code>¬P∧(P∨Q) ⇒ Q</code>。` },
+      { type:"拒取式", stem:`已知 <code>P→Q</code> 与 <code>¬Q</code>，结论是？`,
+        ans:`<code>¬P</code>。规则：<b>拒取式 MT</b>，<code>¬Q∧(P→Q) ⇒ ¬P</code>。` },
+      { type:"CP规则", stem:`用 CP（条件论证）证明：前提 <code>P→(Q→R)</code>，结论 <code>(P∧Q)→R</code>。`,
+        ans:`<pre>(1) P∧Q      P(附加前提)
+(2) P        T(1) 化简
+(3) Q        T(1) 化简
+(4) P→(Q→R)  P
+(5) Q→R      T(2)(4) MP
+(6) R        T(3)(5) MP
+(7) (P∧Q)→R  CP(1)(6)</pre>` },
+      { type:"构造性二难", stem:`已知 <code>P∨Q</code>、<code>P→R</code>、<code>Q→R</code>，结论？`,
+        ans:`<code>R</code>。规则：<b>构造性二难</b> <code>(P∨Q)∧(P→R)∧(Q→R) ⇒ R</code>。` },
+      { type:"应用题", stem:`两扇门一生一死，两名守卫一真一假。只能问一个问题，如何确定生门？`,
+        ans:`问任一守卫：“如果我问另一位‘这是生门吗’，他会说‘是’吗？”——回答“是”则此门为死门，回答“否”则为生门。<div class="why">本质是用一真一假构造异或，两次取反抵消。</div>` },
+      { type:"判定有效性", stem:`论证“若下雨则地湿；地湿；所以下雨”是否有效？`,
+        ans:`<b>无效</b>。这是肯定后件谬误：<code>(P→Q)∧Q</code> 不能推出 P（地湿可能由别的原因造成）。` },
+    ]
+  },
+  {
+    title: "第 4 页 · 范式",
+    tag: "第3讲 · 析取/合取范式 · 主析取/主合取范式",
+    questions: [
+      { type:"析取范式", stem:`求 <code>P → (Q ∧ R)</code> 的析取范式。`,
+        ans:`<code>¬P ∨ (Q∧R)</code> 即为析取范式（两个合取式的析取）。` },
+      { type:"合取范式", stem:`求 <code>(P∧Q) ∨ R</code> 的合取范式。`,
+        ans:`由分配律：<code>(P∨R) ∧ (Q∨R)</code>。` },
+      { type:"主析取范式", stem:`求 <code>P → Q</code> 的主析取范式（以小项表示）。`,
+        ans:`真值为 T 的赋值：(0,0)(0,1)(1,1)。<br>主析取范式 = <code>m₀₀ ∨ m₀₁ ∨ m₁₁ = (¬P∧¬Q) ∨ (¬P∧Q) ∨ (P∧Q)</code>。` },
+      { type:"主合取范式", stem:`求 <code>P → Q</code> 的主合取范式（以大项表示）。`,
+        ans:`真值为 F 的赋值：(1,0)。<br>主合取范式 = <code>M₁₀ = ¬P ∨ Q</code>。` },
+      { type:"互补关系", stem:`若一个含 2 个变元的公式主析取范式有 3 个小项，主合取范式有几个大项？`,
+        ans:`共 <code>2²=4</code> 个极小项位置。小项占 3 个 → 大项占 <code>4−3 = 1</code> 个。<div class="why">小项对应真行，大项对应假行，二者互补。</div>` },
+      { type:"主范式应用", stem:`若某公式主析取范式包含全部 <code>2ⁿ</code> 个小项，该公式是？`,
+        ans:`<b>永真式</b>（重言式）。相应地，主合取范式为空（无大项）。` },
+      { type:"完备集", stem:`下列哪些是极小联结词完备集？<br>① <code>{¬,∧}</code> ② <code>{∧,∨}</code> ③ <code>{↑}</code>（与非）④ <code>{→}</code>`,
+        ans:`①③ 是完备集；④ 单独 <code>{→}</code> 不完备（缺否定能力）；② <code>{∧,∨}</code> 也不完备（无法表达否定）。常见完备集还有 <code>{¬,∨}</code>、<code>{¬,→}</code>、<code>{↓}</code>。` },
+    ]
+  },
+  {
+    title: "第 5 页 · 谓词逻辑（一阶逻辑）",
+    tag: "第4讲 · 个体词 / 谓词 / 量词 / 前束范式",
+    questions: [
+      { type:"符号化", stem:`符号化“所有人都会死”（P(x):x是人；D(x):x会死，全总个体域）。`,
+        ans:`<code>∀x(P(x) → D(x))</code>。<div class="why">全称量词常配蕴涵，不用合取。</div>` },
+      { type:"符号化", stem:`符号化“有的学生很聪明”（S(x):x是学生；C(x):x聪明）。`,
+        ans:`<code>∃x(S(x) ∧ C(x))</code>。<div class="why">存在量词常配合取，不用蕴涵。</div>` },
+      { type:"量词否定", stem:`求 <code>¬∀x(P(x) → Q(x))</code> 的等值式。`,
+        ans:`<code>∃x¬(P(x)→Q(x)) ⇔ ∃x(P(x) ∧ ¬Q(x))</code>。` },
+      { type:"量词顺序", stem:`说明 <code>∀x∃yL(x,y)</code> 与 <code>∃y∀xL(x,y)</code> 含义是否相同。`,
+        ans:`<b>不同</b>。前者：对每个 x 都存在某个 y（y 可随 x 变）；后者：存在一个 y 对所有 x 都成立（y 固定且更强）。后者 ⇒ 前者，但反之不成立。` },
+      { type:"推理", stem:`苏格拉底三段论：前提 <code>∀x(P(x)→D(x))</code>、<code>P(S)</code>，求证 <code>D(S)</code>。`,
+        ans:`<pre>(1) ∀x(P(x)→D(x))  P
+(2) P(S)            P
+(3) P(S)→D(S)       T(1) UI 全称特化
+(4) D(S)            T(2)(3) MP</pre>` },
+      { type:"量词分配", stem:`下列哪个等值成立？<br>① <code>∀x(A(x)∧B(x)) ⇔ ∀xA(x)∧∀xB(x)</code> ② <code>∀x(A(x)∨B(x)) ⇔ ∀xA(x)∨∀xB(x)</code>`,
+        ans:`① <b>成立</b>（∀ 对 ∧ 可分配）；② <b>不成立</b>（∀ 对 ∨ 不可分配，只有 ⇐ 方向）。对偶地，∃ 对 ∨ 可分配，对 ∧ 不可。` },
+      { type:"辖域", stem:`指出 <code>∀x(P(x) → ∃yQ(x,y))</code> 中各量词的辖域及约束/自由变元。`,
+        ans:`∀x 辖域是整个 <code>P(x)→∃yQ(x,y)</code>；∃y 辖域是 <code>Q(x,y)</code>。x、y 均为<b>约束变元</b>，无自由变元（闭式）。` },
+    ]
+  },
+  {
+    title: "第 6 页 · 集合及其运算",
+    tag: "第5讲 · 集合运算 / 恒等式 / 容斥 / 幂集",
+    questions: [
+      { type:"运算", stem:`设 A={1,2,3,4}, B={3,4,5,6}。求 A∪B、A∩B、A−B、A⊕B。`,
+        ans:`A∪B = {1,2,3,4,5,6}；A∩B = {3,4}；A−B = {1,2}；A⊕B = (A−B)∪(B−A) = {1,2,5,6}。` },
+      { type:"幂集", stem:`求 A={a,b,c} 的幂集 P(A) 及其元素个数。`,
+        ans:`<code>|P(A)| = 2³ = 8</code>。P(A) = { ∅,{a},{b},{c},{a,b},{a,c},{b,c},{a,b,c} }。` },
+      { type:"恒等式", stem:`证明 <code>A − (B∪C) = (A−B) ∩ (A−C)</code>。`,
+        ans:`x∈左 ⇔ x∈A ∧ x∉(B∪C) ⇔ x∈A ∧ (x∉B ∧ x∉C) ⇔ (x∈A∧x∉B)∧(x∈A∧x∉C) ⇔ x∈右。证毕（德摩根律的集合版）。` },
+      { type:"容斥", stem:`一班 30 人，选修数学 18 人、英语 15 人、两者都选 8 人。两门都没选的有几人？`,
+        ans:`选了至少一门 = <code>18+15−8 = 25</code>；都没选 = <code>30−25 = 5</code> 人。` },
+      { type:"对称差", stem:`证明对称差满足 <code>A⊕A = ∅</code> 且 <code>A⊕∅ = A</code>。`,
+        ans:`A⊕A = (A−A)∪(A−A) = ∅；A⊕∅ = (A−∅)∪(∅−A) = A∪∅ = A。<div class="why">⊕ 以 ∅ 为单位元、每个集合自逆。</div>` },
+      { type:"笛卡尔积", stem:`设 A={1,2}, B={x,y}。写出 A×B，并说明 A×B 与 B×A 是否相等。`,
+        ans:`A×B = {⟨1,x⟩,⟨1,y⟩,⟨2,x⟩,⟨2,y⟩}。一般 <code>A×B ≠ B×A</code>（有序对顺序不同）。` },
+      { type:"判断", stem:`判断真假：① <code>∅ ⊆ A</code> ② <code>∅ ∈ {∅}</code> ③ <code>{1,2} ∈ {1,2,3}</code>`,
+        ans:`①真（空集是任何集合子集）；②真（∅ 是 {∅} 的元素）；③<b>假</b>（{1,2} 是子集而非元素，应为 ⊆ 才对，且 {1,2}⊆{1,2,3} 才真）。` },
+    ]
+  },
+  {
+    title: "第 7 页 · 二元关系（上）",
+    tag: "第6讲 · 笛卡尔积 / 关系矩阵 / 五大性质 / 合成",
+    questions: [
+      { type:"计数", stem:`若 |A|=3，A 上可定义多少个二元关系？`,
+        ans:`A×A 有 <code>3²=9</code> 个有序对，每个关系是其子集，故共 <code>2⁹ = 512</code> 个。` },
+      { type:"性质判断", stem:`A={1,2,3}，R={⟨1,1⟩,⟨2,2⟩,⟨3,3⟩,⟨1,2⟩,⟨2,1⟩}。判断自反、对称、传递。`,
+        ans:`自反：含全部 ⟨i,i⟩，<b>是</b>；对称：⟨1,2⟩与⟨2,1⟩成对，<b>是</b>；传递：⟨1,2⟩∧⟨2,1⟩需⟨1,1⟩✓，⟨2,1⟩∧⟨1,2⟩需⟨2,2⟩✓，<b>是</b>。故 R 是等价关系。` },
+      { type:"关系矩阵", stem:`R={⟨1,2⟩,⟨2,3⟩,⟨1,3⟩} 在 A={1,2,3} 上，写出关系矩阵 M_R。`,
+        ans:`<pre>     1 2 3
+1  [ 0 1 1 ]
+2  [ 0 0 1 ]
+3  [ 0 0 0 ]</pre><p class="why">上三角，是一个偏序（严格小于）的雏形。</p>` },
+      { type:"合成", stem:`R={⟨1,2⟩,⟨2,3⟩}, S={⟨2,4⟩,⟨3,5⟩}。求 R∘S（先 R 后 S）。`,
+        ans:`<code>R∘S = {⟨x,z⟩ | ∃y, ⟨x,y⟩∈R ∧ ⟨y,z⟩∈S}</code>。⟨1,2⟩→⟨2,4⟩ 得 ⟨1,4⟩；⟨2,3⟩→⟨3,5⟩ 得 ⟨2,5⟩。故 R∘S = {⟨1,4⟩,⟨2,5⟩}。` },
+      { type:"逆关系", stem:`R={⟨1,2⟩,⟨2,3⟩,⟨3,1⟩}，求 R⁻¹。`,
+        ans:`R⁻¹ = {⟨2,1⟩,⟨3,2⟩,⟨1,3⟩}（每个有序对前后对调）。` },
+      { type:"性质等价条件", stem:`用矩阵/集合语言写出“传递”和“对称”的等价条件。`,
+        ans:`对称：<code>R = R⁻¹</code>；传递：<code>R∘R ⊆ R</code>（即 <code>R² ⊆ R</code>）。` },
+      { type:"反对称", stem:`判断 R={⟨1,1⟩,⟨1,2⟩,⟨2,3⟩} 是否反对称。`,
+        ans:`<b>是</b>。反对称要求 <code>R∩R⁻¹ ⊆ I_A</code>：除对角线 ⟨1,1⟩ 外没有成对的 ⟨a,b⟩ 与 ⟨b,a⟩ 同时出现。` },
+    ]
+  },
+  {
+    title: "第 8 页 · 二元关系（下）与函数",
+    tag: "第6讲 · 闭包 / 等价类 / 偏序哈斯图 · 函数性质",
+    questions: [
+      { type:"传递闭包", stem:`A={1,2,3}, R={⟨1,2⟩,⟨2,3⟩}。求传递闭包 t(R)。`,
+        ans:`R² = {⟨1,3⟩}；R³ = ∅。<code>t(R) = R∪R²∪R³ = {⟨1,2⟩,⟨2,3⟩,⟨1,3⟩}</code>。` },
+      { type:"自反/对称闭包", stem:`同上 R，求自反闭包 r(R) 与对称闭包 s(R)。`,
+        ans:`r(R) = R∪I_A = {⟨1,1⟩,⟨2,2⟩,⟨3,3⟩,⟨1,2⟩,⟨2,3⟩}；s(R) = R∪R⁻¹ = {⟨1,2⟩,⟨2,1⟩,⟨2,3⟩,⟨3,2⟩}。` },
+      { type:"等价类", stem:`Z 上定义 <code>aRb ⇔ a≡b (mod 3)</code>。写出商集 Z/R。`,
+        ans:`三个等价类：[0]={…,−3,0,3,…}, [1]={…,−2,1,4,…}, [2]={…,−1,2,5,…}。<code>Z/R = {[0],[1],[2]}</code>。` },
+      { type:"哈斯图", stem:`画出 ⟨{1,2,3,6}, 整除⟩ 的哈斯图（用文字描述层级与连边）。`,
+        ans:`底层 1；中层 2、3（均覆盖 1）；顶层 6（覆盖 2 和 3）。连边：1—2、1—3、2—6、3—6。去自反环，仅画覆盖关系。` },
+      { type:"特殊元素", stem:`上题偏序集 ⟨{1,2,3,6}, |⟩ 中，求最小元、最大元、极大元。`,
+        ans:`最小元 = 1（整除所有）；最大元 = 6（被所有整除）；极大元 = 6；极小元 = 1。` },
+      { type:"函数性质", stem:`f: R→R, f(x)=2x+1。判断是否单射、满射、双射。`,
+        ans:`单射：x₁≠x₂ ⇒ f(x₁)≠f(x₂) ✓；满射：∀y∃x=(y−1)/2 ✓。故 <b>双射</b>，可逆，<code>f⁻¹(y)=(y−1)/2</code>。` },
+      { type:"复合", stem:`f(x)=x², g(x)=x+1。求 (f∘g)(x) 与 (g∘f)(x)，说明是否相等。`,
+        ans:`(f∘g)(x)=f(g(x))=(x+1)²；(g∘f)(x)=g(f(x))=x²+1。二者<b>不相等</b>，复合不满足交换律。` },
+    ]
+  },
+  {
+    title: "第 9 页 · 集合的基数",
+    tag: "第7讲 · 等势 / 可数集 / ℵ₀ 与 ℵ / 连续统",
+    questions: [
+      { type:"等势", stem:`证明自然数集 N 与偶数集 E={0,2,4,…} 等势。`,
+        ans:`构造双射 <code>f: N→E, f(n)=2n</code>，单射且满射，故 <code>N ≈ E</code>。<div class="why">无穷集可与其真子集等势，这是无穷的本质特征。</div>` },
+      { type:"基数", stem:`写出 N、Z、Q、R 的基数，并比较大小。`,
+        ans:`<code>card N = card Z = card Q = ℵ₀</code>（可数无穷）；<code>card R = ℵ</code>（连续统）。<code>ℵ₀ &lt; ℵ</code>。` },
+      { type:"可数性", stem:`判断有理数集 Q 是否可数，并给出直觉理由。`,
+        ans:`<b>可数</b>。Q 可与 N×N 建立对应（分子分母二维排列后对角线编号），而 <code>N×N ≈ N</code>，故 <code>Q ≈ N</code>，基数 ℵ₀。` },
+      { type:"康托定理", stem:`说明为何 <code>A ≺ P(A)</code>（A 严格优势小于其幂集）。`,
+        ans:`康托对角线法：假设存在满射 f:A→P(A)，构造 <code>D={x∈A | x∉f(x)}</code>，则 D 不在 f 的像中，矛盾。故无满射，<code>A ≺ P(A)</code>。特别地 <code>N ≺ P(N) ≈ R</code>。` },
+      { type:"可数集性质", stem:`判断真假：① 可数集的子集仍可数 ② 两个可数集的并可数 ③ 可数个可数集之并可数`,
+        ans:`①②③ 均<b>真</b>。可数集对取子集、有限/可数并、有限笛卡尔积封闭。` },
+      { type:"区间等势", stem:`说明开区间 (0,1) 与全体实数 R 等势。`,
+        ans:`构造双射如 <code>f(x)=tan(π(x−½))</code> 将 (0,1) 映满 R。故 <code>(0,1) ≈ R</code>，基数同为 ℵ。` },
+      { type:"连续统假设", stem:`简述连续统假设（CH）的内容及其地位。`,
+        ans:`CH：不存在严格介于 ℵ₀ 与 ℵ 之间的基数。哥德尔(1940)+科恩(1963)证明 CH 与 ZFC 公理系统<b>相互独立</b>——既不能证明也不能否证。` },
+    ]
+  },
+  {
+    title: "第 10 页 · 代数结构（群论）",
+    tag: "第8讲 · 群定义 / 置换 / 奇偶性 / 交错群",
+    questions: [
+      { type:"群判定", stem:`验证 <code>({1,−1}, ×)</code> 是否构成群，若是指出阶数与是否 Abel。`,
+        ans:`封闭✓、结合✓、单位元 1✓、逆元（1⁻¹=1, (−1)⁻¹=−1）✓。是群，<b>2 阶 Abel 群</b>。` },
+      { type:"反例", stem:`说明 <code>(Z, ×)</code>（整数乘法）为何不是群。`,
+        ans:`单位元为 1，但除 ±1 外的整数没有乘法逆元（如 2 的逆 ½∉Z）。不满足逆元公理，<b>不是群</b>（只是含幺半群）。` },
+      { type:"群性质", stem:`证明群中单位元唯一。`,
+        ans:`设 e、e′ 都是单位元，则 <code>e = e·e′ = e′</code>（前者用 e′ 是单位元，后者用 e 是单位元）。故唯一。` },
+      { type:"元素的阶", stem:`在 <code>Z₆=({0,…,5}, +₆)</code> 中求元素 2 的阶。`,
+        ans:`2,2+2=4,4+2=0 → 需 3 次得单位元 0。故 <code>o(2)=3</code>。` },
+      { type:"置换复合", stem:`设 <code>f=(1 2 3)</code>, <code>g=(1 2)</code>（轮换）。求 fg（先 g 后 f）。`,
+        ans:`fg(1)=f(2)=3；fg(2)=f(1)=2；fg(3)=f(3)=1。即 fg: 1→3,2→2,3→1 = 轮换 <code>(1 3)</code>。` },
+      { type:"奇偶性", stem:`将置换 <code>(1 2 3 4)</code> 分解为对换之积并判断奇偶。`,
+        ans:`<code>(1 2 3 4) = (1 4)(1 3)(1 2)</code>，共 3 个对换 → <b>奇置换</b>。<div class="why">n-轮换 = (n−1) 个对换之积。</div>` },
+      { type:"交错群", stem:`求 S₃ 与交错群 A₃ 的阶，并列出 A₃ 的元素。`,
+        ans:`<code>|S₃|=3!=6</code>，<code>|A₃|=3!/2=3</code>。A₃ 由全部偶置换组成：<code>{e, (1 2 3), (1 3 2)}</code>。` },
+      { type:"应用", stem:`15-滑块谜题：如何用置换奇偶性判断某个目标布局是否可达？`,
+        ans:`将布局视为方块的置换。空格回到原位需偶数次相邻对换，故只有当目标布局相对初始布局是<b>偶置换</b>时才可达；<b>奇置换</b>布局不可能还原。` },
+    ]
+  },
+];
+
+/* ============================================================
+   渲染与交互
+   ============================================================ */
+const pagesEl = document.getElementById('pages');
+const tabsEl = document.getElementById('tabs');
+const barEl = document.getElementById('bar');
+let current = 0;
+const done = new Array(PAGES.length).fill(false);
+
+// 构建页面
+PAGES.forEach((pg, i) => {
+  const sec = document.createElement('section');
+  sec.className = 'page' + (i === 0 ? ' active' : '');
+  sec.dataset.idx = i;
+
+  let qhtml = pg.questions.map((q, j) => `
+    <div class="q">
+      <div class="q-head">
+        <div class="q-num">${j + 1}</div>
+        <div class="q-body">
+          <p class="stem">${q.stem}<span class="q-type">${q.type}</span></p>
+          <button class="toggle" data-q="${i}-${j}"><span class="arr">▶</span> 查看答案</button>
+          <div class="ans" id="ans-${i}-${j}">
+            <div class="lbl">参考答案</div>
+            ${q.ans}
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  sec.innerHTML = `
+    <div class="page-head">
+      <span class="pno">P${i + 1}/10</span>
+      <h2>${pg.title}</h2>
+      <span class="tag">${pg.tag}</span>
+    </div>
+    ${qhtml}
+    <div class="page-foot">
+      <button class="navbtn" data-nav="prev">← 上一页</button>
+      <button class="navbtn" data-nav="next">下一页 →</button>
+    </div>`;
+  pagesEl.appendChild(sec);
+
+  const tab = document.createElement('button');
+  tab.className = 'tab' + (i === 0 ? ' active' : '');
+  tab.dataset.idx = i;
+  tab.innerHTML = `<span class="n">${i + 1}</span>`;
+  tab.title = pg.title;
+  tabsEl.appendChild(tab);
+});
+
+// 切页
+function goTo(idx) {
+  idx = Math.max(0, Math.min(PAGES.length - 1, idx));
+  current = idx;
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', +p.dataset.idx === idx));
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', +t.dataset.idx === idx));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProgress();
+}
+function updateProgress() {
+  const finished = done.filter(Boolean).length;
+  barEl.style.width = (finished / PAGES.length * 100) + '%';
+}
+
+// 事件委托
+tabsEl.addEventListener('click', e => {
+  const t = e.target.closest('.tab');
+  if (t) goTo(+t.dataset.idx);
+});
+pagesEl.addEventListener('click', e => {
+  const tg = e.target.closest('.toggle');
+  if (tg) {
+    const ans = document.getElementById('ans-' + tg.dataset.q);
+    const open = ans.classList.toggle('show');
+    tg.classList.toggle('open', open);
+    tg.querySelector('.arr').nextSibling.textContent = open ? ' 收起答案' : ' 查看答案';
+    return;
+  }
+  const nav = e.target.closest('[data-nav]');
+  if (nav) goTo(nav.dataset.nav === 'next' ? current + 1 : current - 1);
+});
+
+// 工具栏
+document.getElementById('revealAll').addEventListener('click', () => {
+  document.querySelector('.page.active').querySelectorAll('.ans').forEach(a => a.classList.add('show'));
+  document.querySelector('.page.active').querySelectorAll('.toggle').forEach(t => {
+    t.classList.add('open'); t.querySelector('.arr').nextSibling.textContent = ' 收起答案';
+  });
+});
+document.getElementById('hideAll').addEventListener('click', () => {
+  document.querySelector('.page.active').querySelectorAll('.ans').forEach(a => a.classList.remove('show'));
+  document.querySelector('.page.active').querySelectorAll('.toggle').forEach(t => {
+    t.classList.remove('open'); t.querySelector('.arr').nextSibling.textContent = ' 查看答案';
+  });
+});
+document.getElementById('markDone').addEventListener('click', () => {
+  done[current] = !done[current];
+  document.querySelector(`.tab[data-idx="${current}"]`).classList.toggle('done', done[current]);
+  updateProgress();
+});
+document.getElementById('resetAll').addEventListener('click', () => {
+  done.fill(false);
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('done'));
+  updateProgress();
+});
+
+// 键盘左右翻页
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') goTo(current + 1);
+  if (e.key === 'ArrowLeft') goTo(current - 1);
+});
+
+updateProgress();
+</script>
+</body>
+</html>

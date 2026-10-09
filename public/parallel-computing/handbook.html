@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ 高级并行计算 · 课件合订本 · 瀑布流打印版</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  svg: { fontCache: 'global' },
+  startup: { typeset: false }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script"></script>
+<style>
+:root {
+  --accent: #059669;
+  --accent-soft: #ecfdf5;
+  --accent-dark: #047857;
+  --bg: #f5f8f6;
+  --card: #ffffff;
+  --text: #1f2430;
+  --text-soft: #5b6472;
+  --border: #e3e9e5;
+  --code-bg: #eef2f0;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+               "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.72; font-size: 14.5px;
+}
+a { color: var(--accent); text-decoration: none; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: linear-gradient(135deg,#047857 0%,#0d9488 100%); color: #fff;
+  padding: 13px 26px; box-shadow: 0 2px 12px rgba(0,0,0,0.16);
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+}
+.topbar h1 { margin: 0; font-size: 19px; font-weight: 700; }
+.topbar .sub { font-size: 12.5px; opacity: .9; }
+.topbar .controls { margin-left: auto; display: flex; gap: 8px; }
+.topbar .controls a, .topbar .controls button {
+  padding: 6px 13px; background: rgba(255,255,255,0.14); color: #fff;
+  border: 1px solid rgba(255,255,255,0.24); border-radius: 7px;
+  cursor: pointer; font-size: 12.5px; transition: all 0.15s;
+}
+.topbar .controls a:hover, .topbar .controls button:hover {
+  background: rgba(255,255,255,0.28);
+}
+.topbar .controls .seg {
+  display: inline-flex; gap: 0; padding: 0; background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.24); border-radius: 7px; overflow: hidden;
+}
+.topbar .controls .seg button {
+  border: none; border-radius: 0; background: transparent;
+  border-right: 1px solid rgba(255,255,255,0.18); padding: 6px 11px;
+}
+.topbar .controls .seg button:last-child { border-right: none; }
+.topbar .controls .seg button.active { background: rgba(255,255,255,0.40); font-weight: 600; }
+
+.app { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 262px; flex-shrink: 0;
+  background: linear-gradient(180deg,#0f3d2e 0%,#0a2a20 100%); color: #fff;
+  position: sticky; top: 51px; height: calc(100vh - 51px);
+  overflow-y: auto; padding: 14px 0; box-shadow: 2px 0 10px rgba(0,0,0,0.10);
+}
+.sidebar h3 {
+  margin: 14px 18px 6px; font-size: 11px; letter-spacing: .6px;
+  color: rgba(255,255,255,0.55); text-transform: uppercase;
+}
+.sidebar ul { list-style: none; padding: 0; margin: 0; }
+.sidebar li a {
+  display: flex; align-items: baseline; gap: 8px; padding: 4px 18px;
+  color: rgba(255,255,255,0.78); font-size: 12px;
+  border-left: 3px solid transparent; transition: all 0.15s;
+}
+.sidebar li a:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.sidebar .toc-tag {
+  display: inline-block; min-width: 30px; font-weight: 700;
+  color: rgba(255,255,255,0.45); font-size: 10.5px;
+}
+.sidebar .toc-title { flex: 1; }
+.sidebar-foot {
+  padding: 14px 18px; font-size: 11px; color: rgba(255,255,255,0.5);
+  border-top: 1px solid rgba(255,255,255,0.12); margin-top: 14px; line-height: 1.55;
+}
+
+.main { flex: 1; min-width: 0; }
+.sec-label {
+  display: flex; align-items: center; gap: 10px;
+  padding: 20px 26px 4px; font-size: 18px; font-weight: 700;
+}
+.sec-label .bar { width: 5px; height: 20px; border-radius: 3px; background: var(--accent); }
+.sec-label .cnt { font-size: 12.5px; font-weight: 500; color: var(--text-soft); }
+
+.masonry {
+  padding: 14px 26px 8px; column-count: 2; column-gap: 18px; column-fill: balance;
+}
+@media (min-width: 1700px) { .masonry { column-count: 3; } }
+@media (max-width: 820px)  { .masonry { column-count: 1; } }
+.masonry.col1 { max-width: 210mm; margin-left: auto; margin-right: auto; }
+
+.card {
+  break-inside: avoid; -webkit-column-break-inside: avoid; page-break-inside: avoid;
+  display: inline-block; width: 100%;
+  background: var(--card); border-radius: 10px; padding: 17px 19px;
+  margin: 0 0 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border: 1px solid var(--border);
+}
+.card-note { border-top: 3px solid var(--accent); }
+.card-tag {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 2px 9px; border-radius: 10px; margin-bottom: 8px;
+  background: var(--accent-soft); color: var(--accent-dark);
+}
+.card-title {
+  margin: 0 0 10px; font-size: 16.5px; font-weight: 700; line-height: 1.4;
+  border-bottom: 1px solid var(--border); padding-bottom: 8px;
+}
+.card .sub { color: var(--text-soft); font-size: 12px; margin: -4px 0 10px; }
+
+.card-body h3 { margin: 13px 0 5px; font-size: 14.5px; font-weight: 700; color: var(--accent-dark); }
+.card-body h4 { margin: 11px 0 5px; font-size: 13px; font-weight: 600; color: var(--text); }
+.card-body p { margin: 6px 0; }
+.card-body ul, .card-body ol { margin: 6px 0; padding-left: 22px; }
+.card-body li { margin: 3px 0; }
+.card-body strong { color: #111827; }
+.card-body blockquote {
+  margin: 10px 0; padding: 9px 12px; background: var(--accent-soft);
+  border-left: 4px solid var(--accent); border-radius: 4px; font-size: 13px;
+}
+.card-body code {
+  background: var(--code-bg); padding: 1px 5px; border-radius: 3px;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; color: var(--accent-dark);
+}
+.card-body pre {
+  background: #16261f; color: #d8efe5; padding: 10px 12px; border-radius: 6px;
+  overflow-x: auto; margin: 9px 0; font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11.5px; line-height: 1.5;
+}
+.card-body pre code { background: transparent; color: inherit; padding: 0; }
+.table-wrap { overflow-x: auto; margin: 10px 0; }
+.card-body table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.card-body th, .card-body td { padding: 5px 8px; border: 1px solid var(--border); text-align: left; }
+.card-body th { background: var(--code-bg); font-weight: 600; }
+.card-body hr { border: none; border-top: 1px dashed var(--border); margin: 13px 0; }
+mjx-container { max-width: 100%; }
+mjx-container[display="true"] {
+  display: block; overflow-x: auto; overflow-y: hidden;
+  max-width: 100%; padding-bottom: 2px;
+}
+mjx-container[display="true"]::-webkit-scrollbar { height: 5px; }
+mjx-container[display="true"]::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@media print {
+  /* A4 纵向：210mm × 297mm，四周 12mm 边距 → 可打印区 186mm × 273mm */
+  @page { size: 210mm 297mm; margin: 12mm; }
+  html, body { width: 186mm; background: #fff; }
+  body { font-size: 10.3pt; line-height: 1.42; }
+  .app { display: block; width: 186mm; }
+  .sidebar, .topbar, .controls { display: none !important; }
+  .main { padding: 0; width: 186mm; }
+  .sec-label { padding: 4mm 0 1mm; font-size: 14pt; page-break-after: avoid; }
+  .masonry { column-count: 1 !important; padding: 0 !important; display: block; max-width: 186mm; }
+  .card {
+    box-shadow: none !important; border: 1px solid #ccc !important;
+    padding: 9px 11px; margin: 0 0 5mm; page-break-inside: avoid; break-inside: avoid;
+  }
+  .card-note { border-top: 3px solid var(--accent) !important; }
+  .card-body pre { background: #f4f6f5 !important; color: #1f2430 !important; font-size: 8.6pt; }
+  .card-body blockquote { background: #effaf5 !important; }
+  .card-title { font-size: 12.5pt; }
+  .card-body h3 { font-size: 11pt; }
+  .card-body table { font-size: 8.6pt; }
+  a { color: inherit !important; }
+  mjx-container[display="true"] { overflow: visible !important; }
+}
+
+@media (max-width: 900px) {
+  .app { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: relative; top: 0; }
+  .topbar { position: relative; }
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.22); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <h1>⚡ 高级并行计算 · 合订本</h1>
+  <span class="sub">30 讲课件 · 结构 · 互连 · 性能评测 · 瀑布流打印版</span>
+  <div class="controls">
+    <a href="../index.html">🏠 导航</a>
+    <div class="seg" id="colSeg">
+      <button data-cols="1">单栏</button>
+      <button data-cols="2" class="active">两栏</button>
+      <button data-cols="3">三栏</button>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+<aside class="sidebar">
+  <h3>📖 学习课件 (30)</h3>
+  <ul>
+<li><a href="#N-1"><span class="toc-tag">N1</span><span class="toc-title">高级并行计算 · 课程导览</span></a></li>
+<li><a href="#N-2"><span class="toc-tag">N2</span><span class="toc-title">📚 参考教材</span></a></li>
+<li><a href="#N-3"><span class="toc-tag">N3</span><span class="toc-title">🗂 课件总目录</span></a></li>
+<li><a href="#N-4"><span class="toc-tag">N4</span><span class="toc-title">1.1 并行计算概述</span></a></li>
+<li><a href="#N-5"><span class="toc-tag">N5</span><span class="toc-title">1.2 高性能计算机（早期）</span></a></li>
+<li><a href="#N-6"><span class="toc-tag">N6</span><span class="toc-title">1.3 五种并行机结构模型</span></a></li>
+<li><a href="#N-7"><span class="toc-tag">N7</span><span class="toc-title">1.4 五种结构特性一览</span></a></li>
+<li><a href="#N-8"><span class="toc-tag">N8</span><span class="toc-title">1.5 并行计算机体系合一结构</span></a></li>
+<li><a href="#N-9"><span class="toc-tag">N9</span><span class="toc-title">1.6 访存模型详解</span></a></li>
+<li><a href="#N-10"><span class="toc-tag">N10</span><span class="toc-title">1.7 存储结构全景图</span></a></li>
+<li><a href="#N-11"><span class="toc-tag">N11</span><span class="toc-title">1.8 对称多处理机 SMP</span></a></li>
+<li><a href="#N-12"><span class="toc-tag">N12</span><span class="toc-title">1.9 大规模并行机 MPP</span></a></li>
+<li><a href="#N-13"><span class="toc-tag">N13</span><span class="toc-title">1.10 机群型大规模并行机 SP2</span></a></li>
+<li><a href="#N-14"><span class="toc-tag">N14</span><span class="toc-title">1.11 工作站机群 COW</span></a></li>
+<li><a href="#N-15"><span class="toc-tag">N15</span><span class="toc-title">1.12 SMP / MPP / 机群比较</span></a></li>
+<li><a href="#N-16"><span class="toc-tag">N16</span><span class="toc-title">2.1 系统互连层次</span></a></li>
+<li><a href="#N-17"><span class="toc-tag">N17</span><span class="toc-title">2.2 网络性能指标</span></a></li>
+<li><a href="#N-18"><span class="toc-tag">N18</span><span class="toc-title">2.3 静态互连网络</span></a></li>
+<li><a href="#N-19"><span class="toc-tag">N19</span><span class="toc-title">2.4 静态网络特性比较</span></a></li>
+<li><a href="#N-20"><span class="toc-tag">N20</span><span class="toc-title">2.5 嵌入（Embedding）</span></a></li>
+<li><a href="#N-21"><span class="toc-tag">N21</span><span class="toc-title">2.6 动态互连网络</span></a></li>
+<li><a href="#N-22"><span class="toc-tag">N22</span><span class="toc-title">2.7 动态互连网络比较</span></a></li>
+<li><a href="#N-23"><span class="toc-tag">N23</span><span class="toc-title">2.8 标准互连网络</span></a></li>
+<li><a href="#N-24"><span class="toc-tag">N24</span><span class="toc-title">2.9 选路方法与开关技术</span></a></li>
+<li><a href="#N-25"><span class="toc-tag">N25</span><span class="toc-title">2.10 开关技术</span></a></li>
+<li><a href="#N-26"><span class="toc-tag">N26</span><span class="toc-title">2.11 集体通信（Broadcast &amp; All-to-All）</span></a></li>
+<li><a href="#N-27"><span class="toc-tag">N27</span><span class="toc-title">3.1 CPU 基本性能指标</span></a></li>
+<li><a href="#N-28"><span class="toc-tag">N28</span><span class="toc-title">3.2 存储器性能（层次结构 C, L, B）</span></a></li>
+<li><a href="#N-29"><span class="toc-tag">N29</span><span class="toc-title">3.3 并行与通信开销</span></a></li>
+<li><a href="#N-30"><span class="toc-tag">N30</span><span class="toc-title">3.4 并行开销的表达式</span></a></li>
+  </ul>
+  <div class="sidebar-foot">
+    🐒 悟空整理 · 并行计算课件合订<br>
+    参考：陈国良《并行计算》· DDIA · 分布式数据库<br>
+    点击右上角「打印」可导出 A4 PDF。
+  </div>
+</aside>
+
+<main class="main">
+  <div class="sec-label"><span class="bar"></span>📖 学习课件 <span class="cnt">· 30 讲</span></div>
+  <div class="masonry">
+<div class="card card-note" id="N-1"><span class="card-tag">课程导览</span><h3 class="card-title">高级并行计算 · 课程导览</h3><div class="card-body"><blockquote><strong>讲师</strong>：鄂金龙（中国人民大学信息学院 副教授，毕业于清华大学计算机系） <strong>邮箱</strong>：ejinlong@ruc.edu.cn <strong>办公室</strong>：信息楼 125B <strong>研究方向</strong>：云/边缘计算、物联网、流媒体技术</blockquote>
+<hr></div></div>
+<div class="card card-note" id="N-2"><span class="card-tag">高级并行计算</span><h3 class="card-title">📚 参考教材</h3><div class="card-body"><ul><li>陈国良编著. <strong>《并行计算——结构、算法、编程（第3版）》</strong>. 高等教育出版社</li><li>Martin Kleppmann 著. <strong>《数据密集型应用系统设计（DDIA）》</strong>. 中国电力出版社</li><li>于戈、申德荣等编著. <strong>《分布式数据库系统——大数据时代新型数据库技术（第2/3版）》</strong>. 机械工业出版社</li></ul>
+<p><strong>考试安排</strong>：6.6/7/14 9:00–12:00 13:30–16:30，7月初考试</p>
+<hr></div></div>
+<div class="card card-note" id="N-3"><span class="card-tag">高级并行计算</span><h3 class="card-title">🗂 课件总目录</h3><div class="card-body"><div class="table-wrap"><table><thead><tr><th>编号</th><th>模块</th><th>主要内容</th></tr></thead><tbody><tr><td>1</td><td><strong>并行计算·结构</strong></td><td>并行机结构模型、互连网络、并行性能评测</td></tr><tr><td>2</td><td><strong>并行计算·算法</strong></td><td>并行算法模型、并行算法设计方法、PCAM</td></tr><tr><td>3</td><td><strong>分布式系统</strong></td><td>分布式通信、分布式存储、分布式计算</td></tr><tr><td>4</td><td><strong>分布式数据库系统</strong></td><td>DDBS 基本概念、系统结构、数据库设计</td></tr></tbody></table></div>
+<hr></div></div>
+<div class="card card-note" id="N-4"><span class="card-tag">第1章</span><h3 class="card-title">1.1 并行计算概述</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><ul><li><strong>并行计算</strong>：并行机上所作的计算，又称<strong>高性能计算</strong>或<strong>超级计算</strong>。</li><li><strong>计算科学</strong>：计算物理、计算化学、计算生物等。</li><li><strong>科学与工程问题的需求</strong>：气象预报、油藏模拟、核武器数值模拟、航天器设计、基因测序等。</li><li><strong>需求类型</strong>：计算密集、数据密集、网络密集。</li><li><strong>美国 HPCC 计划</strong>：重大挑战性课题，3T 性能。</li><li><strong>美国 Petaflops 研究项目</strong>：Pflop/s。</li><li><strong>美国 ASCI 计划</strong>：核武器数值模拟。</li></ul></div></div>
+<div class="card card-note" id="N-5"><span class="card-tag">第1章</span><h3 class="card-title">1.2 高性能计算机（早期）</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><div class="table-wrap"><table><thead><tr><th>厂商/型号</th><th>性能</th><th>年份</th><th>处理器</th></tr></thead><tbody><tr><td>Intel Option Red</td><td>1 Tflops</td><td>1997</td><td>Pentium Pro</td></tr><tr><td>SGI Option Blue Mountain</td><td>3 Tflops</td><td>1998</td><td>MIPS10000</td></tr><tr><td>IBM Option White</td><td>7 Tflops (Top 4)</td><td>2001</td><td>Power3</td></tr><tr><td>日本 Earth Simulator</td><td>35 Tflops (Top 1)</td><td>2002</td><td>VP</td></tr><tr><td>HP ASCI Q</td><td>7 Tflops (Top 2,3)</td><td>2002</td><td>Alpha Server</td></tr><tr><td>中国联想</td><td>1 Tflops (Top 43)</td><td>2002</td><td>—</td></tr></tbody></table></div></div></div>
+<div class="card card-note" id="N-6"><span class="card-tag">第1章</span><h3 class="card-title">1.3 五种并行机结构模型</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><p>并行机按 MIMD 思想可分为五大类：<strong>PVP</strong>、<strong>SMP</strong>、<strong>MPP</strong>、<strong>DSM</strong>、<strong>COW</strong>。</p>
+<pre><code>                    P/C        LM         NIC              P/C        LM         NIC
+                  ┌────┐    ┌────┐     ┌────┐            ┌────┐    ┌────┐     ┌────┐
+                  │CPU │    │局存│     │网卡│            │CPU │    │局存│     │网卡│
+                  └─┬──┘    └──┬─┘     └──┬─┘            └──┬─┘    └──┬─┘     └──┬─┘
+                    │          │          │                 │          │          │
+                    └──────────┼──────────┘                 └──────────┼──────────┘
+                               │                                       │
+   (a) PVP                    ┌┴┐    ┌──────┐              (b) SMP    ┌┴┐   ┌────┐
+        并行向量机            │SM│    │  I/O │              对称多处理机│MB│   │ I/O│
+                             └─┘    └──────┘                         └──┘   └────┘
+   (c) MPP 大规模并行处理机        (d) DSM 分布共享存储            (e) COW 工作站机群
+        定制网络 + LM + NIC + MB        NIC + DIR + MB                商用网络（以太网/ATM）+ Bridge</code></pre></div></div>
+<div class="card card-note" id="N-7"><span class="card-tag">第1章</span><h3 class="card-title">1.4 五种结构特性一览</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><div class="table-wrap"><table><thead><tr><th>属性</th><th>PVP</th><th>SMP</th><th>MPP</th><th>DSM</th><th>COW</th></tr></thead><tbody><tr><td>结构类型</td><td>MIMD</td><td>MIMD</td><td>MIMD</td><td>MIMD</td><td>MIMD</td></tr><tr><td>处理器类型</td><td>专用定制</td><td>商用</td><td>商用</td><td>商用</td><td>商用</td></tr><tr><td>互连网络</td><td>定制交叉开关</td><td>总线、交叉开关</td><td>定制网络</td><td>定制网络</td><td>商用网络（以太网/ATM）</td></tr><tr><td>通信机制</td><td>共享变量</td><td>共享变量</td><td>消息传递</td><td>共享变量</td><td>消息传递</td></tr><tr><td>地址空间</td><td>单地址空间</td><td>单地址空间</td><td>多地址空间</td><td>单地址空间</td><td>多地址空间</td></tr><tr><td>系统存储器</td><td>集中共享</td><td>集中共享</td><td>分布非共享</td><td>分布共享</td><td>分布非共享</td></tr><tr><td>访存模型</td><td>UMA</td><td>UMA</td><td>NORMA</td><td>NUMA</td><td>NORMA</td></tr><tr><td>代表机器</td><td>Cray C-90, Cray T-90, 银河1号</td><td>IBM R50, SGI Power Challenge, 曙光1号</td><td>Intel Paragon, IBM SP2, 曙光 1000/2000</td><td>Stanford DASH, Cray T3D</td><td>Berkeley NOW, Alpha Farm</td></tr></tbody></table></div></div></div>
+<div class="card card-note" id="N-8"><span class="card-tag">第1章</span><h3 class="card-title">1.5 并行计算机体系合一结构</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><p><strong>结论</strong>：SMP、MPP、DSM 和 COW 并行结构渐趋一致。</p>
+<ul><li>大量的节点通过高速网络互连起来。</li><li>节点遵循 <strong>Shell 结构</strong>：用专门定制的 Shell 电路将商用微处理器和节点的其它部分（包括板级 Cache、局存、NIC 和 DISK）连接起来。<strong>优点是 CPU 升级只需要更换 Shell</strong>。</li></ul>
+<pre><code>                 (a) 无共享                    (b) 共享磁盘                (c) 共享存储
+   C  P  NIC               C  P  NIC         C  P
+   ─┬─┬──┐   互连网络      ─┬─┬──┐           ─┬─┐ 互连网络
+    │M│ │     ──────►       │M│ │  ──────►    │ │  ──────►   共享存储器 + 共享磁盘
+    └─┴──┘                  └─┴──┘            └─┘
+   节点1 … 节点 N           节点1 … 节点 N      Shell       Shell</code></pre></div></div>
+<div class="card card-note" id="N-9"><span class="card-tag">第1章</span><h3 class="card-title">1.6 访存模型详解</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><h3>1.6.1 UMA（Uniform Memory Access）均匀存储访问</h3>
+<ul><li>物理存储器被所有处理器<strong>均匀共享</strong>。</li><li>所有处理器访问任何存储字取<strong>相同</strong>的时间。</li><li>每台处理器可带私有高速缓存。</li><li>外围设备也可以一定形式共享。</li></ul>
+<pre><code>                    P1   P2   …   Pn
+                     │    │        │
+                     └────┴────────┴─── 系统互连（总线 / 交叉开关 / 多级网络）──►
+                                                              │
+                                                          ┌───┴────┐
+                                                          │  I/O   │
+                                                          │ SM1...SMm│
+                                                          │ 共享存储│
+                                                          └────────┘</code></pre>
+<h3>1.6.2 NUMA（Nonuniform Memory Access）非均匀存储访问</h3>
+<ul><li>共享存储器<strong>物理上分布在所有处理器</strong>中，所有本地存储器的集合组成全局地址空间。</li><li>处理器访问存储器的时间<strong>不一样</strong>：访问本地存储器 LM 或群内共享存储器 CSM 较快，而访问外地存储器或全局共享存储器 GSM 较慢。</li><li>每台处理器可带私有高速缓存，外设可以某种形式共享。</li></ul>
+<h3>1.6.3 COMA（Cache-Only Memory Access）全高速缓存存储访问</h3>
+<ul><li>各处理器节点中<strong>没有存储层次结构</strong>，全部高速缓存组成了全局地址空间。</li><li>利用分布的高速缓存目录 D 进行远程高速缓存的访问。</li><li>COMA 中的高速缓存容量一般都大于 2 级高速缓存容量。</li><li>使用 COMA 时，数据开始时可任意分配，运行时最终会被<strong>迁移</strong>到要用到它的地方。</li></ul>
+<h3>1.6.4 CC-NUMA（Coherent-Cache NUMA）高速缓存一致性非均匀存储访问</h3>
+<ul><li>大多数使用基于目录的高速缓存一致性协议。</li><li>保留 SMP 结构易于编程的优点，也改善常规 SMP 的可扩放性。</li><li>实际上是一个分布共享存储的 DSM 多处理机系统。</li><li><strong>显著优点</strong>：程序员无需明确地在节点上分配数据，硬件和软件自动迁移数据。</li></ul>
+<pre><code>  I/O  NIC, DIR, RC                            I/O  NIC, DIR, RC
+  ─┬───┬─────┐                                ─┬───┬─────┐
+   │Mem│P/C  │          系统互连网络             │Mem│P/C  │
+   └───┴─────┘ ◄──────────────────────────────►  └───┴─────┘
+   节点 1                                  节点 N
+       (总线或交叉开关)                       (总线或交叉开关)</code></pre>
+<h3>1.6.5 NORMA（No-Remote Memory Access）非远程存储访问</h3>
+<ul><li>所有存储器是<strong>私有</strong>的。</li><li>绝大多数 NUMA 都不支持远程存储器的访问。</li><li>在 DSM 中，NORMA 就消失了。</li></ul></div></div>
+<div class="card card-note" id="N-10"><span class="card-tag">第1章</span><h3 class="card-title">1.7 存储结构全景图</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><pre><code>                                ┌─────────────────────────────────────────────┐
+                                │                  MIMD                       │
+                                │   多计算机（多地址空间非共享存储器）           │
+                                │   IBM SP2, DEC TruCluster, Tandem, …         │
+                                └─────────────────────────────────────────────┘
+                                                          ▲
+                                                          │
+            UMA               Cluster/NCC-NUMA              │
+   PVP ──► SMP ──► CC-NUMA ──► MPP ──► COMA               │
+   Cray T90   Intel SHV   Stanford Dash, SGI Origin      │
+                              Intel TFLOPS                 │
+                                                          │
+                                                          ▼
+                                  紧耦合/松散耦合；中央/分布存储；单/多地址空间</code></pre></div></div>
+<div class="card card-note" id="N-11"><span class="card-tag">第1章</span><h3 class="card-title">1.8 对称多处理机 SMP</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><ul><li><strong>SMP</strong>：采用商用微处理器，通常有片上和片外 Cache，基于总线连接，集中式共享存储，UMA 结构。</li><li><strong>例子</strong>：SGI Power Challenge、DEC Alpha Server、曙光 1 号。</li></ul>
+<p><strong>优点</strong></p>
+<ul><li>对称性</li><li>单地址空间，易编程性，动态负载平衡，无需显示数据分配</li><li>高速缓存及其一致性，数据局部性，硬件维持一致性</li><li>低通信延迟，Load/Store 完成</li></ul>
+<p><strong>问题</strong></p>
+<ul><li>欠可靠（BUS、OS、SM）</li><li>通信延迟相对于 CPU 上升，竞争加剧</li><li>慢速增加的带宽（MB 每 3 年翻倍，IOB 更慢）</li><li>不可扩放性 → CC-NUMA</li></ul></div></div>
+<div class="card card-note" id="N-12"><span class="card-tag">第1章</span><h3 class="card-title">1.9 大规模并行机 MPP</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><ul><li>由成百上千个处理器组成的大规模计算机系统。</li><li>NORMA 结构，高带宽低延迟定制互连。</li><li><strong>可扩放性</strong>：Mem、I/O 平衡设计。</li><li><strong>通用性和可用性</strong>：PVM、MPI、交互、批处理、互连对用户透明、单一系统映像、故障处理。</li><li><strong>例子</strong>：Intel Option Red、IBM SP2、曙光 1000。</li></ul></div></div>
+<div class="card card-note" id="N-13"><span class="card-tag">第1章</span><h3 class="card-title">1.10 机群型大规模并行机 SP2</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><ul><li><strong>设计策略</strong>：机群体系结构、标准环境、标准编程模型、系统可用性、精选的单一系统映像。</li><li><strong>系统结构</strong>：HPS（高性能开关）多级 Ω 网络；宽节点、窄节点和窄节点 2。</li></ul></div></div>
+<div class="card card-note" id="N-14"><span class="card-tag">第1章</span><h3 class="card-title">1.11 工作站机群 COW</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><ul><li><strong>特征</strong>：分布式存储，MIMD，工作站 + 商用互连网络，每个节点是完整计算机。</li><li><strong>优点</strong>：投资风险小、系统结构灵活、性能/价格比高、能充分利用分散资源、可扩放性好。</li><li><strong>问题</strong>：通信性能、并行编程环境。</li><li><strong>例子</strong>：Berkeley NOW、Alpha Farm、FXCOW。</li></ul></div></div>
+<div class="card card-note" id="N-15"><span class="card-tag">第1章</span><h3 class="card-title">1.12 SMP / MPP / 机群比较</h3><p class="sub">第1章　并行计算机结构模型</p><div class="card-body"><div class="table-wrap"><table><thead><tr><th>系统特征</th><th>SMP</th><th>MPP</th><th>机群</th></tr></thead><tbody><tr><td>节点数量 (N)</td><td>≤ O(10)</td><td>O(100)–O(1000)</td><td>≤ O(100)</td></tr><tr><td>节点复杂度</td><td>中粒度或细粒度</td><td>细粒度或中粒度</td><td>中粒度或粗粒度</td></tr><tr><td>节点间通信</td><td>共享存储器</td><td>消息传递（或共享变量有 DSM 时）</td><td>消息传递</td></tr><tr><td>节点操作系统</td><td>1</td><td>N（微内核）和 1 个主机 OS</td><td>N（希望为同构）</td></tr><tr><td>单一系统映像</td><td>永远</td><td>部分</td><td>希望</td></tr><tr><td>地址空间</td><td>单一</td><td>多或单一（有 DSM 时）</td><td>多个</td></tr><tr><td>作业调度</td><td>单一运行队列</td><td>主机上单一运行队列</td><td>协作多队列</td></tr><tr><td>网络协议</td><td>非标准</td><td>非标准</td><td>标准或非标准</td></tr><tr><td>可用性</td><td>通常较低</td><td>低到中</td><td>高可用或容错</td></tr><tr><td>性能/价格比</td><td>一般</td><td>一般</td><td>高</td></tr><tr><td>互连网络</td><td>总线/交叉开关</td><td>定制</td><td>商用</td></tr></tbody></table></div>
+<hr></div></div>
+<div class="card card-note" id="N-16"><span class="card-tag">第2章</span><h3 class="card-title">2.1 系统互连层次</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><p>不同带宽与距离的互连技术：<strong>总线</strong>、<strong>SAN</strong>、<strong>LAN</strong>、<strong>MAN</strong>、<strong>WAN</strong>。</p>
+<pre><code>       100 Gb/s ──┐
+        10 Gb/s ──┼─ 交叉开关 / MIN
+         1 Gb/s ──┼─ 千兆位以太网 / 光纤通道
+       100 Mb/s ──┼─ 快速以太网 / SCI / HiPPI / Myrinet
+        10 Mb/s ──┴─ 10BaseT / FDDI / ATM
+                总线  SAN  LAN  MAN  WAN</code></pre></div></div>
+<div class="card card-note" id="N-17"><span class="card-tag">第2章</span><h3 class="card-title">2.2 网络性能指标</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><ul><li><strong>节点度（Node Degree）</strong>：射入或射出一个节点的边数。在单向网络中，入射和出射边之和称为节点度。</li><li><strong>网络直径（Network Diameter）</strong>：网络中任何两个节点之间的最长距离（最大路径数）。</li><li><strong>对剖宽度（Bisection Width）</strong>：对分网络各半所必须移去的最少边数（允许两边差 1 行）。</li><li><strong>对剖带宽（Bisection Bandwidth）</strong>：每秒钟内，在最小对剖平面上通过所有连线的最大信息位（或字节）数。</li><li><strong>对称性（Symmetry）</strong>：从任一节点观看网络都一样。</li></ul></div></div>
+<div class="card card-note" id="N-18"><span class="card-tag">第2章</span><h3 class="card-title">2.3 静态互连网络</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><ul><li><strong>一维线性阵列（1-D Linear Array）</strong>：节点度 2（内节点），直径 N−1，对剖宽度 1。</li><li><strong>环形（Ring）</strong>：首尾相连，节点度恒为 2，直径 ⌊N/2⌋（双向）或 N−1（单向），对剖宽度 2。</li><li><strong>二维网孔（2-D Mesh）</strong>：节点度 4，直径 2(N−1)，对剖宽度 N。</li><li><strong>Illiac 网孔</strong>：垂直环绕、水平蛇状，节点度恒为 4，直径 (√N−1)，对剖宽度 √N。</li><li><strong>2-D 环绕（2-D Torus）</strong>：垂直水平均环绕，节点度恒为 4，直径 2⌊√N/2⌋，对剖宽度 2√N。</li><li><strong>二叉树</strong>：节点度 3，对剖宽度 1，直径 2(⌈log₂N⌉−1)。</li><li><strong>星形网络</strong>：节点度 N−1，直径 2，对剖宽度 ⌊N/2⌋。</li><li><strong>二叉胖树（Fat Tree）</strong>：通路自叶向根逐渐变宽，解决根瓶颈问题。</li><li><strong>超立方（n-Cube）</strong>：N=2ⁿ 个顶点，节点度 n，直径 n，对剖宽度 N/2。</li><li><strong>立方环</strong>：3-立方的每个顶点代之以一个环，每个顶点度为 3。</li></ul></div></div>
+<div class="card card-note" id="N-19"><span class="card-tag">第2章</span><h3 class="card-title">2.4 静态网络特性比较</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><div class="table-wrap"><table><thead><tr><th>网络名称</th><th>网络规模</th><th>节点度</th><th>网络直径</th><th>对剖宽度</th><th>对称</th><th>链路数</th></tr></thead><tbody><tr><td>线性阵列</td><td>N</td><td>2</td><td>1</td><td>非</td><td>1</td><td>N−1</td></tr><tr><td>环形</td><td>N</td><td>2（双向）</td><td>⌊N/2⌋</td><td>是</td><td>2</td><td>N</td></tr><tr><td>2-D 网孔</td><td>(√N)×(√N)</td><td>4</td><td>2(N−1)</td><td>非</td><td>N</td><td>2(N−√N)</td></tr><tr><td>Illiac 网孔</td><td>(√N)×(√N)</td><td>4</td><td>√N−1</td><td>非</td><td>√N</td><td>2N</td></tr><tr><td>2-D 环绕</td><td>(√N)×(√N)</td><td>4</td><td>2⌊√N/2⌋</td><td>是</td><td>2√N</td><td>2N</td></tr><tr><td>二叉树</td><td>N</td><td>3</td><td>2(⌈log₂N⌉−1)</td><td>1</td><td>非</td><td>N−1</td></tr><tr><td>星形</td><td>N</td><td>N−1</td><td>2</td><td>⌊N/2⌋</td><td>非</td><td>N−1</td></tr><tr><td>超立方</td><td>2ⁿ</td><td>n</td><td>n</td><td>N/2</td><td>是</td><td>nN/2</td></tr><tr><td>立方环</td><td>k·2ᵏ</td><td>3</td><td>2k−1+⌊2ᵏ/k⌋</td><td>2N/(3·2ᵏ)</td><td>是</td><td>3N</td></tr></tbody></table></div></div></div>
+<div class="card card-note" id="N-20"><span class="card-tag">第2章</span><h3 class="card-title">2.5 嵌入（Embedding）</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><ul><li>将网络中的各节点映射到另一个网络中去。</li><li>用<strong>膨胀（Dilation）系数</strong>来描述嵌入质量：被嵌入网络中的一条链路在所要嵌入的网络中对应所需的最大链路数。</li><li>如果膨胀系数为 1，称为<strong>完美嵌入</strong>。</li><li>环网可完美嵌入到 2-D 环绕网中</li><li>超立方网可完美嵌入到 2-D 环绕网中</li></ul></div></div>
+<div class="card card-note" id="N-21"><span class="card-tag">第2章</span><h3 class="card-title">2.6 动态互连网络</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><h3>2.6.1 总线（PCI, VME, Multibus, Sbus, MicroChannel）</h3>
+<p>多处理机总线系统的主要问题：</p>
+<ul><li>总线仲裁、中断处理、协议转换</li><li>快速同步、高速缓存一致性协议</li><li>分事务、总线桥和层次总线扩展</li></ul>
+<h3>2.6.2 交叉开关（Crossbar）</h3>
+<ul><li>单级交换网络，可为每个端口提供更高的带宽。</li><li>象电话交换机一样，交叉点开关可由程序控制动态设置其处于"开"或"关"状态。</li><li>两种使用方式：</li><li>用于对称多处理机或多计算机机群中处理器间通信</li><li>用于 SMP 服务器或向量超级计算机中处理器和存储器之间的存取</li></ul>
+<h3>2.6.3 交换开关模块</h3>
+<ul><li>n 个输入和 n 个输出，每个输入可连接到任意输出端口。</li><li>只允许<strong>一对一</strong>或<strong>一对多</strong>的映射，<strong>不允许多对一</strong>（会冲突）。</li></ul>
+<h3>2.6.4 多级互连网络 MIN（Multistage Interconnection Network）</h3>
+<ul><li>单级交叉开关级联起来形成 MIN。</li><li>级间互连：均匀洗牌、蝶网、多路均匀洗牌、交叉开关、立方连接。</li><li>n 输入的 Ω 网络需要 log₂n 级 × 2 列开关。</li><li><strong>Cedar</strong> 多处理机系统（Illinois 大学）采用了 Ω 网络。</li><li><strong>Cray Y/MP</strong> 多级网络：支持 8 个向量处理器和 256 个存储器模块间的数据传输，能避免 8 个处理器同时存取冲突。</li></ul></div></div>
+<div class="card card-note" id="N-22"><span class="card-tag">第2章</span><h3 class="card-title">2.7 动态互连网络比较</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><div class="table-wrap"><table><thead><tr><th>网络特性</th><th>总线系统</th><th>多级互连网络</th><th>交叉开关</th></tr></thead><tbody><tr><td>硬件复杂度</td><td>O(wn)</td><td>O(n·log n·w)</td><td>O(w·n²)</td></tr><tr><td>每个处理器带宽</td><td>O(wf)</td><td>O(wf)</td><td>O(wf)</td></tr><tr><td>报道的聚集带宽</td><td>SunFire Gigaplane 2.67 GB/s</td><td>IBM SP2 HPS 10.24 GB/s</td><td>Digital 千兆开关 3.4 GB/s</td></tr></tbody></table></div></div></div>
+<div class="card card-note" id="N-23"><span class="card-tag">第2章</span><h3 class="card-title">2.8 标准互连网络</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><h3>2.8.1 Myrinet</h3>
+<ul><li><strong>厂商</strong>：Myricom 公司设计；基于 Caltech 多计算机和 VLSI 技术和 USC 的 ATOMIC/LAN 技术。</li><li>假设任意拓扑结构，不必限定为开关网孔或任何规则结构。</li><li>数据链路层具有可变长的包格式，对每条链路施行流控制和错误控制，使用<strong>切通选路法</strong>及定制的可编程主机接口。</li><li>物理层：全双工 SAN 链路，最长 3 米，峰值速率 (1.28+1.28) Gbps（目前有 2.56+2.56）。</li><li>Myrinet 交换开关：8, 12, 16 端口。</li><li>Myrinet 主机接口：32 位的称作 <strong>LANai 芯片</strong>的用户定制的 VLSI 处理器。</li><li><strong>2002 年 11 月 TOP500 中 140 台使用 Myrinet，包括前 100 中的 15 台</strong>。</li></ul>
+<h3>2.8.2 高性能并行接口 HiPPI</h3>
+<ul><li>Los Alamos 国家实验室 1987 年提出，统一不同产商大型机和超级计算机的接口。</li><li>1993 年 ANSI X3T9.3 委员会认可了 HiPPI 标准，覆盖物理和数据链路层。</li><li>单工的点到点数据传输接口，速率 800 Mbps 到 1.6 Gbps。</li><li>超级 HiPPI：潜在 6.4 Gbps 速率（比 HiPPI 快 8 倍且时延低）。</li><li>SGI 和 Los Alamos 开发了速率高达 25.6 Gbps 的 HiPPI 交换开关。</li></ul>
+<h3>2.8.3 光纤通道 FC（Fiber Channel）</h3>
+<ul><li>通道和网络标准的集成；既可共享介质，也可交换技术。</li><li>速度范围：100 / 133 / 200 / 400 / 800 Mbps，未来 1 / 2 / 4 Gbps。</li><li>支持点到点、仲裁环及交换光纤连接。</li></ul>
+<h3>2.8.4 FDDI（Fiber Distributed Data Interface）</h3>
+<ul><li>光纤分布式数据接口。</li><li>双向光纤令牌环提供 100–200 Mbps 数据传输速率。</li><li>具有互连大量设备的能力。</li><li>传统 FDDI 仅以异步方式操作。</li></ul>
+<h3>2.8.5 ATM（Asynchronous Transfer Mode）</h3>
+<ul><li>ATM 论坛（1991）和 ITU 标准定义。</li><li>独立于介质的消息传输协议，将消息段变成更短的<strong>固定长度 53 字节的报元</strong>进行传输。</li><li>基于报元交换机制。</li><li>网络支持 25 / 51 / 155 / 622 Mbps 速率。</li></ul>
+<h3>2.8.6 以太网演进</h3>
+<div class="table-wrap"><table><thead><tr><th>代别</th><th>类型</th><th>引入年代</th><th>速度（带宽）</th><th>最大距离</th><th>主要应用领域</th></tr></thead><tbody><tr><td>以太网</td><td>10BaseT</td><td>1982</td><td>10 Mb/s</td><td>UTP 100 m；同轴 500 m；多模光纤 2 Km；单模光纤 25 Km</td><td>文件共享、打印机共享</td></tr><tr><td>快速以太网</td><td>100BaseT</td><td>1994</td><td>100 Mb/s</td><td>UTP 100 m；STP 100 m；多模光纤 412 m（半）/2 Km（全）；单模 20 Km</td><td>COW 计算、C/S 结构、大型数据库</td></tr><tr><td>千兆以太网</td><td>1GB</td><td>1997</td><td>1 Gb/s</td><td>UTP 25–100 m；STP 25–100 m；多模 500 m；单模 3 Km</td><td>大型图像、多媒体、数据仓库</td></tr></tbody></table></div></div></div>
+<div class="card card-note" id="N-24"><span class="card-tag">第2章</span><h3 class="card-title">2.9 选路方法与开关技术</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><h3>2.9.1 基本术语</h3>
+<ul><li><strong>消息（Message）</strong>：在多计算机系统处理节点之间传递包含数据和同步信息的信息包。</li><li><strong>包（Packet）</strong>：长度随协议不同而不同（64–512 位），是信息传送的最小单位。</li><li><strong>片（Flit）</strong>：长度固定，一般为 8 位。</li></ul>
+<pre><code>  包消息
+  ┌──┬──┬──┬──┬──┬──┬──┐     ← 顺序号数
+  │头│数│据│  │片│尾│片│
+  │片│   │   │  │  │  │  │
+  └──┴──┴──┴──┴──┴──┴──┘
+  F  F  F  F  F  F  F  F</code></pre>
+<h3>2.9.2 选路模式分类</h3>
+<p>按传输模式分：</p>
+<div class="table-wrap"><table><thead><tr><th>模式</th><th>说明</th></tr></thead><tbody><tr><td>一到一（单播）</td><td>一条信包从源到唯一目的地</td></tr><tr><td>多到一（集中）</td><td>多个处理器发送到同一目的地；每条信包有且仅有一个目的地</td></tr><tr><td>一到多（多播）</td><td>一条信包到一组目的地</td></tr><tr><td>一到所有（广播、组播）</td><td>一条信包到所有处理器（每节点最多一份）</td></tr><tr><td>多到多（会议）</td><td>每个处理器都向所有其他处理器发消息</td></tr></tbody></table></div>
+<p>按路径计算分：</p>
+<ul><li><strong>静态选路</strong>：事先算好传输路径（offline）</li><li><strong>动态选路</strong>：没有事先计算好的路径（online）</li></ul>
+<p>按交换方式分：</p>
+<ul><li>线路交换</li><li>存储-转发（信包）</li><li>虫孔（Wormhole）</li></ul>
+<h3>2.9.3 选路算法的三种机制</h3>
+<ul><li><strong>基于算术的</strong>：开关中具有简单的算术运算功能，如维序选路。</li><li><strong>基于源地址的</strong>：在源点时就将沿路径的各个开关的输出端口地址 p₀,p₁,…,pₙ 包在信包头部，每个开关只对信包头的输出端口地址进行剥离。</li><li><strong>基于查表的</strong>：开关中含有选路表，对信包头中的选路域查出输出端口地址。</li></ul>
+<h3>2.9.4 选路分类</h3>
+<ul><li><strong>最短路径/非最短路径</strong>（贪心选路/随机选路）：维序选路是贪心的，二阶段维序选路是随机的。</li><li><strong>确定选路/自适应选路</strong>（寻径确定/寻径视网络状况）。</li><li><strong>维序选路（Dimension-Ordered Routing）</strong>：一种确定的最短路径选路。</li><li>二维网孔中的维序选路：<strong>X-Y 选路</strong></li><li>超立方中的维序选路：<strong>E-立方选路</strong></li></ul>
+<h3>2.9.5 X-Y 选路算法</h3>
+<pre><code>begin
+  step1: 沿 X 方向将信包送至目的地处理器所在的列
+  step2: 沿 Y 方向将信包送至目的地处理器所在的行
+end</code></pre>
+<p>示意：源 (2,1) → 目的 (7,6)，先沿 X 方向、再沿 Y 方向移动。</p>
+<h3>2.9.6 E-立方选路算法</h3>
+<p><strong>路由计算</strong>：</p>
+<pre><code>s_{n-1} s_{n-2} … s_1 s_0   (源地址)
+                          ⊕
+d_{n-1} d_{n-2} … d_1 d_0   (目的地址)
+                          =
+r_{n-1} r_{n-2} … r_1 r_0   (路由值)</code></pre>
+<p><strong>路由过程</strong>：依次访问 r_i=1 的维。</p>
+<p><strong>示例</strong>：源 S=0110，目的 D=1101，路由值 R=1011，路径：</p>
+<pre><code>0110 → 0111 → 0101 → 1101</code></pre></div></div>
+<div class="card card-note" id="N-25"><span class="card-tag">第2章</span><h3 class="card-title">2.10 开关技术</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><h3>2.10.1 信道与时延参数</h3>
+<ul><li><strong>信道带宽 b</strong>：每个信道有 w 位宽和信号传输率 f = 1/t，b = w·f bits/sec。</li><li><strong>节点和开关的度</strong>：与节点和开关相连的信道数目。</li><li><strong>路径</strong>：信包在网络中走过的开关和链路（link）序列。</li><li><strong>路由长度或距离</strong>：路径中包括的链路数。</li></ul>
+<p><strong>信包传输性能参数</strong>：</p>
+<ul><li><strong>启动时间 t_s</strong>：准备包头信息等</li><li><strong>节点延迟时间 t_h</strong>：包头穿越相邻节点的时间</li><li><strong>字传输时间 t_w</strong>：传输每个字的时间</li><li><strong>链路数 l</strong>、<strong>信包大小 m</strong></li></ul>
+<h3>2.10.2 存储-转发（Store-and-Forward）选路</h3>
+<ul><li>消息被分成信包，每个信包都含有寻径信息。</li><li>当一个信包到达中间节点 A 时，A 把整个信包放入通信缓冲器中，然后选路到下一个相邻节点 B。</li><li><strong>传输时间</strong>：</li></ul>
+<p>$$t_{comm}(SF) = t_s + (mt_w + t_h) \cdot l = O(ml)$$</p>
+<ul><li><strong>缺点</strong>：每个节点必须缓冲整个消息，缓冲器较大；网络时延与节点数成正比。</li></ul>
+<h3>2.10.3 切通（Cut-Through）选路</h3>
+<ul><li>在传递一个消息之前，就为它建立一条从源节点到目的节点的物理通道。</li><li><strong>传输时间</strong>：</li></ul>
+<p>$$t_{comm}(CT) = t_s + mt_w + lt_h = O(m+l)$$</p>
+<ul><li><strong>缺点</strong>：物理通道非共享；传输过程中物理通道一直被占用。</li></ul>
+<h3>2.10.4 虫孔（Wormhole）选路</h3>
+<ul><li>由 Dally 于 1986 年提出。</li><li>把消息分成许多很小的<strong>片（flit）</strong>：</li><li><strong>头片</strong>：包含所有寻径信息</li><li><strong>数据片</strong>：中间数据</li><li><strong>尾片</strong>：包含消息结束符</li><li>每个节点上只需缓冲一个片。</li><li>用头片直接牵引一条从输入链路到输出链路的路径。每个消息中的片以流水方式在网络中向前"蠕动"。</li></ul>
+<p><strong>优点</strong>：</p>
+<ol><li>每个节点缓冲器需求量小，易于 VLSI 实现。</li><li>较低的网络传输延迟（消息包较长时距离影响小）。</li><li>通道共享性好、利用率高。</li><li>易于实现 Multicast 和 Broadcast。</li></ol>
+<p><strong>缺点</strong>：节点缓冲器需求量小是优点，但头片阻塞会导致后续所有片停滞。</p>
+<h3>2.10.5 距离 l 的计算</h3>
+<p>对于 p 个处理器：</p>
+<div class="table-wrap"><table><thead><tr><th>网络</th><th>距离 l</th></tr></thead><tbody><tr><td>一维环形</td><td>l ≤ ⌊p/2⌋</td></tr><tr><td>带环绕 Mesh</td><td>l ≤ ⌊p^(1/2) / 2⌋</td></tr><tr><td>超立方</td><td>l ≤ log p</td></tr></tbody></table></div>
+<p><strong>单一信包传输时间</strong>：</p>
+<div class="table-wrap"><table><thead><tr><th>网络</th><th>SF 模式</th><th>CT 模式</th></tr></thead><tbody><tr><td>一维环形</td><td>t_comm(SF) = (t_s + t_w·m) + ⌊p/2⌋·t_h</td><td>t_comm(CT) = t_s + mt_w + lt_h</td></tr><tr><td>带环绕 Mesh</td><td>t_comm(SF) = (t_s + t_w·m) + ⌊p^(1/2)/2⌋·t_h</td><td>同上</td></tr><tr><td>超立方</td><td>t_comm(SF) = (t_s + t_w·m) + log p · t_h</td><td>同上</td></tr></tbody></table></div>
+<p>当 m &gt;&gt; p 时：t_comm(SF) ≈ t_comm(CT) = t_s + mt_w（t_s &gt;&gt; t_h）。</p></div></div>
+<div class="card card-note" id="N-26"><span class="card-tag">第2章</span><h3 class="card-title">2.11 集体通信（Broadcast &amp; All-to-All）</h3><p class="sub">第2章　并行计算机互连与通信</p><div class="card-body"><h3>2.11.1 一到多播送 SF 模式</h3>
+<p><strong>环</strong>：</p>
+<ol><li>先左右邻近传送</li><li>再左右二个方向同时播送</li></ol>
+<p>时间：t_all-to-one(SF) = (t_s + t_w·m)·⌈log p⌉</p>
+<p><strong>环绕网孔</strong>：</p>
+<ol><li>先完成一行中的播送</li><li>再同时进行各列的播送（4 步）</li></ol>
+<p>时间：t_all-to-one(SF) = (t_s + t_w·m)·⌈2·log(√p)⌉ ≈ 2(t_s + t_w·m)·log(√p)</p>
+<p><strong>超立方</strong>：从低维到高维依次播送。</p>
+<p>时间：t_all-to-one(SF) = (t_s + t_w·m)·log p</p>
+<h3>2.11.2 一到多播送 CT 模式</h3>
+<p><strong>环</strong>：</p>
+<ol><li>发送至 p/2 远的处理器</li><li>同时发送至 p/4 远的处理器</li><li>……</li></ol>
+<p>时间：t_all-to-one(CT) = t_s·log p + t_w·m·log p + t_h·(p/2)</p>
+<p>（t_h·p/2 较大，可忽略时简化为 (t_s + t_w·m)·log p）</p>
+<p><strong>网孔</strong>：先进行行播送，再同时进行列播送。</p>
+<p>时间：t_all-to-one(CT) = 2·(t_s·log √p + t_w·m·log √p + t_h·(√p−1)) = (t_s + t_w·m)·log p + 2t_h·(√p−1)</p>
+<p><strong>超立方</strong>：依次从低维到高维播送。</p>
+<p>时间：t_all-to-one(CT) = (t_s + t_w·m)·log p</p>
+<h3>2.11.3 多到多播送 SF 模式</h3>
+<p><strong>环</strong>：同时向右（或左）播送刚接收到的信包。</p>
+<p>时间：t_all-to-all(SF) = (p−1)·(t_s + t_w·m)</p>
+<p><strong>环绕网孔</strong>：</p>
+<ol><li>先进行行的播送</li><li>再进行列的播送</li></ol>
+<p>时间：t_all-to-all(SF) = 2·(p−1)·(t_s + t_w·m)</p>
+<p><strong>超立方</strong>：依次按维进行多到多的播送。</p>
+<p>时间：t_all-to-all(SF) = (t_s + t_w·m)·⌈log p⌉·(p/2)</p>
+<h3>2.11.4 多到多播送 CT 模式</h3>
+<p>使用一到多的策略会造成链路竞争，<strong>CT 模式一般不直接用于多到多播送</strong>。</p>
+<hr></div></div>
+<div class="card card-note" id="N-27"><span class="card-tag">第3章</span><h3 class="card-title">3.1 CPU 基本性能指标</h3><p class="sub">第3章　并行计算性能评测</p><div class="card-body"><ul><li><strong>工作负载 W</strong></li><li><strong>执行时间</strong></li><li><strong>浮点运算数</strong></li><li><strong>指令数目</strong></li><li><strong>并行执行时间</strong>：</li></ul>
+<p>$$T_n = T_{comput} + T_{paro} + T_{comm}$$</p>
+<p>（T_comput 计算时间，T_paro 并行开销时间（进程创建、切换等），T_comm 通信时间）</p></div></div>
+<div class="card card-note" id="N-28"><span class="card-tag">第3章</span><h3 class="card-title">3.2 存储器性能（层次结构 C, L, B）</h3><p class="sub">第3章　并行计算性能评测</p><div class="card-body"><div class="table-wrap"><table><thead><tr><th>层次</th><th>容量</th><th>延迟</th><th>带宽</th></tr></thead><tbody><tr><td>寄存器</td><td>&lt; 2KB</td><td>0 周期</td><td>1–32 GB/s</td></tr><tr><td>1 级 Cache</td><td>4–256KB</td><td>0–2 周期</td><td>1–16 GB/s</td></tr><tr><td>2 级 Cache</td><td>64KB–4MB</td><td>2–10 周期</td><td>1–4 GB/s</td></tr><tr><td>主存</td><td>16MB–16GB</td><td>10–100 周期</td><td>0.4–2 GB/s</td></tr><tr><td>磁盘</td><td>1–100GB</td><td>100K–1M 周期</td><td>1–16 MB/s</td></tr><tr><td>远程存储器</td><td>1–100GB</td><td>100–100K 周期</td><td>1–300 MB/s</td></tr></tbody></table></div>
+<p><strong>示例</strong>：RISC add r1,r2,r3，r=8 bytes，100 MHz，则 B = 3·8·100·10⁶ B/s = 2.4 GB/s。</p></div></div>
+<div class="card card-note" id="N-29"><span class="card-tag">第3章</span><h3 class="card-title">3.3 并行与通信开销</h3><p class="sub">第3章　并行计算性能评测</p><div class="card-body"><p>并行和通信开销相对于计算可能很大。</p>
+<ul><li><strong>PowerPC</strong>：每周期 15 ns 执行 4 flops；</li><li>创建进程 1.4 ms（可执行 372000 flops）。</li></ul>
+<p><strong>乒乓方法（Ping-Pong Scheme）</strong>：测量点到点通信开销。</p>
+<p>节点 0 发送 m 个字节给节点 1；节点 1 从节点 0 接收 m 个字节后，立即将消息发回节点 0。总时间除以 2 即得到点到点通信时间。</p>
+<pre><code>节点 0 ──────m 字节─────► 节点 1
+   ◄────────m 字节────────┘</code></pre>
+<p><strong>伪代码</strong>：</p>
+<pre><code>if (my_node_id == 0) {                /* 发送者 */
+    start_time = second();
+    send an m-byte message to node 1;
+    receive an m-byte message from node 1;
+    end_time = second();
+    total_time = end_time - start_time;
+    communication_time[i] = total_time / 2;
+}
+else if (my_node_id == 1) {            /* 接收者 */
+    receive an m-byte message from node 0;
+    send an m-byte message to node 0;
+}</code></pre>
+<p>可一般化为<strong>热土豆法（Hot-Potato）</strong>或<strong>救火队法（Fire-Brigade）</strong>：0 → 1 → 2 → … → n-1 → 0。</p></div></div>
+<div class="card card-note" id="N-30"><span class="card-tag">第3章</span><h3 class="card-title">3.4 并行开销的表达式</h3><p class="sub">第3章　并行计算性能评测</p><div class="card-body"><p><strong>点到点通信</strong>：</p>
+<p>$$t(m) = t_0 + \frac{m}{r_\infty}$$</p>
+<ul><li><strong>通信启动时间 t₀</strong></li><li><strong>渐近带宽 r∞</strong>：传送</li></ul></div></div>
+  </div>
+</main>
+</div>
+
+<script>
+(function () {
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    window.MathJax.typesetPromise();
+  } else if (window.MathJax && window.MathJax.startup) {
+    window.MathJax.startup.promise.then(function () { window.MathJax.typesetPromise(); });
+  }
+})();
+
+(function () {
+  var segs = document.querySelectorAll('#colSeg button');
+  var masonries = document.querySelectorAll('.masonry');
+  segs.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var single = b.dataset.cols === '1';
+      masonries.forEach(function (m) {
+        m.style.columnCount = b.dataset.cols;
+        m.classList.toggle('col1', single);
+      });
+      segs.forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active');
+    });
+  });
+})();
+</script>
+</body>
+</html>

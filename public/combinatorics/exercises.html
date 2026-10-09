@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#7c3aed">
+<title>组合数学 · 练习题 · 10 页 70 题</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root {
+  --bg:#0f0a1e; --card:#1a1330; --card2:#221842; --text:#e8e4f5; --muted:#a799c9;
+  --border:#322752; --primary:#a78bfa; --primary-dark:#7c3aed; --accent:#fbbf24;
+  --ok:#34d399; --ans-bg:#162a22; --ans-border:#34d399; --chip:#2a1f4d;
+  --topbar:linear-gradient(135deg,#5b21b6 0%,#312e81 100%);
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.75; font-size:15px; }
+.topbar { position:sticky; top:0; z-index:100; background:var(--topbar); padding:14px 22px;
+  box-shadow:0 4px 14px rgba(0,0,0,.4); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+.topbar h1 { margin:0; font-size:19px; color:#fff; }
+.topbar .sub { font-size:12px; color:#ddd6f5; margin-top:2px; }
+.actions { display:flex; gap:8px; }
+.btn { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25); color:#fff;
+  padding:6px 13px; border-radius:7px; cursor:pointer; font-size:13px; transition:all .15s; text-decoration:none; display:inline-flex; align-items:center; gap:5px; }
+.btn:hover { background:rgba(255,255,255,.28); transform:translateY(-1px); }
+.progress-wrap { height:4px; background:var(--border); }
+.progress { height:100%; width:0; background:linear-gradient(90deg,var(--primary),var(--accent)); transition:width .3s; }
+.tabs { display:flex; flex-wrap:wrap; gap:6px; padding:14px 22px; background:var(--card); border-bottom:1px solid var(--border);
+  position:sticky; top:60px; z-index:90; }
+.tab { padding:6px 13px; border-radius:20px; background:var(--chip); color:var(--muted); cursor:pointer;
+  font-size:13px; border:1px solid transparent; transition:all .15s; white-space:nowrap; }
+.tab:hover { color:var(--text); border-color:var(--primary); }
+.tab.active { background:var(--primary-dark); color:#fff; border-color:var(--primary); }
+.tab.done::after { content:" ✓"; color:var(--ok); }
+.wrap { max-width:900px; margin:0 auto; padding:24px 20px 80px; }
+.page { display:none; }
+.page.active { display:block; animation:fade .25s; }
+@keyframes fade { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:none;} }
+.page-title { display:flex; align-items:center; gap:12px; margin:0 0 6px; font-size:22px; }
+.page-title .pgnum { background:var(--primary-dark); color:#fff; font-size:13px; padding:4px 11px; border-radius:8px; }
+.page-desc { color:var(--muted); font-size:13.5px; margin:0 0 18px; }
+.q { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:14px; transition:border-color .15s; }
+.q:hover { border-color:var(--primary); }
+.q-head { display:flex; gap:10px; align-items:flex-start; }
+.q-num { background:var(--card2); color:var(--primary); font-weight:700; min-width:30px; height:30px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+.q-body { flex:1; }
+.q-stem { margin:2px 0; }
+.lvl { font-size:11px; color:var(--accent); margin-left:6px; }
+.toggle { margin-top:10px; background:var(--card2); border:1px solid var(--border); color:var(--primary);
+  padding:5px 12px; border-radius:7px; cursor:pointer; font-size:12.5px; transition:all .15s; }
+.toggle:hover { background:var(--primary-dark); color:#fff; }
+.answer { margin-top:10px; padding:12px 14px; background:var(--ans-bg); border-left:3px solid var(--ans-border);
+  border-radius:0 8px 8px 0; font-size:14px; display:none; }
+.answer.show { display:block; animation:fade .2s; }
+.answer .lbl { color:var(--ok); font-weight:700; font-size:12px; display:block; margin-bottom:4px; }
+.pager { display:flex; justify-content:space-between; margin-top:24px; }
+.pager button { background:var(--card); border:1px solid var(--border); color:var(--text);
+  padding:9px 18px; border-radius:9px; cursor:pointer; font-size:14px; transition:all .15s; }
+.pager button:hover:not(:disabled) { background:var(--primary-dark); border-color:var(--primary); color:#fff; }
+.pager button:disabled { opacity:.35; cursor:not-allowed; }
+code { background:var(--card2); padding:2px 6px; border-radius:4px; font-family:Consolas,Menlo,monospace; font-size:13px; color:#f9a8d4; }
+@media (max-width:600px){ .tabs{top:58px;} .topbar h1{font-size:16px;} .wrap{padding:18px 14px 70px;} }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>🎲 组合数学 · 练习题</h1>
+    <div class="sub">10 页 · 70 题 · 配套《组合数学 20 页学习课件》</div>
+  </div>
+  <div class="actions">
+    <a class="btn" href="courseware.html">📖 课件</a>
+    <button class="btn" onclick="toggleAll()" id="allBtn">👁 显示全部答案</button>
+  </div>
+</div>
+<div class="progress-wrap"><div class="progress" id="prog"></div></div>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="wrap" id="wrap"></div>
+
+<script>
+const PAGES = [
+  { title:"基本计数原理", desc:"加法原理、乘法原理、捆绑法、容斥入门", qs:[
+    {l:"★", q:"从 5 件上衣、4 条裤子、3 双鞋中各选一件搭配，共有多少种搭配？", a:"乘法原理：$5\\times4\\times3 = 60$ 种。"},
+    {l:"★", q:"一个密码由 3 位数字组成（0–9，可重复），共有多少种？若数字不可重复呢？", a:"可重复：$10^3 = 1000$；不可重复：$10\\times9\\times8 = 720$。"},
+    {l:"★", q:"从甲地到乙地有 3 条公路、2 条铁路；从乙地到丙地有 4 条路。甲→丙共多少种走法？只在甲、乙间往返又有多少？", a:"甲→丙分两步：$(3+2)\\times4 = 20$ 种。甲↔乙往返：$5\\times5 = 25$ 种。"},
+    {l:"★★", q:"用数字 1,2,3,4,5 组成无重复数字的三位数，其中是偶数的有多少个？", a:"偶数末位取 2 或 4（2 种），前两位从剩 4 个排：$2\\times P(4,2)=2\\times12 = 24$ 个。"},
+    {l:"★★", q:"8 个人排成一排照相，其中甲、乙两人必须相邻，有多少种排法？", a:"捆绑法：甲乙看作整体与其余 6 人共 7 个对象排列 $7!$，内部 2 种：$7!\\times2 = 10080$。"},
+    {l:"★★", q:"从 1 到 1000 的整数中，能被 3 或 5 整除的有多少个？", a:"容斥：$\\lfloor1000/3\\rfloor+\\lfloor1000/5\\rfloor-\\lfloor1000/15\\rfloor = 333+200-66 = 467$。"},
+    {l:"★★★", q:"用 0–9 组成的四位数（首位非 0）中，恰含一个数字 0 的有多少个？", a:"0 的位置（百/十/个，3 种）$\\times$ 首位 $9$ 种 $\\times$ 另两非 0 位各 $9$ 种 $= 3\\times9\\times9\\times9 = 2187$ 个。"}
+  ]},
+  { title:"排列", desc:"线排列、圆排列、捆绑、容斥、多重集、项链", qs:[
+    {l:"★", q:"计算 $P(7,3)$ 与 $P(6,6)$。", a:"$P(7,3)=7\\times6\\times5 = 210$；$P(6,6)=6! = 720$。"},
+    {l:"★", q:"6 名运动员争夺金、银、铜牌，共有多少种结果？", a:"有序取 3：$P(6,3)=6\\times5\\times4 = 120$ 种。"},
+    {l:"★", q:"7 个人围圆桌而坐，有多少种不同坐法（旋转等价）？", a:"圆排列：$(7-1)! = 720$ 种。"},
+    {l:"★★", q:"5 对夫妻共 10 人围圆桌，要求每对夫妻相邻，有多少种坐法？", a:"5 对各看作一块作圆排列 $(5-1)!=24$，每对内部 2 种：$24\\times2^5 = 768$。"},
+    {l:"★★", q:"用 A,B,C,D,E 排成一列，要求 A 不在第一位、E 不在最后一位，有多少种？", a:"容斥：$5!-4!-4!+3! = 120-24-24+6 = 78$。"},
+    {l:"★★", q:"将 “BANANA” 重新排列（相同字母无区别），有多少种不同排法？", a:"B·1, A·3, N·2：$\\dfrac{6!}{1!\\,3!\\,2!} = 60$。"},
+    {l:"★★★", q:"8 个不同的珠子串成一条项链（旋转、翻转都等价），有多少种不同项链？", a:"项链数 $=\\dfrac{(8-1)!}{2} = \\dfrac{5040}{2} = 2520$。"}
+  ]},
+  { title:"组合", desc:"组合数、补集法、双计数、不相邻选取", qs:[
+    {l:"★", q:"计算 $\\binom{10}{3}$ 与 $\\binom{10}{7}$，并说明为何相等。", a:"$\\binom{10}{3}=120=\\binom{10}{7}$；由对称性 $\\binom{n}{k}=\\binom{n}{n-k}$。"},
+    {l:"★", q:"从 12 人中选出 5 人组成委员会，有多少种选法？", a:"$\\binom{12}{5} = 792$。"},
+    {l:"★★", q:"从 12 人（含甲、乙）中选 5 人，要求甲、乙至少一人入选，有多少种？", a:"补集法：$\\binom{12}{5}-\\binom{10}{5}=792-252 = 540$。"},
+    {l:"★★", q:"平面上 10 个点，任意三点不共线，可连多少条线段？可构成多少个三角形？", a:"线段 $\\binom{10}{2}=45$；三角形 $\\binom{10}{3}=120$。"},
+    {l:"★★", q:"一副扑克 52 张中取 5 张，恰含 2 张 K 的取法有多少？", a:"$\\binom{4}{2}\\binom{48}{3}=6\\times17296 = 103776$。"},
+    {l:"★★★", q:"从 1–20 中选 3 个不同的数，使它们两两之差都 $\\ge 2$（不相邻），有多少种？", a:"令 $a'=a,b'=b-1,c'=c-2$，则 $1\\le a'<b'<c'\\le18$，故 $\\binom{18}{3}=816$。"},
+    {l:"★★★", q:"证明 $\\sum_{k=0}^{n}\\binom{n}{k}^2 = \\binom{2n}{n}$（组合解释）。", a:"从 $n$ 红 + $n$ 蓝共 $2n$ 个中取 $n$ 个：取 $k$ 红 $n-k$ 蓝有 $\\binom{n}{k}\\binom{n}{n-k}=\\binom{n}{k}^2$，求和 $=\\binom{2n}{n}$。"}
+  ]},
+  { title:"多重集与隔板法", desc:"非负/正整数解、可重组合、上界约束", qs:[
+    {l:"★", q:"方程 $x_1+x_2+x_3 = 10$ 的非负整数解有多少组？", a:"隔板法：$\\binom{10+3-1}{3-1}=\\binom{12}{2} = 66$。"},
+    {l:"★", q:"把 8 个相同的苹果分给 3 个小孩，每人至少 1 个，有多少种分法？", a:"每人先发 1 个，剩 5 个任意分：$\\binom{5+3-1}{2}=\\binom{7}{2} = 21$。"},
+    {l:"★★", q:"方程 $x_1+x_2+x_3+x_4 = 15$，$x_i\\ge1$ 的正整数解有多少？", a:"令 $y_i=x_i-1$，$\\sum y_i=11$：$\\binom{11+3}{3}=\\binom{14}{3} = 364$。"},
+    {l:"★★", q:"从苹果、香蕉、橙子三种水果中买 12 个（每种可不买），有多少种购买方案？", a:"可重组合：$\\binom{12+3-1}{2}=\\binom{14}{2} = 91$。"},
+    {l:"★★", q:"“MISSISSIPPI” 的不同字母排列有多少种？", a:"M·1,I·4,S·4,P·2：$\\dfrac{11!}{1!\\,4!\\,4!\\,2!} = 34650$。"},
+    {l:"★★★", q:"$x_1+x_2+x_3+x_4 = 20$，约束 $x_1\\le 6$，其余 $\\ge0$，有多少组解？", a:"总解 $\\binom{23}{3}=1771$；减 $x_1\\ge7$ 的 $\\binom{16}{3}=560$：$1771-560 = 1211$。"},
+    {l:"★★★", q:"将 10 个相同的球放入 4 个不同的盒子，允许空盒，且第 1 盒球数为偶数，有多少种？", a:"第 1 盒取 $2j$（$j=0..5$），其余 3 盒分 $10-2j$：$\\sum\\binom{12-2j}{2}=66+45+28+15+6+1 = 161$。"}
+  ]},
+  { title:"二项式定理与恒等式", desc:"展开系数、常数项、求和、Vandermonde", qs:[
+    {l:"★", q:"求 $(x+2)^5$ 展开式中 $x^3$ 项的系数。", a:"$\\binom{5}{3}x^3\\cdot2^2 = 10\\times4 = 40$。"},
+    {l:"★", q:"求 $(2x-3y)^4$ 展开式中 $x^2y^2$ 项的系数。", a:"$\\binom{4}{2}(2)^2(-3)^2 = 6\\times4\\times9 = 216$。"},
+    {l:"★★", q:"求 $\\left(x^2+\\dfrac{1}{x}\\right)^6$ 展开式中的常数项。", a:"通项 $\\binom{6}{k}x^{12-3k}$，令 $12-3k=0\\Rightarrow k=4$，常数项 $\\binom{6}{4}=15$。"},
+    {l:"★★", q:"证明 $\\sum_{k}\\binom{n}{k} = 2^n$ 和 $\\sum_{k}(-1)^k\\binom{n}{k}=0$（$n\\ge1$）。", a:"在 $(1+x)^n=\\sum\\binom{n}{k}x^k$ 中令 $x=1$ 得 $2^n$；令 $x=-1$ 得 $0$。"},
+    {l:"★★", q:"利用二项式定理求 $\\sum_{k=0}^{n}k\\binom{n}{k}$。", a:"对 $(1+x)^n$ 求导：$n(1+x)^{n-1}=\\sum k\\binom{n}{k}x^{k-1}$，令 $x=1$ 得 $n\\,2^{n-1}$。"},
+    {l:"★★★", q:"证明 Vandermonde 恒等式 $\\sum_{k}\\binom{m}{k}\\binom{n}{r-k}=\\binom{m+n}{r}$。", a:"比较 $(1+x)^m(1+x)^n=(1+x)^{m+n}$ 两边 $x^r$ 的系数即得。"},
+    {l:"★★★", q:"求 $\\sum_{k=0}^{n}\\binom{n}{k}\\dfrac{1}{k+1}$ 的闭式。", a:"$\\dfrac{1}{k+1}\\binom{n}{k}=\\dfrac{1}{n+1}\\binom{n+1}{k+1}$，求和 $=\\dfrac{2^{n+1}-1}{n+1}$。"}
+  ]},
+  { title:"鸽巢原理", desc:"构造盒子：余数、配对、奇偶、累计序列", qs:[
+    {l:"★", q:"任意 13 个人中，至少有两人在同一个月出生，为什么？", a:"12 个月为 12 个盒子，13 人放入必有一月 $\\ge2$ 人。"},
+    {l:"★", q:"抽屉里有红、蓝、黄三色袜子，至少取多少只才能保证有 2 只同色？", a:"3 种颜色为盒，取 4 只必有 2 只同色（$3+1$）。"},
+    {l:"★★", q:"从 1–100 中任取 51 个数，证明必有两个数互质。", a:"按相邻配对 $\\{1,2\\},\\dots,\\{99,100\\}$ 共 50 对，取 51 个必有一对相邻，相邻整数互质。"},
+    {l:"★★", q:"从 1–8 中任取 5 个数，证明必有两个之和为 9。", a:"配对 $\\{1,8\\},\\{2,7\\},\\{3,6\\},\\{4,5\\}$ 共 4 盒，取 5 个必有一对同盒，其和为 9。"},
+    {l:"★★", q:"证明任意 $n+1$ 个不超过 $2n$ 的正整数中，必有一个整除另一个。", a:"每数写成 $2^a\\cdot m$（$m$ 奇）。$1\\sim2n$ 中奇数仅 $n$ 个为盒，$n+1$ 个数必有两个同 $m$，其一整除另一。"},
+    {l:"★★★", q:"平面上任取 5 个整点，证明必有两点的中点也是整点。", a:"按坐标奇偶 $(奇/偶)\\times(奇/偶)$ 共 4 类，5 点必有 2 点同类，坐标同奇偶 ⇒ 中点为整点。"},
+    {l:"★★★", q:"棋手 11 周每天至少 1 盘、每周至多 12 盘，证明存在连续若干天恰好下 21 盘。", a:"设 $a_i$ 为前 $i$ 天累计，$1\\le a_1<\\cdots<a_{77}\\le132$。$a_i$ 与 $a_i+21$ 共 154 数落在 $1\\sim153$，鸽巢得 $a_j=a_i+21$。"}
+  ]},
+  { title:"容斥原理", desc:"集合计数、错位排列、欧拉函数、满射、平方/立方", qs:[
+    {l:"★", q:"50 名学生中 30 人学英语、25 人学日语、15 人都学。至少学一门多少人？都不学呢？", a:"至少一门 $=30+25-15 = 40$；都不学 $=50-40 = 10$。"},
+    {l:"★", q:"求 1–100 中不能被 2、3、5 任一整除的数的个数。", a:"$100-(50+33+20)+(16+10+6)-3 = 26$。"},
+    {l:"★★", q:"求错位排列数 $D_4$、$D_5$ 的值。", a:"$D_4=9,\\ D_5=44$（由 $D_n=n!\\sum_{k=0}^{n}\\frac{(-1)^k}{k!}$）。"},
+    {l:"★★", q:"4 封信装入 4 个写好地址的信封，全部装错的概率是多少？", a:"$\\dfrac{D_4}{4!}=\\dfrac{9}{24} = \\dfrac{3}{8} = 0.375$。"},
+    {l:"★★", q:"求欧拉函数 $\\varphi(60)$，并写出推导。", a:"$60=2^2\\cdot3\\cdot5$，$\\varphi(60)=60\\cdot\\tfrac12\\cdot\\tfrac23\\cdot\\tfrac45 = 16$。"},
+    {l:"★★★", q:"用红黄蓝三色给 5 个不同小球染色，要求三色都用到，有多少种染法？", a:"满射：$3^5-\\binom{3}{1}2^5+\\binom{3}{2}1^5 = 243-96+3 = 150$。"},
+    {l:"★★★", q:"求 1 到 1000 中既不是完全平方数也不是完全立方数的整数个数。", a:"平方 31、立方 10、六次方 3：$1000-(31+10-3)=962$。"}
+  ]},
+  { title:"递推关系与生成函数", desc:"建立递推、特征方程、迭代、OGF、卷积", qs:[
+    {l:"★", q:"写出 Hanoi 塔 $n$ 盘移动次数的递推并求闭式。", a:"$H_n=2H_{n-1}+1,\\ H_1=1$；闭式 $H_n=2^n-1$。"},
+    {l:"★", q:"Fibonacci 数列 $F_0=0,F_1=1$，求 $F_2$ 到 $F_8$。", a:"$1,2,3,5,8,13,21$。"},
+    {l:"★★", q:"解递推 $a_n=5a_{n-1}-6a_{n-2}$，$a_0=1,a_1=0$。", a:"特征根 $2,3$，$a_n=A2^n+B3^n$；代入得 $A=3,B=-2$，$a_n=3\\cdot2^n-2\\cdot3^n$。"},
+    {l:"★★", q:"解递推 $a_n=2a_{n-1}+1$，$a_0=0$。", a:"迭代得 $a_n=2^n-1$。"},
+    {l:"★★", q:"平面上 $n$ 条直线两两相交、无三线共点，把平面分成多少个区域？", a:"$L_n=L_{n-1}+n,\\ L_0=1$，解得 $L_n=1+\\dfrac{n(n+1)}{2}$。"},
+    {l:"★★★", q:"用生成函数求 $a_n=3a_{n-1}+2$，$a_0=1$ 的通项。", a:"$G(x)=\\dfrac{1+x}{(1-3x)(1-x)}=\\dfrac{3/2}{1-3x}-\\dfrac{1/2}{1-x}$，$a_n=2\\cdot3^n-1$。"},
+    {l:"★★★", q:"求数列 $1,1,1,\\dots$ 与 $1,2,3,\\dots$ 卷积的生成函数及第 $n$ 项。", a:"$\\dfrac{1}{1-x}\\cdot\\dfrac{1}{(1-x)^2}=\\dfrac{1}{(1-x)^3}$，第 $n$ 项 $\\binom{n+2}{2}=\\dfrac{(n+1)(n+2)}{2}$。"}
+  ]},
+  { title:"Catalan / Stirling / 划分", desc:"Catalan 化身、Stirling、Bell、整数划分、Euler 定理", qs:[
+    {l:"★", q:"写出 Catalan 数 $C_0$ 到 $C_5$。", a:"$1,1,2,5,14,42$。"},
+    {l:"★", q:"3 对括号有多少种合法匹配？列举出来。", a:"$C_3=5$ 种：<code>((()))</code> <code>(()())</code> <code>(())()</code> <code>()(())</code> <code>()()()</code>。"},
+    {l:"★★", q:"凸六边形有多少种三角剖分？用 Catalan 数验证。", a:"$(6-2)=4$，三角剖分数 $=C_4=14$。"},
+    {l:"★★", q:"求把 4 个不同的球放入 2 个无区别非空盒子的方法数 $S(4,2)$。", a:"$S(4,2)=\\frac{1}{2}(2^4-\\binom{2}{1}1^4)=\\frac12(16-2)=7$。"},
+    {l:"★★", q:"求 Bell 数 $B_4$（集合 $\\{1,2,3,4\\}$ 的划分总数）。", a:"$B_4=S(4,1)+\\cdots+S(4,4)=1+7+6+1 = 15$。"},
+    {l:"★★★", q:"求整数 6 的所有划分 $p(6)$，并列举。", a:"$p(6)=11$：$6;5{+}1;4{+}2;4{+}1{+}1;3{+}3;3{+}2{+}1;3{+}1{+}1{+}1;2{+}2{+}2;2{+}2{+}1{+}1;2{+}1{+}1{+}1{+}1;1{\\times}6$。"},
+    {l:"★★★", q:"证明 $n$ 分成互不相同部分的划分数 = 分成奇数部分的划分数（以 $n=5$ 验证）。", a:"$n=5$：互异 $\\{5\\},\\{4,1\\},\\{3,2\\}$ 共 3 个；奇数 $\\{5\\},\\{3,1,1\\},\\{1^5\\}$ 共 3 个。一般由 $\\prod(1+x^k)=\\prod\\frac{1}{1-x^{2k-1}}$ 证。"}
+  ]},
+  { title:"Pólya 计数 / 图论 / 综合", desc:"完全图、树、Burnside、Cayley、Ramsey", qs:[
+    {l:"★", q:"$K_5$（5 个顶点的完全图）有多少条边？", a:"$\\binom{5}{2}=10$ 条。"},
+    {l:"★", q:"一棵有 10 个顶点的树有多少条边？", a:"树有 $n-1=9$ 条边。"},
+    {l:"★★", q:"用 2 种颜色给正三角形 3 顶点染色，旋转等价下有多少种本质不同染色（Burnside）？", a:"旋转群 $\\{e,r,r^2\\}$ 不动点 $8,2,2$，Burnside $\\frac{1}{3}(8+2+2)=4$ 种。"},
+    {l:"★★", q:"用 $m$ 种颜色给正方形 4 顶点染色，仅旋转群 $C_4$ 作用，求本质不同染色数公式。", a:"轮换数 $4,1,2,1$：$N=\\frac{1}{4}(m^4+m+m^2+m)=\\frac{m^4+m^2+2m}{4}$。"},
+    {l:"★★", q:"证明 $R(3,3)\\le 6$：6 人聚会必有 3 人互识或 3 人互不识。", a:"取一人 $A$，其余 5 人由鸽巢必有 3 人与 $A$ 同类（设都认识 $A$）。这 3 人中若有 2 人互识则与 $A$ 成互识三角，否则三人互不识。"},
+    {l:"★★★", q:"4 个有标号顶点的生成树有多少棵（Cayley 公式）？列举验证 $n=3$。", a:"$n^{n-2}=4^2=16$ 棵；$n=3$：$3^1=3$ 棵。"},
+    {l:"★★★", q:"用红蓝两色对 $K_6$ 的边染色，证明必出现单色三角形。", a:"$A$ 引出 5 条边两色，必有 3 条同色（设红）连到 $B,C,D$。若 $BC,BD,CD$ 有一条红则成红三角，否则三条全蓝成蓝三角。"}
+  ]}
+];
+
+const tabsEl = document.getElementById('tabs');
+const wrapEl = document.getElementById('wrap');
+let current = 0;
+const doneSet = new Set();
+
+PAGES.forEach((p, i) => {
+  const t = document.createElement('div');
+  t.className = 'tab' + (i === 0 ? ' active' : '');
+  t.id = 'tab-' + i;
+  t.textContent = 'P' + (i + 1);
+  t.onclick = () => goPage(i);
+  tabsEl.appendChild(t);
+});
+
+PAGES.forEach((p, i) => {
+  const page = document.createElement('div');
+  page.className = 'page' + (i === 0 ? ' active' : '');
+  page.id = 'page-' + i;
+  let html = `<h2 class="page-title"><span class="pgnum">第 ${i+1} 页</span>${p.title}</h2>`;
+  html += `<p class="page-desc">${p.desc}　·　${p.qs.length} 题</p>`;
+  p.qs.forEach((qq, j) => {
+    html += `<div class="q"><div class="q-head"><div class="q-num">${j+1}</div><div class="q-body">`;
+    html += `<div class="q-stem">${qq.q}<span class="lvl">${qq.l}</span></div>`;
+    html += `<button class="toggle" onclick="toggleAns(${i},${j})">💡 显示答案</button>`;
+    html += `<div class="answer" id="ans-${i}-${j}"><span class="lbl">参考答案</span>${qq.a}</div>`;
+    html += `</div></div></div>`;
+  });
+  html += `<div class="pager"><button onclick="goPage(${i-1})" ${i===0?'disabled':''}>← 上一页</button>`;
+  html += `<button onclick="markDone(${i})" style="border-color:var(--ok);color:var(--ok)">✓ 标记本页完成</button>`;
+  html += `<button onclick="goPage(${i+1})" ${i===PAGES.length-1?'disabled':''}>下一页 →</button></div>`;
+  page.innerHTML = html;
+  wrapEl.appendChild(page);
+});
+
+function goPage(i) {
+  if (i < 0 || i >= PAGES.length) return;
+  document.getElementById('page-' + current).classList.remove('active');
+  document.getElementById('tab-' + current).classList.remove('active');
+  current = i;
+  document.getElementById('page-' + current).classList.add('active');
+  document.getElementById('tab-' + current).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function toggleAns(i, j) {
+  document.getElementById(`ans-${i}-${j}`).classList.toggle('show');
+}
+let allShown = false;
+function toggleAll() {
+  allShown = !allShown;
+  document.querySelectorAll('.answer').forEach(a => a.classList.toggle('show', allShown));
+  document.getElementById('allBtn').textContent = allShown ? '🙈 隐藏全部答案' : '👁 显示全部答案';
+}
+function markDone(i) {
+  doneSet.add(i);
+  document.getElementById('tab-' + i).classList.add('done');
+  document.getElementById('prog').style.width = (doneSet.size / PAGES.length * 100) + '%';
+  if (i < PAGES.length - 1) goPage(i + 1);
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') goPage(current - 1);
+  if (e.key === 'ArrowRight') goPage(current + 1);
+});
+</script>
+</body>
+</html>

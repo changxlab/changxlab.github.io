@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenClaw · Hermes · 波布 · 悟空 — 一个住在微信里的工程团队</title>
+  <style>
+    :root{
+      --bg:#050816;--bg2:#0b1022;
+      --panel:rgba(15,23,42,.76);--panel2:rgba(255,255,255,.04);
+      --ink:#f5f8ff;--muted:#a7b5d2;--dim:#7d8aaa;
+      --line:rgba(255,255,255,.10);--line2:rgba(125,211,252,.18);
+      --blue:#7dd3fc;--cyan:#56f0e0;--gold:#f6c64d;--green:#8bf0c5;--pink:#f0a4d8;
+      --shadow:0 30px 100px rgba(0,0,0,.45);--radius:28px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 10% 8%, rgba(125,211,252,.20), transparent 18%),
+        radial-gradient(circle at 88% 10%, rgba(246,198,77,.16), transparent 20%),
+        radial-gradient(circle at 50% 0%, rgba(86,240,224,.14), transparent 26%),
+        linear-gradient(180deg,var(--bg2) 0%, var(--bg) 56%, #02040a 100%);
+    }
+    .wrap{max-width:1240px;margin:0 auto;padding:34px 20px 72px}
+    .hero{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.10);border-radius:36px;padding:34px;background:linear-gradient(145deg,rgba(15,23,42,.86),rgba(15,23,42,.58));box-shadow:var(--shadow);backdrop-filter:blur(18px);isolation:isolate}
+    .hero:before{content:"";position:absolute;inset:-1px;background:radial-gradient(circle at 18% 20%, rgba(125,211,252,.16), transparent 16%),radial-gradient(circle at 80% 18%, rgba(246,198,77,.14), transparent 18%),linear-gradient(135deg, rgba(125,211,252,.14), transparent 28%, transparent 72%, rgba(86,240,224,.12));pointer-events:none;z-index:-1}
+    .topline{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:12px}
+    .mark{width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--cyan));box-shadow:0 0 0 6px rgba(255,255,255,.05)}
+    .eyebrow{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--blue);font-weight:800}
+    .badge{padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:var(--muted);font-size:12px}
+    .badge b{color:var(--green)}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;margin-top:24px}
+    h1{margin:10px 0 12px;font-size:clamp(40px,6.4vw,80px);line-height:1.02;letter-spacing:-.06em;max-width:13ch}
+    h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lead{max-width:760px;margin:0;color:var(--muted);font-size:18px;line-height:1.75}
+    .lead b{color:var(--ink);font-weight:600}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:13px 18px;border-radius:999px;text-decoration:none;font-weight:700;font-size:14px}
+    .btn.primary{background:linear-gradient(135deg,var(--gold),#ffdf87);color:#1a1630;box-shadow:0 14px 30px rgba(246,198,77,.24)}
+    .btn.secondary{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:var(--ink)}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .chip{padding:9px 14px;border-radius:999px;border:1px solid rgba(125,211,252,.18);background:rgba(255,255,255,.04);font-size:13px;color:var(--ink)}
+    .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+    .stat{padding:14px 16px;border-radius:18px;border:1px solid var(--line2);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01))}
+    .stat .n{font-size:26px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+    .stat .n small{font-size:14px;color:var(--muted);font-weight:600;margin-left:4px}
+    .stat .l{color:var(--dim);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
+
+    .mascot-stage{position:relative;min-height:540px;border-radius:34px;background:radial-gradient(circle at 50% 50%, rgba(86,240,224,.10), transparent 52%),radial-gradient(circle at 50% 50%, rgba(125,211,252,.08), transparent 70%),linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08);overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+    .mascot{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:22px;padding:10px 10px 12px;background:rgba(5,8,22,.38);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.11);transition:transform .25s ease, box-shadow .25s ease}
+    .mascot:hover{transform:rotate(0deg) scale(1.05) !important;z-index:10 !important;box-shadow:0 0 40px rgba(86,240,224,.22), 0 16px 48px rgba(0,0,0,.5) !important}
+    .mascot img{display:block;width:100%;height:auto;border-radius:14px}
+    .mascot .label{margin-top:9px;font-size:13px;letter-spacing:.10em;font-weight:700;padding:5px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.16);color:#fff;white-space:nowrap}
+    .hero-monkey{left:3%;top:4%;width:50%;z-index:5;transform:rotate(-7deg);box-shadow:0 0 60px rgba(246,198,77,.22), 0 20px 60px rgba(0,0,0,.5);border-color:rgba(246,198,77,.28)}
+    .hero-monkey .label{background:linear-gradient(135deg,rgba(246,198,77,.22),rgba(246,198,77,.08));border-color:rgba(246,198,77,.36);color:#fde68a}
+    .hero-hero{right:3%;top:3%;width:46%;z-index:4;transform:rotate(8deg);box-shadow:0 0 50px rgba(125,211,252,.20), 0 16px 50px rgba(0,0,0,.45);border-color:rgba(125,211,252,.26)}
+    .hero-hero .label{background:linear-gradient(135deg,rgba(125,211,252,.20),rgba(125,211,252,.06));border-color:rgba(125,211,252,.36);color:#bae6fd}
+    .hero-user{left:5%;bottom:4%;width:42%;z-index:3;transform:rotate(6deg);box-shadow:0 0 44px rgba(139,240,197,.18), 0 14px 44px rgba(0,0,0,.45);border-color:rgba(139,240,197,.24)}
+    .hero-user .label{background:linear-gradient(135deg,rgba(139,240,197,.18),rgba(139,240,197,.06));border-color:rgba(139,240,197,.34);color:#a7f3d0}
+    .hero-claw{right:4%;bottom:3%;width:40%;z-index:4;transform:rotate(-9deg);box-shadow:0 0 40px rgba(86,240,224,.18), 0 14px 40px rgba(0,0,0,.45);border-color:rgba(86,240,224,.24)}
+    .hero-claw .label{background:linear-gradient(135deg,rgba(86,240,224,.18),rgba(86,240,224,.06));border-color:rgba(86,240,224,.34);color:#99f6e4}
+    .glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:280px;height:280px;background:radial-gradient(circle, rgba(86,240,224,.20) 0%, rgba(125,211,252,.12) 40%, transparent 70%);filter:blur(22px);pointer-events:none;z-index:1}
+
+    .section{margin-top:22px;display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+    .card{grid-column:span 6;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);backdrop-filter:blur(12px)}
+    .card.wide{grid-column:1/-1}
+    .card.third{grid-column:span 4}
+    .card.eighth{grid-column:span 8}
+    .card.quarter{grid-column:span 3}
+    .kicker{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    .kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+    h2{margin:0 0 10px;font-size:24px;letter-spacing:-.03em}
+    h3{margin:0 0 8px;font-size:17px;letter-spacing:-.01em;color:var(--ink)}
+    p{margin:0 0 12px;color:var(--muted);line-height:1.75}
+    p b{color:var(--ink);font-weight:600}
+    code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;padding:2px 6px;border-radius:6px;background:rgba(125,211,252,.10);color:var(--blue);border:1px solid rgba(125,211,252,.18)}
+
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .mini{border:1px solid var(--line2);border-radius:18px;padding:16px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03))}
+    .mini b{display:block;font-size:15px;margin-bottom:6px;color:var(--ink)}
+    .mini span{color:var(--muted);font-size:13.5px;line-height:1.6}
+    .mini.gold{border-color:rgba(246,198,77,.28);background:linear-gradient(180deg,rgba(246,198,77,.08),rgba(246,198,77,.02))}
+    .mini.blue{border-color:rgba(125,211,252,.28);background:linear-gradient(180deg,rgba(125,211,252,.08),rgba(125,211,252,.02))}
+    .mini.green{border-color:rgba(139,240,197,.28);background:linear-gradient(180deg,rgba(139,240,197,.08),rgba(139,240,197,.02))}
+    .mini.cyan{border-color:rgba(86,240,224,.28);background:linear-gradient(180deg,rgba(86,240,224,.08),rgba(86,240,224,.02))}
+
+    /* Chat mockup */
+    .chat{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(15,23,42,.7),rgba(15,23,42,.4));padding:14px;margin-top:12px;font-size:13.5px}
+    .msg{display:flex;gap:10px;margin:8px 0;align-items:flex-start}
+    .av{flex:0 0 28px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800}
+    .av.u{background:linear-gradient(135deg,#8bf0c5,#56f0e0);color:#0a1f17}
+    .av.a{background:linear-gradient(135deg,#f6c64d,#ffdf87);color:#3a2a05}
+    .bubble{padding:9px 12px;border-radius:14px;line-height:1.55;max-width:88%}
+    .bubble.u{background:rgba(139,240,197,.10);border:1px solid rgba(139,240,197,.22);color:#e7fff4}
+    .bubble.a{background:rgba(246,198,77,.08);border:1px solid rgba(246,198,77,.22);color:#fff6dc}
+    .bubble .tag{display:inline-block;font-size:11px;color:var(--dim);margin-right:6px;letter-spacing:.06em;text-transform:uppercase}
+    .bubble code{font-size:12.5px}
+
+    .quote{padding:22px;border-radius:22px;background:linear-gradient(135deg,rgba(86,240,224,.12),rgba(86,240,224,.04));border:1px solid rgba(86,240,224,.18);color:#f4fffd;line-height:1.85;font-size:16px}
+    .quote strong{color:var(--cyan)}
+    .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;position:relative}
+    .step{padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);position:relative}
+    .step .num{position:absolute;top:-10px;left:14px;font-size:11px;font-weight:800;letter-spacing:.12em;color:#1a1630;background:linear-gradient(135deg,var(--gold),#ffdf87);padding:3px 9px;border-radius:999px}
+    .step b{display:block;margin:6px 0 6px;font-size:15px}
+    .step span{color:var(--muted);font-size:13px;line-height:1.55}
+    .step .ex{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(255,255,255,.10);font-size:12px;color:var(--dim);font-family:ui-monospace,monospace}
+
+    .stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .pill{padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:12px;color:var(--muted)}
+    .pill b{color:var(--ink);font-weight:700;margin-right:4px}
+
+    .compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+    .col{padding:16px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
+    .col.bad{border-color:rgba(240,164,216,.22);background:linear-gradient(180deg,rgba(240,164,216,.06),transparent)}
+    .col.good{border-color:rgba(139,240,197,.24);background:linear-gradient(180deg,rgba(139,240,197,.08),transparent)}
+    .col h4{margin:0 0 10px;font-size:13px;letter-spacing:.10em;text-transform:uppercase;color:var(--dim)}
+    .col.bad h4{color:var(--pink)}
+    .col.good h4{color:var(--green)}
+    .col ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;line-height:1.8}
+    .col li{margin-bottom:4px}
+
+    /* Shared memory vault */
+    .bridge{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(125,211,252,.10),rgba(246,198,77,.05) 50%,rgba(86,240,224,.10));border-color:rgba(86,240,224,.22)}
+    .bridge:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 0% 50%, rgba(125,211,252,.16), transparent 30%),radial-gradient(circle at 100% 50%, rgba(246,198,77,.16), transparent 30%);pointer-events:none}
+    .bridge > *{position:relative}
+    .bridge-row{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;margin-top:18px;position:relative}
+    .node{padding:18px;border-radius:20px;border:1px solid var(--line);background:rgba(5,8,22,.55);backdrop-filter:blur(10px)}
+    .node .role{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+    .node h3{margin:0 0 4px;font-size:18px}
+    .node p{margin:0;font-size:13px;color:var(--muted)}
+    .node.left{border-color:rgba(125,211,252,.30)}
+    .node.left .role{color:var(--blue)}
+    .node.right{border-color:rgba(246,198,77,.30)}
+    .node.right .role{color:var(--gold)}
+    .center{width:140px;text-align:center;position:relative}
+    .center .vault{width:84px;height:84px;margin:0 auto;border-radius:22px;background:linear-gradient(135deg,var(--cyan),var(--blue));display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 0 50px rgba(86,240,224,.45),0 0 0 6px rgba(86,240,224,.10)}
+    .center .vault-label{margin-top:8px;font-size:12px;font-weight:800;letter-spacing:.10em;color:var(--cyan)}
+    .center .vault-path{margin-top:2px;font-family:ui-monospace,monospace;font-size:11px;color:var(--dim)}
+    .arrow-l,.arrow-r{position:absolute;top:50%;height:2px;width:38px;background:linear-gradient(90deg,transparent,var(--cyan))}
+    .arrow-l{left:-30px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+    .arrow-r{right:-30px;background:linear-gradient(90deg,var(--cyan),var(--gold))}
+    .vault-tree{margin-top:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .leaf{padding:12px 14px;border-radius:14px;border:1px solid var(--line2);background:rgba(5,8,22,.45);font-size:13px}
+    .leaf b{display:block;font-family:ui-monospace,monospace;color:var(--blue);font-size:12.5px;margin-bottom:4px}
+    .leaf span{color:var(--muted);font-size:12.5px;line-height:1.5}
+    .evo{margin-top:18px;padding:16px 18px;border-radius:16px;border:1px dashed rgba(86,240,224,.30);background:rgba(86,240,224,.04);font-size:13.5px;color:var(--muted);line-height:1.8}
+    .evo b{color:var(--cyan)}
+    @media(max-width:980px){.bridge-row{grid-template-columns:1fr;text-align:center}.arrow-l,.arrow-r{display:none}.vault-tree{grid-template-columns:1fr 1fr}}
+
+    .footer{text-align:center;margin-top:26px;color:var(--muted);font-size:13px;line-height:1.8}
+    .footer .links{margin-top:6px}
+    .footer code{font-size:11.5px}
+
+    @media(max-width:980px){
+      .hero-grid{grid-template-columns:1fr}
+      .mascot-stage{min-height:460px}
+      .hero-monkey,.hero-hero,.hero-user,.hero-claw{width:46%}
+      .card,.card.third,.card.eighth,.card.quarter{grid-column:1/-1}
+      .grid-4,.timeline,.stat-row{grid-template-columns:1fr 1fr}
+      .compare{grid-template-columns:1fr}
+    }
+    @media(max-width:680px){
+      .wrap{padding:18px 14px 44px}
+      .hero{padding:20px;border-radius:28px}
+      .mascot-stage{min-height:380px}
+      .hero-monkey,.hero-hero,.hero-user,.hero-claw{width:47%}
+      .grid-4,.timeline,.grid-3,.grid-2,.stat-row{grid-template-columns:1fr 1fr}
+      h1{max-width:unset}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="topline">
+        <div class="brand"><span class="mark"></span><div class="eyebrow">OpenClaw · Hermes · 波布 · 悟空</div></div>
+        <div class="badge">A teammate in your chat · 24/7 · <b>with memory</b></div>
+      </div>
+
+      <div class="hero-grid">
+        <div>
+          <h1>把微信，变成<em>会交付</em>的工程团队。</h1>
+          <p class="lead">
+            发一句"帮我做张落地页"，等回的不是聊天，而是一个 <b>html 文件 + 截图预览</b>。
+            OpenClaw 自托管网关把 WhatsApp / Telegram / 微信 接进 AI coding agent；
+            <b>Hermes</b> 让它记住你；<b>波布</b> 替你拍板；<b>悟空</b> 让它有灵气。
+            这不是"再多一个对话框"，是一个真正长期成长的合作关系。
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#story">看一个真实故事 →</a>
+            <a class="btn secondary" href="#system">看系统结构</a>
+          </div>
+          <div class="chips">
+            <span class="chip">🦾 执行层</span>
+            <span class="chip">🧠 长期记忆</span>
+            <span class="chip">🎯 方向判断</span>
+            <span class="chip">🐒 孙悟空 SOUL</span>
+            <span class="chip">🔐 MIT 自托管</span>
+            <span class="chip">💬 WhatsApp 原生</span>
+            <span class="chip" style="border-color:rgba(86,240,224,.32);color:#99f6e4">🗄️ shared-memory 金库</span>
+          </div>
+          <div class="stat-row">
+            <div class="stat"><div class="n">80<small>+</small></div><div class="l">已加载技能</div></div>
+            <div class="stat"><div class="n">5<small> models</small></div><div class="l">GPT-5.5 / Claude-Opus 4.7</div></div>
+            <div class="stat"><div class="n">24/7</div><div class="l">systemd 常驻</div></div>
+            <div class="stat"><div class="n">0<small>$</small></div><div class="l">MIT 开源 · 自托管</div></div>
+          </div>
+        </div>
+
+        <div class="mascot-stage" aria-label="Mascot hero composition">
+          <div class="glow"></div>
+          <div class="mascot hero-monkey"><span class="label">悟空 / 灵气</span><img src="1-wukong.png" alt="悟空" /></div>
+          <div class="mascot hero-hero"><span class="label">Hermes / 记忆</span><img src="2-hermes.png" alt="Hermes" /></div>
+          <div class="mascot hero-claw"><span class="label">OpenClaw / 执行</span><img src="3-openclaw.png" alt="OpenClaw" /></div>
+          <div class="mascot hero-user"><span class="label">波布 / 判断</span><img src="4-bob.png" alt="Bob" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 真实故事 -->
+    <section class="section" id="story">
+      <article class="card wide">
+        <div class="kicker"><span class="dot"></span>真实场景 · 这页就是这么来的</div>
+        <h2>17 分钟，从"再丰富点"到一个新版本上线</h2>
+        <p>这页的 v1 → v1.1 升级，全程发生在 WhatsApp 里。<b>没有 IDE、没有 Figma、没有部署脚本</b>——只有一句话和一个回执。</p>
+
+        <div class="chat">
+          <div class="msg"><div class="av u">B</div><div class="bubble u"><span class="tag">波布 · 21:47</span>使用 openclaw memory 命令查看记忆，优化 v1 版本 landing page 让内容更丰富，故事更具体，更有吸引力，干货满满。</div></div>
+          <div class="msg"><div class="av a">🐒</div><div class="bubble a"><span class="tag">悟空 · 21:47</span>收到。先读 <code>/memories/repo/openclaw-docs.md</code> 和 <code>openclaw-env.md</code>，对齐当前环境真实能力——</div></div>
+          <div class="msg"><div class="av a">🐒</div><div class="bubble a"><span class="tag">悟空 · 21:48</span>识别到可加血点：① 把空泛口号换成真实 WhatsApp 对话 ② 用 80+ skills / GPT-5.5 / systemd 等真数据替换 placeholder ③ 加 before/after 对比 ④ 加技术栈 pill ⑤ 加可复用的 4 步工作流</div></div>
+          <div class="msg"><div class="av a">🦾</div><div class="bubble a"><span class="tag">OpenClaw · 21:51</span>已备份 <code>v1.bak.html</code>；写入新版 ✓ render 截图就绪 ✓</div></div>
+          <div class="msg"><div class="av a">🧠</div><div class="bubble a"><span class="tag">Hermes · 21:51</span>已沉淀偏好：「landing 文案优先具体故事 + 真实数字，不要再用'让协作更高效'这种话」→ 下次自动遵守。</div></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- 四个角色：从"是什么"到"在做什么" -->
+    <section class="section" id="system">
+      <article class="card third">
+        <div class="kicker"><span class="dot" style="background:#f6c64d;box-shadow:0 0 12px #f6c64d"></span>OpenClaw · 执行</div>
+        <h2>把意图变成<br/>可交付物</h2>
+        <p>不是聊天回复，是真文件。一个 Node 24 进程，<b>一份 <code>~/.openclaw/openclaw.json</code></b>，把 8 个插件、80+ 技能、5 个模型、3 条 channel 编排在一起。</p>
+        <div class="stack">
+          <span class="pill"><b>Gateway</b> :18789</span>
+          <span class="pill"><b>Plugins</b> 8/93</span>
+          <span class="pill"><b>Channels</b> WhatsApp ✓</span>
+          <span class="pill"><b>Browser</b> headless</span>
+        </div>
+      </article>
+
+      <article class="card third">
+        <div class="kicker"><span class="dot" style="background:#7dd3fc;box-shadow:0 0 12px #7dd3fc"></span>Hermes · 记忆</div>
+        <h2>从「一次性聊天」<br/>到「越用越懂你」</h2>
+        <p>三层短期记忆 + 一座长期金库：<b>user / session / repo</b> 提速当下，<b><a href="#vault" style="color:#99f6e4;text-decoration:none;border-bottom:1px dashed rgba(86,240,224,.40)"><code>.hermes/shared-memory</code></a></b> 沉淀长期。OpenClaw 和悟空读写同一份真理。</p>
+        <div class="stack">
+          <span class="pill"><b>user</b> 跨工作区</span>
+          <span class="pill"><b>session</b> 当前任务</span>
+          <span class="pill"><b>repo</b> 项目知识</span>
+          <span class="pill" style="border-color:rgba(86,240,224,.32);color:#99f6e4"><b>vault</b> 共享金库 ↗</span>
+        </div>
+      </article>
+
+      <article class="card third">
+        <div class="kicker"><span class="dot" style="background:#8bf0c5;box-shadow:0 0 12px #8bf0c5"></span>波布 · 判断</div>
+        <h2>定方向、<br/>砍废话、按下回车</h2>
+        <p>悟空再聪明也只是工具。<b>谁该被服务、什么算"做完"、哪些细节值得纠结</b>——这些只有波布能决定。OpenClaw 用 <code>commands.ownerAllowFrom</code> 把这种权威写进协议。</p>
+        <div class="stack">
+          <span class="pill">WhatsApp</span>
+          <span class="pill">owner-only</span>
+          <span class="pill">/diagnostics</span>
+        </div>
+      </article>
+
+      <article class="card eighth">
+        <div class="kicker"><span class="dot" style="background:#56f0e0;box-shadow:0 0 12px #56f0e0"></span>悟空 · SOUL</div>
+        <h2>让这套系统有"猴味"——敏捷、火眼、抗压、活泼但不散</h2>
+        <div class="grid-4">
+          <div class="mini gold"><b>🌀 灵动</b><span>一句"再加点干货"能立刻切换风格，不用十轮澄清。</span></div>
+          <div class="mini blue"><b>🔥 火眼</b><span>分得清"模糊需求""伪需求""真信号"——遇到"加点科技感"会反问"参考哪种科技感？"</span></div>
+          <div class="mini green"><b>💪 韧性</b><span>跑 30 步的工作流中途 401，不重启，自己 retry + fallback 到备份模型。</span></div>
+          <div class="mini cyan"><b>🤝 协作</b><span>不是单兵：执行有 OpenClaw、记忆有 Hermes、判断有波布，悟空只负责"灵"。</span></div>
+        </div>
+      </article>
+
+      <article class="card quarter">
+        <div class="kicker"><span class="dot"></span>SOUL 来源</div>
+        <h3>为什么是孙悟空？</h3>
+        <p style="font-size:14px">中国 AI 时代不该全是"GPT 灰"和"Claude 米黄"。<b>悟空有桀骜、有火眼、还会七十二变</b>——这正是 agent 该有的样子。</p>
+      </article>
+    </section>
+
+    <!-- Shared Memory Vault · 记忆桥 -->
+    <section class="section" id="vault">
+      <article class="card wide bridge">
+        <div class="kicker"><span class="dot" style="background:#56f0e0;box-shadow:0 0 12px #56f0e0"></span>The Bridge · <code>~/.hermes/shared-memory</code></div>
+        <h2>这套系统真正会<em>进化</em>的秘密：一座共享金库，不是一段 prompt。</h2>
+        <p>记忆只在大脑里，换台机器就丢了。所以我们把它<b>拿出来，做成一个版本化的知识仓库</b>——Hermes 在这里思考、OpenClaw 在这里查事实、波布在这里立规矩。<b>三方读写同一份真理。</b></p>
+
+        <div class="bridge-row">
+          <div class="node left">
+            <div class="role">🧠 Brain</div>
+            <h3>Hermes</h3>
+            <p>主脑。长期理解、提炼模式、把一次性结论升级为可复用的活页面。</p>
+          </div>
+          <div class="center">
+            <span class="arrow-l"></span>
+            <span class="arrow-r"></span>
+            <div class="vault">🗄️</div>
+            <div class="vault-label">SHARED MEMORY</div>
+            <div class="vault-path">~/.hermes/shared-memory</div>
+          </div>
+          <div class="node right">
+            <div class="role">🦾 Execution</div>
+            <h3>OpenClaw</h3>
+            <p>执行层。干活前先读金库对齐事实，干完后把可复用资产写回。</p>
+          </div>
+        </div>
+
+        <div class="vault-tree">
+          <div class="leaf"><b>people/</b><span>稳定身份：bob-profile、口味、决策风格</span></div>
+          <div class="leaf"><b>workflows/</b><span>重复工作流：bob-hermes-workflow、迁移、截图</span></div>
+          <div class="leaf"><b>skills/</b><span>可复用方法：landing-page、研究比较、发布</span></div>
+          <div class="leaf"><b>memories/</b><span>稳定事实和偏好：环境快照、踩过的坑</span></div>
+          <div class="leaf"><b>systems/</b><span>治理与边界：分类规则、命名规范</span></div>
+          <div class="leaf"><b>maps/</b><span>迁移交叉表：旧资产 → 新结构</span></div>
+          <div class="leaf"><b>archive/</b><span>原始来源与历史，不删除</span></div>
+          <div class="leaf"><b>assets/</b><span>OpenClaw 沉淀的可复用产物（含本页）</span></div>
+        </div>
+
+        <div class="evo">
+          <b>Hermes 的进化机制</b> — 每次任务结束，悟空判断本轮经验是「一次性」还是「值得长留」。值得的，会自动升格成 <code>workflows/</code> 或 <code>skills/</code> 的活页面，并写进 <code>index.md</code>。<b>所以第二次发同样的需求，质量更高、追问更少。</b><br/>
+          <span style="color:var(--dim);font-size:12.5px">规则：lowercase-kebab-case · 每个新活页更新 index.md · 一次性内容留在 archive/ · 稳定结论镜像回 Hermes 内存。</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- Before/After -->
+    <section class="section">
+      <article class="card wide">
+        <div class="kicker"><span class="dot"></span>对比 · 它和"再多一个 ChatGPT 标签页"有什么不同</div>
+        <h2>真正的差异，藏在三个细节里</h2>
+        <div class="compare">
+          <div class="col bad">
+            <h4>✕ 传统聊天助手</h4>
+            <ul>
+              <li>每次新对话从零开始介绍自己</li>
+              <li>"我没法访问文件 / 浏览器 / 执行代码"</li>
+              <li>需要打开网页、登录、切换 IDE</li>
+              <li>结果是文本，要自己复制粘贴</li>
+              <li>所有数据上传到别人的服务器</li>
+              <li>偏好和习惯无法跨会话复用</li>
+            </ul>
+          </div>
+          <div class="col good">
+            <h4>✓ OpenClaw + 悟空</h4>
+            <ul>
+              <li>WhatsApp 一句话直接干活，<b>不切环境</b></li>
+              <li>真有 browser + filesystem + git，<b>跑出真截图</b></li>
+              <li>结果是 <code>.html / .png / .pdf</code> 直接回到聊天</li>
+              <li>所有数据在你自己的 AWS EC2，<b>MIT 开源</b></li>
+              <li>跨会话记得你的偏好（Hermes 三层记忆）</li>
+              <li>系统级 <b>systemd 服务</b>，24h 在线、断电自启</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- 工作节奏 -->
+    <section class="section">
+      <article class="card wide">
+        <div class="kicker"><span class="dot"></span>Rhythm · 一次任务，四个动作</div>
+        <h2>每一次合作，都让下一次更便宜</h2>
+        <div class="timeline">
+          <div class="step"><span class="num">01 · 接住</span><b>读真实意图</b><span>读 memory、读 repo、对齐口径。不假设、不推断模糊词。</span><span class="ex">memory view /memories/repo/</span></div>
+          <div class="step"><span class="num">02 · 做成</span><b>真产物</b><span>不是"建议你这样做"，是"做完了，文件在这"。</span><span class="ex">create_file v1.1.html · render_png</span></div>
+          <div class="step"><span class="num">03 · 沉淀</span><b>稳定偏好入库</b><span>哪类偏好是"以后都这样"，Hermes 自动写到 /memories/。</span><span class="ex">memory create user/style.md</span></div>
+          <div class="step"><span class="num">04 · 进化</span><b>下次更快</b><span>同样的任务，第二次省掉 60% 的澄清和试错。</span><span class="ex">/standup · 复盘 24h</span></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- 真实能力清单 -->
+    <section class="section">
+      <article class="card eighth">
+        <div class="kicker"><span class="dot"></span>Capabilities · 它现在就能做的事</div>
+        <h2>不是 roadmap，是<em style="color:var(--green);font-style:normal">今晚就能用</em>的能力</h2>
+        <div class="grid-3">
+          <div class="mini"><b>🎨 一句话生成落地页</b><span>HTML + CSS + 截图预览，自动适配暗色调和移动端。本页就是产物。</span></div>
+          <div class="mini"><b>🌐 浏览器自动化</b><span>开 chrome headless，登录、截图、抓数据、跑 Playwright，全部自托管。</span></div>
+          <div class="mini"><b>📝 文档与笔记</b><span>Obsidian / Markdown / PDF 生成与改写，能写技术博客也能写周报。</span></div>
+          <div class="mini"><b>🧪 代码补丁与重构</b><span>跨文件改动、错误诊断、跑测试。底层是真的 git workspace。</span></div>
+          <div class="mini"><b>🔍 多源搜索</b><span>Brave Search + GitHub Search + 工作区 grep，事实先于生成。</span></div>
+          <div class="mini"><b>📊 数据 + Notebook</b><span>跑 Python、画图、跑 SQL（含 session_store FTS5）。</span></div>
+          <div class="mini"><b>🤖 多模型路由</b><span>默认 gpt-5.4-mini 跑日常，复杂任务自动升 claude-opus-4.7。</span></div>
+          <div class="mini"><b>💬 三 channel 接入</b><span>WhatsApp 已上线；Telegram / WeChat 在 plugins.allow 里随开随用。</span></div>
+          <div class="mini"><b>🔧 自我诊断与修复</b><span><code>openclaw doctor --fix</code> 自带 config 备份 + 回滚 + schema 校验。</span></div>
+        </div>
+      </article>
+
+      <article class="card quarter">
+        <div class="kicker"><span class="dot"></span>Stack</div>
+        <h3>运行在你自己的机器上</h3>
+        <div class="stack" style="margin-top:8px">
+          <span class="pill"><b>Node</b> 25.5</span>
+          <span class="pill"><b>OS</b> Ubuntu 24.04</span>
+          <span class="pill"><b>AWS</b> EC2 4×Xeon</span>
+          <span class="pill"><b>RAM</b> 16G</span>
+          <span class="pill"><b>License</b> MIT</span>
+          <span class="pill"><b>Bind</b> loopback</span>
+          <span class="pill"><b>Auth</b> bearer token</span>
+          <span class="pill"><b>Secrets</b> 0600 perms</span>
+          <span class="pill"><b>Provider</b> ofox.ai 代理</span>
+          <span class="pill"><b>Models</b> GPT-5.5 · Claude 4.7</span>
+        </div>
+        <p style="margin-top:14px;font-size:13px;color:var(--dim)">数据从不离开你的 VPS。<br/>关掉网关 = 关掉所有 agent。</p>
+      </article>
+    </section>
+
+    <!-- 一句话总结 -->
+    <section class="section">
+      <article class="card wide">
+        <div class="quote">
+          <strong>一句话：</strong>
+          OpenClaw 把"执行能力"做成一个住在微信里的进程；
+          Hermes 让它记住你；波布让它有方向；悟空让它有灵气。
+          <br/><br/>
+          这不是"再多一个 AI 工具"——
+          <b>这是一个你能托付任务、能不断教它、能跟它一起长大的同事。</b>
+        </div>
+      </article>
+    </section>
+
+    <div class="footer">
+      Wukong for Bob · OpenClaw personal assistant · WhatsApp direct session · 2026<br/>
+      <span class="links">
+        <code>openclaw status</code> · <code>openclaw logs --follow</code> · <code>~/.openclaw/openclaw.json</code> · MIT
+      </span>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>组合数学学习资源研究报告 | 悟空研究</title>
+<style>
+  :root {
+    --bg: #0d1117; --fg: #c9d1d9; --accent: #58a6ff;
+    --border: #30363d; --card-bg: #161b22; --muted: #8b949e;
+    --tag-bg: #1f2937; --tag-fg: #58a6ff;
+    --green: #3fb950; --orange: #d2991d; --red: #f85149;
+    --purple: #bc8cff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.7; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 2rem; color: #fff; border-bottom: 2px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 1rem; }
+  h2 { font-size: 1.4rem; color: var(--accent); margin: 2.5rem 0 1rem; padding-left: 0.5rem; border-left: 3px solid var(--accent); }
+  h3 { font-size: 1.15rem; color: #e6edf3; margin: 1.5rem 0 0.75rem; }
+  p, li { margin: 0.4rem 0; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  ul { padding-left: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th, td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--card-bg); color: #e6edf3; font-weight: 600; white-space: nowrap; }
+  tr:hover { background: rgba(88,166,255,0.05); }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin: 1rem 0; }
+  .tag { display: inline-block; background: var(--tag-bg); color: var(--tag-fg); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.8rem; margin: 0.15rem 0.25rem; }
+  .tag.green { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tag.orange { background: rgba(210,153,29,0.15); color: var(--orange); }
+  .tag.red { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag.purple { background: rgba(188,140,255,0.15); color: var(--purple); }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .meta { color: var(--muted); font-size: 0.85rem; }
+  .toc { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+  .toc ol { padding-left: 1.5rem; columns: 2; }
+  .toc li { margin: 0.3rem 0; }
+  .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; text-align: center; }
+  .highlight { border-left: 3px solid var(--accent); background: rgba(88,166,255,0.06); padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+  .signal { border-left: 3px solid var(--green); background: rgba(63,185,80,0.06); padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+  .warn { border-left: 3px solid var(--orange); background: rgba(210,153,29,0.06); padding: 1rem 1.25rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+  .fire { color: var(--orange); }
+  .free-badge { color: var(--green); font-weight: 600; }
+  .hero { background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(188,140,255,0.08)); border: 1px solid var(--border); border-radius: 10px; padding: 2rem; margin: 1.5rem 0; }
+  .path-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; }
+  .path-card h3 { margin-top: 0; }
+  .path-card .step { display: flex; align-items: flex-start; gap: 0.5rem; margin: 0.5rem 0; font-size: 0.92rem; }
+  .step-num { background: var(--accent); color: #fff; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; flex-shrink: 0; }
+  @media (max-width: 768px) {
+    body { padding: 1rem; }
+    .toc ol { columns: 1; }
+    .grid2, .grid3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🧮 组合数学（Combinatorics）学习资源研究报告</h1>
+
+<div class="meta">
+  研究日期：2026-06-27 ｜ 研究员：悟空（Hermes Agent） ｜ 涵盖范围：教材、公开课、习题集、博客、视频教程、交互工具、中文资源、学术前沿
+</div>
+
+<div class="hero">
+  <p style="font-size: 1.1rem; color: #e6edf3; margin-bottom: 0.75rem;">
+    <strong>什么是组合数学？</strong> 组合数学研究<em>离散结构</em> — 计数、排列、图、设计等。它是理论计算机科学的基石，也是数学竞赛的四大支柱之一。从健康码的排列组合到区块链共识算法，组合思维无处不在。
+  </p>
+  <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+    <span class="tag green">枚举组合学</span>
+    <span class="tag">极值组合学</span>
+    <span class="tag purple">代数组合学</span>
+    <span class="tag orange">概率方法</span>
+    <span class="tag">图论</span>
+    <span class="tag green">解析组合学</span>
+    <span class="tag purple">加性组合学</span>
+    <span class="tag">组合设计</span>
+  </div>
+</div>
+
+<div class="highlight" style="display:flex; flex-wrap:wrap; align-items:center; gap:1rem; justify-content:space-between;">
+  <div>
+    <strong style="color:#e6edf3; font-size:1.05rem;">📚 配套学习材料</strong>
+    <p class="meta" style="margin-top:0.25rem;">基于本报告知识体系整理的 20 页学习课件与 70 题练习（含答案、MathJax 公式渲染、交互式答案折叠）。</p>
+  </div>
+  <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+    <a href="courseware.html" style="display:inline-block; background:rgba(88,166,255,0.15); border:1px solid var(--accent); color:var(--accent); padding:0.5rem 1rem; border-radius:8px; font-weight:600;">📖 学习课件（20 页）</a>
+    <a href="exercises.html" style="display:inline-block; background:rgba(188,140,255,0.15); border:1px solid var(--purple); color:var(--purple); padding:0.5rem 1rem; border-radius:8px; font-weight:600;">📝 练习题（70 题）</a>
+  </div>
+</div>
+
+<div class="toc">
+<strong>📋 目录</strong>
+<ol>
+  <li><a href="#s1">经典教材分级推荐</a></li>
+  <li><a href="#s2">MIT OCW 公开课合集</a></li>
+  <li><a href="#s3">YouTube 及视频资源</a></li>
+  <li><a href="#s4">习题与竞赛资源</a></li>
+  <li><a href="#s5">博客与社区</a></li>
+  <li><a href="#s6">在线学习平台</a></li>
+  <li><a href="#s7">中文本土资源</a></li>
+  <li><a href="#s8">交互工具与可视化</a></li>
+  <li><a href="#s9">学术前沿 &amp; 重要学者</a></li>
+  <li><a href="#s10">推荐学习路径</a></li>
+  <li><a href="#s11">信号与洞见</a></li>
+</ol>
+</div>
+
+<!-- ==================== SECTION 1 ==================== -->
+<h2 id="s1">1. 经典教材分级推荐</h2>
+
+<h3>🌱 入门级 — 高中生 / 大学新生</h3>
+<table>
+<tr><th>排名</th><th>书名</th><th>作者</th><th>亮点</th><th>获取</th></tr>
+<tr>
+  <td>🥇</td>
+  <td><strong>A Walk Through Combinatorics</strong></td>
+  <td>Miklós Bóna</td>
+  <td>⭐⭐⭐⭐⭐ 最推荐的入门书。写作风格亲切，证明清晰，习题优秀。涵盖枚举、图论、组合设计。</td>
+  <td>Amazon / 各大书店</td>
+</tr>
+<tr>
+  <td>🥈</td>
+  <td><strong>Applied Combinatorics</strong></td>
+  <td>Keller & Trotter</td>
+  <td><span class="free-badge">🆓 免费开源</span>。Georgia Tech CS 专业使用。应用导向。</td>
+  <td><a href="https://open.umn.edu/opentextbooks/textbooks/339">Open Textbook Library</a></td>
+</tr>
+<tr>
+  <td>🥉</td>
+  <td><strong>Discrete Mathematics: An Open Introduction</strong></td>
+  <td>Oscar Levin</td>
+  <td><span class="free-badge">🆓 免费</span>。离散数学入门，组合部分质量高。探究式风格。</td>
+  <td><a href="http://discrete.openmathbooks.org/">官网</a></td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><strong>Combinatorics Through Guided Discovery</strong></td>
+  <td>Kenneth Bogart</td>
+  <td><span class="free-badge">🆓 免费</span>。探究式学习，带提示和答案。</td>
+  <td><a href="https://math.dartmouth.edu/news-resources/electronic/kpbogart/">Dartmouth</a></td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><strong>组合数学（原书第5版）</strong></td>
+  <td>Richard Brualdi</td>
+  <td>MIT 等名校采用的经典教材，<strong>有中文译本</strong>。系统阐述组合基础。</td>
+  <td>机械工业出版社</td>
+</tr>
+</table>
+
+<h3>🌿 中级 — 本科高年级 / 研究生入门</h3>
+<table>
+<tr><th>排名</th><th>书名</th><th>作者</th><th>亮点</th><th>获取</th></tr>
+<tr>
+  <td>🥇</td>
+  <td><strong>Concrete Mathematics</strong> <span class="tag orange">🔥 神书</span></td>
+  <td>Graham, Knuth, Patashnik</td>
+  <td>连续与离散数学的融合。Knuth 经典。边注幽默，<strong>习题全部有解答</strong>。有中文版《具体数学》。</td>
+  <td>Amazon / 中文版可购</td>
+</tr>
+<tr>
+  <td>🥈</td>
+  <td><strong>generatingfunctionology</strong> <span class="tag orange">🔥 神书</span></td>
+  <td>Herbert Wilf</td>
+  <td><span class="free-badge">🆓 免费 PDF</span>。生成函数专著。作者说"生成函数是晾衣绳，我们把数列挂上去展示"。</td>
+  <td><a href="https://www2.math.upenn.edu/~wilf/gfology2.pdf">免费下载</a></td>
+</tr>
+<tr>
+  <td>🥉</td>
+  <td><strong>A Course in Combinatorics</strong></td>
+  <td>van Lint & Wilson</td>
+  <td>剑桥经典教材，覆盖面广。含图论、编码理论等。</td>
+  <td>Cambridge UP</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><strong>Combinatorics and Graph Theory</strong></td>
+  <td>Harris, Hirst, Mossinghoff</td>
+  <td>本科标准教材，图论与组合并重。</td>
+  <td>Springer</td>
+</tr>
+</table>
+
+<h3>🌳 高级 — 研究生 / 专业方向</h3>
+<table>
+<tr><th>排名</th><th>书名</th><th>作者</th><th>亮点</th><th>获取</th></tr>
+<tr>
+  <td>🥇</td>
+  <td><strong>Enumerative Combinatorics, Vol 1 & 2</strong> <span class="tag orange">🔥 圣经</span></td>
+  <td>Richard Stanley</td>
+  <td>枚举组合学标准参考书。习题极难但极有价值。研究生必读。</td>
+  <td>Cambridge UP</td>
+</tr>
+<tr>
+  <td>🥈</td>
+  <td><strong>Analytic Combinatorics</strong> <span class="tag orange">🔥 神书</span></td>
+  <td>Flajolet & Sedgewick</td>
+  <td><span class="free-badge">🆓 免费</span>。用复分析做组合计数。CS 理论必备。</td>
+  <td><a href="https://ac.cs.princeton.edu/">免费官网</a></td>
+</tr>
+<tr>
+  <td>🥉</td>
+  <td><strong>The Probabilistic Method</strong></td>
+  <td>Alon & Spencer</td>
+  <td>概率方法权威著作。组合数学中的随机化技术。</td>
+  <td>Wiley</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><strong>Additive Combinatorics</strong></td>
+  <td>Tao & Vu</td>
+  <td>Terence Tao (菲尔兹奖) 合著。需要扎实分析学基础。</td>
+  <td>Cambridge UP</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><strong>Algebraic Combinatorics</strong></td>
+  <td>Richard Stanley</td>
+  <td>Stanley 另一力作。代数组合学入门精品。</td>
+  <td>Springer</td>
+</tr>
+</table>
+
+<!-- ==================== SECTION 2 ==================== -->
+<h2 id="s2">2. MIT OpenCourseWare 公开课合集</h2>
+<p>MIT OCW 是组合数学公开课最丰富的来源，<strong>全部免费</strong>，含讲义/习题/部分视频。</p>
+
+<table>
+<tr><th>课程</th><th>编号</th><th>年份</th><th>水平</th><th>核心内容</th></tr>
+<tr>
+  <td><a href="https://ocw.mit.edu/courses/18-212-algebraic-combinatorics-spring-2019">Algebraic Combinatorics</a></td>
+  <td>18.212</td>
+  <td>2019</td>
+  <td>研究生</td>
+  <td>Catalan 数、Dyck 路、对称函数、Stanley 风格</td>
+</tr>
+<tr>
+  <td><a href="https://ocw.mit.edu/courses/18-225-graph-theory-and-additive-combinatorics-fall-2023">Graph Theory &amp; Additive Combinatorics</a></td>
+  <td>18.225</td>
+  <td>2023</td>
+  <td>研究生</td>
+  <td>图论 + 加性组合学交叉前沿，Szemerédi 定理等</td>
+</tr>
+<tr>
+  <td><a href="https://ocw.mit.edu/courses/18-226-probabilistic-methods-in-combinatorics-fall-2022">Probabilistic Methods</a> 🎥</td>
+  <td>18.226</td>
+  <td>2022</td>
+  <td>研究生</td>
+  <td>概率方法，含<strong>视频讲座</strong>！Ramsey 下界、Sperner 定理</td>
+</tr>
+<tr>
+  <td><a href="https://ocw.mit.edu/courses/18-315-combinatorial-theory-introduction-to-graph-theory-extremal-and-enumerative-combinatorics-spring-2005">Combinatorial Theory</a></td>
+  <td>18.315</td>
+  <td>2005</td>
+  <td>研究生</td>
+  <td>图论 + 极值组合 + 枚举组合，完整讲义</td>
+</tr>
+<tr>
+  <td><a href="https://ocw.mit.edu/courses/18-218-topics-in-combinatorics-analysis-of-boolean-functions-spring-2021">Analysis of Boolean Functions</a></td>
+  <td>18.218</td>
+  <td>2021</td>
+  <td>研究生</td>
+  <td>Boolean 函数 Fourier 分析，TCS + 组合交叉</td>
+</tr>
+<tr>
+  <td><a href="https://ocw.mit.edu/courses/18-319-geometric-combinatorics-fall-2005">Geometric Combinatorics</a></td>
+  <td>18.319</td>
+  <td>2005</td>
+  <td>研究生</td>
+  <td>离散与计算几何</td>
+</tr>
+<tr>
+  <td><a href="https://ocw.mit.edu/courses/18-318-topics-in-algebraic-combinatorics-spring-2006">Topics in Algebraic Combinatorics</a></td>
+  <td>18.318</td>
+  <td>2006</td>
+  <td>研究生</td>
+  <td>矩阵树定理、线性代数在组合中的应用</td>
+</tr>
+</table>
+
+<!-- ==================== SECTION 3 ==================== -->
+<h2 id="s3">3. YouTube 及视频资源</h2>
+
+<h3>🎓 大学课程录像</h3>
+<table>
+<tr><th>系列</th><th>讲师</th><th>机构</th><th>水平</th><th>评价</th></tr>
+<tr>
+  <td><a href="https://www.youtube.com/watch?v=pCJNjW8kMIg">Enumerative Combinatorics</a></td>
+  <td>Federico Ardila</td>
+  <td>旧金山州立大学</td>
+  <td>本科/研究生</td>
+  <td><span class="tag orange">🔥 强烈推荐</span> 讲解清晰，覆盖枚举组合学核心</td>
+</tr>
+<tr>
+  <td><a href="https://www.youtube.com/watch?v=gesQpnQNyqw">Topics in Combinatorics</a></td>
+  <td>Timothy Gowers</td>
+  <td>剑桥 Part III</td>
+  <td>研究生</td>
+  <td><span class="tag orange">🔥 菲尔兹奖得主授课</span> 含讲义+习题</td>
+</tr>
+<tr>
+  <td><a href="https://www.youtube.com/watch?v=NGGxRpLxW5g">Algebraic Methods in Combinatorics</a></td>
+  <td>Boris Bukh</td>
+  <td>卡内基梅隆</td>
+  <td>研究生</td>
+  <td>极值组合中的代数证明技术</td>
+</tr>
+<tr>
+  <td><a href="https://www.youtube.com/playlist?list=PLl-gb0E4MII0sGLCJeqDB3y63HZ6lM5LJ">Discrete Math II / Combinatorics</a></td>
+  <td>Kimberly Brehm</td>
+  <td>-</td>
+  <td>本科</td>
+  <td>完整离散数学第二学期课程</td>
+</tr>
+<tr>
+  <td><a href="https://podcast.ucsd.edu/watch/sp24/math184_a00/28/kaltura">MATH 184 Enumerative Combinatorics</a></td>
+  <td>UCSD</td>
+  <td>UCSD</td>
+  <td>本科</td>
+  <td>完整学期录像</td>
+</tr>
+</table>
+
+<h3>📺 推荐 YouTube 频道</h3>
+<div class="grid3">
+  <div class="card">
+    <strong>🎬 3Blue1Brown</strong>
+    <p class="meta">部分组合数学可视化视频（如 Catalan 数、Pascal 三角形），动画精美。</p>
+    <a href="https://www.youtube.com/@3blue1brown">3Blue1Brown</a>
+  </div>
+  <div class="card">
+    <strong>🎬 Numberphile</strong>
+    <p class="meta">数学科普，多位组合学家出镜。Erdős、Ramsey 理论等。</p>
+    <a href="https://www.youtube.com/@numberphile">Numberphile</a>
+  </div>
+  <div class="card">
+    <strong>🎬 MIT OpenCourseWare</strong>
+    <p class="meta">18.226 概率方法课程含完整视频。</p>
+    <a href="https://www.youtube.com/@mitocw">MIT OCW</a>
+  </div>
+  <div class="card">
+    <strong>🎬 Algebraic Combinatorics</strong>
+    <p class="meta">ACOW 在线研讨会系列，代数组合学前沿。</p>
+    <a href="https://www.youtube.com/channel/UC6dE43qlOZ8KIDORSkLi2Ug">ACOW</a>
+  </div>
+  <div class="card">
+    <strong>🎬 Igor Pak 视频收藏</strong>
+    <p class="meta">UCLA 教授整理的组合数学视频庞大索引。</p>
+    <a href="https://www.math.ucla.edu/~pak/lectures/Math-Videos/comb-videos.htm">UCLA</a>
+  </div>
+</div>
+
+<!-- ==================== SECTION 4 ==================== -->
+<h2 id="s4">4. 习题与竞赛资源</h2>
+
+<h3>📝 经典习题集</h3>
+<table>
+<tr><th>资源</th><th>说明</th><th>获取</th></tr>
+<tr>
+  <td><strong>102 Combinatorial Problems</strong></td>
+  <td>Titu Andreescu &amp; Zuming Feng。US IMO 训练精选 102 题，按主题分类，含详细解答。<span class="tag orange">强烈推荐</span></td>
+  <td><a href="https://rainymathboy.files.wordpress.com/2011/01/102-combinatorial-problems.pdf">PDF</a></td>
+</tr>
+<tr>
+  <td><strong>A Path to Combinatorics for Undergraduates</strong></td>
+  <td>大学生组合数学之路。计数策略、鸽巢原理、生成函数等主题习题。</td>
+  <td><a href="https://mathematicalolympiads.files.wordpress.com/2012/08/a_path_to_combinatorics_for_undergraduates.pdf">PDF</a></td>
+</tr>
+<tr>
+  <td><strong>MadAsMaths - Combinatorics</strong></td>
+  <td>英国 A-Level 风格组合学习题集，难度渐进。</td>
+  <td><a href="https://madasmaths.com/">官网</a></td>
+</tr>
+<tr>
+  <td><strong>AoPS Wiki - Combinatorics</strong></td>
+  <td>竞赛导向组合数学百科，海量例题+解答。</td>
+  <td><a href="https://artofproblemsolving.com/wiki/index.php/Combinatorics">AoPS Wiki</a></td>
+</tr>
+</table>
+
+<h3>🏆 竞赛体系</h3>
+<table>
+<tr><th>竞赛</th><th>水平</th><th>组合占比</th><th>语言</th></tr>
+<tr><td>AMC 8</td><td>初中</td><td>~25%</td><td>英语</td></tr>
+<tr><td>AMC 10/12</td><td>高中</td><td>~30-35%</td><td>英语</td></tr>
+<tr><td>AIME</td><td>高中拔尖</td><td>~35%</td><td>英语</td></tr>
+<tr><td>USAMO / IMO</td><td>国家队</td><td>四大板块之一</td><td>英语</td></tr>
+<tr><td>全国高中数学联赛 / CMO</td><td>国家队选拔</td><td>重要板块</td><td>中文</td></tr>
+</table>
+
+<h3>💻 在线练习</h3>
+<div class="grid3">
+  <div class="card">
+    <strong>🧩 Brilliant.org</strong>
+    <p class="meta">交互式数学学习，组合数学课程优秀。从入门到进阶。</p>
+    <a href="https://brilliant.org">brilliant.org</a>
+  </div>
+  <div class="card">
+    <strong>🧮 Project Euler</strong>
+    <p class="meta">用编程解决数学问题，700+ 题中含大量组合题。</p>
+    <a href="https://projecteuler.net">projecteuler.net</a>
+  </div>
+  <div class="card">
+    <strong>🏆 Codeforces</strong>
+    <p class="meta">竞赛编程平台，组合数学在算法题中频繁出现。</p>
+    <a href="https://codeforces.com">codeforces.com</a>
+  </div>
+  <div class="card">
+    <strong>🏅 AoPS Online</strong>
+    <p class="meta">自适应难度训练，强大的社区解答系统。</p>
+    <a href="https://artofproblemsolving.com">artofproblemsolving.com</a>
+  </div>
+</div>
+
+<!-- ==================== SECTION 5 ==================== -->
+<h2 id="s5">5. 博客与社区</h2>
+
+<h3>学术博客</h3>
+<table>
+<tr><th>博客</th><th>作者</th><th>方向</th></tr>
+<tr>
+  <td><a href="https://gilkalai.wordpress.com">Combinatorics and more</a></td>
+  <td>Gil Kalai</td>
+  <td><span class="tag orange">🔥 必读</span> 组合数学 + 理论 CS 前沿。量子计算辩论、ML 与数学。</td>
+</tr>
+<tr>
+  <td><a href="https://igorpak.wordpress.com">Igor Pak's Blog</a></td>
+  <td>Igor Pak (UCLA)</td>
+  <td>组合教材批判。"The problem with combinatorics textbooks" 是经典。</td>
+</tr>
+<tr>
+  <td><a href="https://terrytao.wordpress.com">What's new</a></td>
+  <td>Terence Tao (UCLA)</td>
+  <td>菲尔兹奖得主。加性组合学、解析数论。数学写作典范。</td>
+</tr>
+<tr>
+  <td><a href="https://www.jeremykun.com">Math ∩ Programming</a></td>
+  <td>Jeremy Kun</td>
+  <td>数学与编程交叉，组合算法。适合程序员的组合数学。</td>
+</tr>
+<tr>
+  <td><a href="https://11011110.livejournal.com">11011110</a></td>
+  <td>David Eppstein (UCI)</td>
+  <td>计算几何、图论、组合学。</td>
+</tr>
+</table>
+
+<h3>Q&amp;A 社区</h3>
+<div class="grid2">
+  <div class="card">
+    <strong>📚 Math StackExchange</strong>
+    <p class="meta">combinatorics 标签 10 万+ 问题。搜索 "good book" / "recommendation"。</p>
+    <a href="https://math.stackexchange.com/questions/tagged/combinatorics">math.stackexchange.com</a>
+  </div>
+  <div class="card">
+    <strong>🔬 MathOverflow</strong>
+    <p class="meta">研究级问题。"Good combinatorics textbooks for teaching" 线程极有价值。</p>
+    <a href="https://mathoverflow.net/questions/tagged/co.combinatorics">mathoverflow.net</a>
+  </div>
+  <div class="card">
+    <strong>🗣 Reddit r/math</strong>
+    <p class="meta">学习资源讨论活跃。搜索 "combinatorics" 获取大量推荐。</p>
+    <a href="https://www.reddit.com/r/math">r/math</a>
+  </div>
+  <div class="card">
+    <strong>🌱 Reddit r/learnmath</strong>
+    <p class="meta">初学者友好。作业求助和资源推荐。</p>
+    <a href="https://www.reddit.com/r/learnmath">r/learnmath</a>
+  </div>
+</div>
+
+<!-- ==================== SECTION 6 ==================== -->
+<h2 id="s6">6. 在线学习平台</h2>
+
+<table>
+<tr><th>平台</th><th>组合数学课程</th><th>费用</th><th>特点</th></tr>
+<tr>
+  <td><strong>MIT OCW</strong></td>
+  <td>7+ 门组合数学/图论课</td>
+  <td><span class="free-badge">免费</span></td>
+  <td>最完整学术资源，含讲义/习题/视频</td>
+</tr>
+<tr>
+  <td><strong>学堂在线</strong></td>
+  <td>清华大学《组合数学》</td>
+  <td><span class="free-badge">免费</span></td>
+  <td><span class="tag orange">中文最佳</span> 系统讲解计数、母函数、递推、Pólya 定理</td>
+</tr>
+<tr>
+  <td><strong>中国大学MOOC</strong></td>
+  <td>多所高校离散数学/组合数学</td>
+  <td><span class="free-badge">免费</span></td>
+  <td>中文授课，南京大学等</td>
+</tr>
+<tr>
+  <td><strong>Coursera</strong></td>
+  <td>Discrete Optimization (Melbourne)</td>
+  <td>免费旁听</td>
+  <td>结构化学习，有证书</td>
+</tr>
+<tr>
+  <td><strong>Khan Academy</strong></td>
+  <td>排列组合基础</td>
+  <td><span class="free-badge">免费</span></td>
+  <td>零基础友好</td>
+</tr>
+<tr>
+  <td><strong>Brilliant.org</strong></td>
+  <td>Combinatorics 互动课程</td>
+  <td>付费</td>
+  <td>交互式学习体验极佳</td>
+</tr>
+<tr>
+  <td><strong>AoPS Online School</strong></td>
+  <td>计数与概率系列</td>
+  <td>付费</td>
+  <td>竞赛导向，社区强大</td>
+</tr>
+<tr>
+  <td><strong>Daily Challenge (Po-Shen Loh)</strong></td>
+  <td>组合数学模块</td>
+  <td>付费</td>
+  <td>前美国 IMO 教练设计</td>
+</tr>
+</table>
+
+<!-- ==================== SECTION 7 ==================== -->
+<h2 id="s7">7. 中文本土资源 🇨🇳</h2>
+
+<div class="grid2">
+  <div class="card">
+    <h3>📖 中文教材</h3>
+    <ul>
+      <li><strong>《组合数学》（原书第5版）</strong> — Brualdi 中文版，MIT 教材</li>
+      <li><strong>《具体数学：计算机科学基础》</strong> — Graham, Knuth, Patashnik 中文版</li>
+      <li><strong>《组合数学丛书》</strong> — 高教社/清华社系列</li>
+      <li><strong>清华大学出版社《组合数学》</strong> — 国内高校常用</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🎓 中文公开课</h3>
+    <ul>
+      <li><a href="https://www.xuetangx.com/course/THU08091000450">清华大学《组合数学》</a> — 学堂在线</li>
+      <li><strong>中国大学MOOC</strong> — 南京大学等离散数学课程</li>
+      <li><strong>Bilibili</strong> — 搜索"组合数学"获得大量视频</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🌐 中文社区</h3>
+    <ul>
+      <li><strong>知乎</strong> — "组合数学 教材推荐"获大量评价</li>
+      <li><strong>CSDN / 博客园</strong> — 部分教程和笔记</li>
+      <li><strong>Bilibili</strong> — 数学竞赛 UP 主组合系列、AoPS 搬运</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🏆 中文竞赛资源</h3>
+    <ul>
+      <li><strong>AoPS 中文资源</strong> — Bilibili 有视频搬运</li>
+      <li><strong>全国高中数学联赛</strong> — 组合板块真题</li>
+      <li><strong>AMC 中文培训</strong> — Think Academy 等机构</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== SECTION 8 ==================== -->
+<h2 id="s8">8. 交互工具与可视化 🛠️</h2>
+
+<table>
+<tr><th>工具</th><th>用途</th><th>推荐度</th></tr>
+<tr>
+  <td><a href="https://mathigon.org">Mathigon</a></td>
+  <td><span class="tag orange">🔥 数学互动乐园</span> Polypad 可做组合可视化探索。最美的数学网站之一。</td>
+  <td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+  <td><a href="https://www.geogebra.org">GeoGebra</a></td>
+  <td>免费数学工具。概率模拟、组合计数可视化。</td>
+  <td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+  <td><a href="https://matteomucciconi.github.io/applets-list">Mucciconi Applets</a></td>
+  <td>概率与代数组合学交互实验。</td>
+  <td>⭐⭐⭐⭐</td>
+</tr>
+<tr>
+  <td><a href="https://www.desmos.com">Desmos</a></td>
+  <td>在线图形计算器。生成函数可视化。学习组合恒等式时很有用。</td>
+  <td>⭐⭐⭐⭐</td>
+</tr>
+<tr>
+  <td>Python (itertools, sympy)</td>
+  <td>用编程验证组合恒等式、生成组合对象。Jupyter Notebook 是理想环境。</td>
+  <td>⭐⭐⭐⭐⭐</td>
+</tr>
+</table>
+
+<div class="highlight">
+  <strong>💡 建议：</strong> 学组合数学时，用 Python 的 <code>itertools.combinations</code> 等函数验证手算结果、探索小规模例子，这是培养组合直觉的绝佳方式。
+</div>
+
+<!-- ==================== SECTION 9 ==================== -->
+<h2 id="s9">9. 学术前沿 &amp; 重要学者</h2>
+
+<h3>🌟 重要学者（推荐关注）</h3>
+<table>
+<tr><th>学者</th><th>机构</th><th>方向</th><th>备注</th></tr>
+<tr><td>Richard Stanley</td><td>MIT</td><td>枚举组合学、代数组合学</td><td>Enumerative Combinatorics 作者</td></tr>
+<tr><td>Terence Tao</td><td>UCLA</td><td>加性组合学、调和分析</td><td>菲尔兹奖 2006</td></tr>
+<tr><td>Gil Kalai</td><td>耶路撒冷希伯来大学</td><td>极值组合、理论 CS</td><td>博客必读</td></tr>
+<tr><td>Noga Alon</td><td>Princeton / Tel Aviv</td><td>概率方法、极值组合</td><td>The Probabilistic Method 作者</td></tr>
+<tr><td>June Huh</td><td>Princeton</td><td>代数组合学</td><td>菲尔兹奖 2022</td></tr>
+<tr><td>Timothy Gowers</td><td>剑桥 / Collège de France</td><td>极值组合、加性组合学</td><td>菲尔兹奖 1998，剑桥公开课</td></tr>
+<tr><td>Federico Ardila</td><td>旧金山州立大学</td><td>枚举组合学、拟阵理论</td><td>YouTube 课程推荐</td></tr>
+<tr><td>Igor Pak</td><td>UCLA</td><td>组合枚举、计算组合学</td><td>博客+视频索引</td></tr>
+</table>
+
+<h3>🔬 当前研究热点（2024–2026）</h3>
+<div class="grid2">
+  <div class="card">
+    <strong>📊 多变量解析组合学 (ACSV)</strong>
+    <p class="meta">Pemantle-Wilson-Melczer 教科书 2024 第2版。多变量渐近计数新方法。</p>
+  </div>
+  <div class="card">
+    <strong>🤖 组合数学 × 机器学习</strong>
+    <p class="meta">图神经网络、用 ML 辅助组合优化。AlphaDev 等强化学习排序算法。</p>
+  </div>
+  <div class="card">
+    <strong>📐 极值组合新方法</strong>
+    <p class="meta">代数方法 (Flag Algebra)、概率方法新变体。正则性引理推广。</p>
+  </div>
+  <div class="card">
+    <strong>🔗 高维展开子</strong>
+    <p class="meta">代数拓扑与组合学交叉。模拟图上的谱方法推广到高维复形。</p>
+  </div>
+</div>
+
+<h3>📡 前沿追踪渠道</h3>
+<ul>
+  <li><a href="https://arxiv.org/list/math.CO/recent"><strong>arXiv math.CO</strong></a> — 每日更新，组合数学预印本</li>
+  <li><strong>Paper Digest</strong> — 每月"最具影响力组合数学 arXiv 论文"</li>
+  <li><strong>GRWC (Graduate Research Workshop in Combinatorics)</strong> — 年度研究生研讨会，2025 在 Ames, IA</li>
+  <li><strong>FPSAC</strong> — 代数组合学最重要年度会议</li>
+</ul>
+
+<!-- ==================== SECTION 10 ==================== -->
+<h2 id="s10">10. 推荐学习路径 🗺️</h2>
+
+<div class="grid2">
+  <div class="path-card">
+    <h3>💻 路径 A：计算机科学方向</h3>
+    <div class="step"><span class="step-num">1</span>Applied Combinatorics (Keller & Trotter) — <span class="free-badge">免费</span></div>
+    <div class="step"><span class="step-num">2</span>Concrete Mathematics (Graham, Knuth, Patashnik)</div>
+    <div class="step"><span class="step-num">3</span>generatingfunctionology (Wilf) — <span class="free-badge">免费</span></div>
+    <div class="step"><span class="step-num">4</span>Analytic Combinatorics (Flajolet &amp; Sedgewick) — <span class="free-badge">免费</span></div>
+    <div class="step"><span class="step-num">5</span>MIT 18.212 Algebraic Combinatorics</div>
+    <p class="meta" style="margin-top: 1rem;">⏱ 预计周期：6-12 个月</p>
+  </div>
+
+  <div class="path-card">
+    <h3>🏆 路径 B：数学竞赛方向</h3>
+    <div class="step"><span class="step-num">1</span>AoPS Introduction to Counting &amp; Probability</div>
+    <div class="step"><span class="step-num">2</span>AoPS Intermediate Counting &amp; Probability</div>
+    <div class="step"><span class="step-num">3</span>102 Combinatorial Problems</div>
+    <div class="step"><span class="step-num">4</span>AMC 10/12 + AIME 真题训练</div>
+    <div class="step"><span class="step-num">5</span>AoPS Wiki 组合板块通读</div>
+    <p class="meta" style="margin-top: 1rem;">⏱ 预计周期：3-6 个月</p>
+  </div>
+
+  <div class="path-card">
+    <h3>🎓 路径 C：纯数学研究方向</h3>
+    <div class="step"><span class="step-num">1</span>A Walk Through Combinatorics (Bóna) — 基础</div>
+    <div class="step"><span class="step-num">2</span>A Course in Combinatorics (van Lint &amp; Wilson) — 广度</div>
+    <div class="step"><span class="step-num">3</span>generatingfunctionology (Wilf) — 生成函数专精</div>
+    <div class="step"><span class="step-num">4</span>Enumerative Combinatorics Vol 1 (Stanley)</div>
+    <div class="step"><span class="step-num">5</span>MIT OCW + Federico Ardila 视频 + arXiv 跟踪</div>
+    <p class="meta" style="margin-top: 1rem;">⏱ 预计周期：12-24 个月</p>
+  </div>
+
+  <div class="path-card">
+    <h3>🇨🇳 路径 D：中文环境自学</h3>
+    <div class="step"><span class="step-num">1</span>清华大学《组合数学》(学堂在线) — 视频课程</div>
+    <div class="step"><span class="step-num">2</span>《组合数学》原书第5版 (Brualdi 中文版)</div>
+    <div class="step"><span class="step-num">3</span>《具体数学》(中文版)</div>
+    <div class="step"><span class="step-num">4</span>Bilibili 补充视频 + 知乎推荐帖</div>
+    <div class="step"><span class="step-num">5</span>AoPS 中文资源 + Project Euler 练习</div>
+    <p class="meta" style="margin-top: 1rem;">⏱ 预计周期：6-12 个月</p>
+  </div>
+</div>
+
+<!-- ==================== SECTION 11 ==================== -->
+<h2 id="s11">11. 信号与洞见 📡</h2>
+
+<div class="signal">
+  <strong>🟢 信号一：免费资源空前丰富</strong>
+  <p>MIT OCW 7+ 门完整课程、3 本经典教材免费可获取 (generatingfunctionology、Analytic Combinatorics、Applied Combinatorics)。组合数学可能是数学领域免费学习资源最丰富的方向之一。</p>
+</div>
+
+<div class="signal">
+  <strong>🟢 信号二：YouTube 正在改变数学教育</strong>
+  <p>Federico Ardila 和 Timothy Gowers（菲尔兹奖得主）在 YouTube 上发布完整课程。视频讲座不再只是补充 — 它们正在成为一线学习资源。Igor Pak 维护的视频索引是宝贵的导航。</p>
+</div>
+
+<div class="warn">
+  <strong>🟡 信号三：组合数学的"两极化"</strong>
+  <p>入门门槛低（排列组合人人都懂），但研究前沿（如 Stanley 的 Enumerative Combinatorics）难度陡峭。从 Bóna 到 Stanley 的跳跃是许多学习者的瓶颈。建议用 generatingfunctionology 和 Concrete Mathematics 作为过渡。</p>
+</div>
+
+<div class="signal">
+  <strong>🟢 信号四：中文资源在追赶</strong>
+  <p>清华大学《组合数学》在学堂在线的课程质量很高，Brualdi 和 Knuth 的经典教材都有中文译本。但中文本土原创教材和博客相对稀缺，原创内容生态有增长空间。</p>
+</div>
+
+<div class="signal">
+  <strong>🟢 信号五：组合数学 × 编程是新趋势</strong>
+  <p>Project Euler、Codeforces 等平台的组合数学题热度上升。用 Python 验证组合恒等式、用 Jupyter Notebook 探索小规模例子，正在成为标准学习方式。这也是 CS 学生入门组合数学的自然路径。</p>
+</div>
+
+<div class="warn">
+  <strong>🟡 信号六：竞赛资源与研究资源之间存在断层</strong>
+  <p>AoPS/竞赛体系覆盖入门到中级的组合数学培养非常有效，但从竞赛过渡到学术研究（如读 Stanley）缺少桥梁资源。Cameron 的 Combinatorics: Topics, Techniques, Algorithms 和 Bóna 的研究生教材是值得考虑的桥梁。</p>
+</div>
+
+<hr style="border-color: var(--border); margin: 2rem 0;">
+
+<h2>📎 附录：免费资源速查表</h2>
+
+<table>
+<tr><th>资源</th><th>类型</th><th>链接</th></tr>
+<tr><td>Applied Combinatorics</td><td>教材</td><td><a href="https://open.umn.edu/opentextbooks/textbooks/339">Open Textbook Library</a></td></tr>
+<tr><td>Discrete Math: Open Introduction</td><td>教材</td><td><a href="http://discrete.openmathbooks.org/">官网</a></td></tr>
+<tr><td>generatingfunctionology</td><td>教材</td><td><a href="https://www2.math.upenn.edu/~wilf/gfology2.pdf">Penn Math PDF</a></td></tr>
+<tr><td>Analytic Combinatorics</td><td>教材</td><td><a href="https://ac.cs.princeton.edu/">Princeton 官网</a></td></tr>
+<tr><td>Combinatorics Through Guided Discovery</td><td>教材+习题</td><td><a href="https://math.dartmouth.edu/news-resources/electronic/kpbogart/">Dartmouth</a></td></tr>
+<tr><td>MIT OCW 全部组合学课程</td><td>视频+讲义</td><td><a href="https://ocw.mit.edu">ocw.mit.edu</a></td></tr>
+<tr><td>清华大学《组合数学》</td><td>视频课程</td><td><a href="https://www.xuetangx.com/course/THU08091000450">学堂在线</a></td></tr>
+<tr><td>Federico Ardila 枚举组合学</td><td>YouTube</td><td><a href="https://www.youtube.com/watch?v=pCJNjW8kMIg">YouTube</a></td></tr>
+<tr><td>Timothy Gowers 组合学</td><td>YouTube+讲义</td><td><a href="https://www.youtube.com/watch?v=gesQpnQNyqw">YouTube</a></td></tr>
+<tr><td>102 Combinatorial Problems</td><td>习题集</td><td><a href="https://rainymathboy.files.wordpress.com/2011/01/102-combinatorial-problems.pdf">PDF</a></td></tr>
+<tr><td>AoPS Wiki - Combinatorics</td><td>百科+习题</td><td><a href="https://artofproblemsolving.com/wiki/index.php/Combinatorics">AoPS</a></td></tr>
+<tr><td>arXiv math.CO</td><td>前沿论文</td><td><a href="https://arxiv.org/list/math.CO/recent">arxiv.org</a></td></tr>
+<tr><td>Igor Pak 视频收藏</td><td>视频索引</td><td><a href="https://www.math.ucla.edu/~pak/lectures/Math-Videos/comb-videos.htm">UCLA</a></td></tr>
+</table>
+
+<div class="footer">
+  <p>本报告由 <strong>悟空（Hermes Agent）</strong>研究整理 ｜ 2026 年 6 月 27 日 ｜ 研究耗时约 15 分钟</p>
+  <p style="margin-top: 0.5rem;">
+    <a href="../index.html">🏠 回到主页</a> ｜
+    <a href="https://github.com/wukong-ai-code/share">📂 GitHub 仓库</a> ｜
+    <a href="research-report.md">📄 查看 Markdown 版</a>
+  </p>
+</div>
+
+</body>
+</html>

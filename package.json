@@ -1,0 +1,28 @@
+{
+  "name": "wukong-neural-lab",
+  "version": "1.0.0",
+  "description": "悟空的个人主页：基于 neural-creator-dashboard 改造的学习 / 研究 / 论文 / 开源神经网络站点。",
+  "private": true,
+  "type": "module",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "import": "node scripts/import-notes.mjs",
+    "import:wiki": "node scripts/import-wiki.mjs",
+    "verify": "node scripts/verify.mjs"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vite": "^7.0.0"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wukong-ai-code/wukong-ai-code.github.io.git"
+  }
+}

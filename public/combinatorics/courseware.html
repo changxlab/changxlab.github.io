@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#7c3aed">
+<title>组合数学 · 学习课件 · 20 页</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root {
+  --bg: #f6f5fb; --card-bg: #ffffff; --text: #1f2937; --text-light: #6b7280;
+  --border: #e8e5f0; --border-strong: #d4cfe3; --primary: #7c3aed; --primary-dark: #5b21b6;
+  --primary-soft: #ede9fe; --accent: #f59e0b; --code-bg: #f3f0fb; --code-text: #be185d;
+  --quote-bg: #fef3c7; --quote-border: #f59e0b; --quote-text: #78350f;
+  --table-stripe: #faf9fe; --table-head-bg: linear-gradient(180deg,#f3f0fb 0%,#ece7f7 100%);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05); --shadow-md: 0 4px 12px rgba(91,33,182,0.12);
+  --topbar-bg: linear-gradient(135deg,#7c3aed 0%,#5b21b6 100%); --topbar-text:#fff;
+}
+[data-theme="dark"] {
+  --bg:#100b1f; --card-bg:#1b1530; --text:#e8e4f5; --text-light:#a799c9;
+  --border:#2d2447; --border-strong:#42396a; --primary:#a78bfa; --primary-dark:#c4b5fd;
+  --primary-soft:#3b2d6b; --accent:#fbbf24; --code-bg:#2d2447; --code-text:#f9a8d4;
+  --quote-bg:#3b2706; --quote-border:#f59e0b; --quote-text:#fcd34d;
+  --table-stripe:#160f29; --table-head-bg:linear-gradient(180deg,#2d2447 0%,#1b1530 100%);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.3); --shadow-md:0 4px 12px rgba(0,0,0,0.5);
+  --topbar-bg:linear-gradient(135deg,#5b21b6 0%,#312e81 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#100b1f; --card-bg:#1b1530; --text:#e8e4f5; --text-light:#a799c9;
+    --border:#2d2447; --border-strong:#42396a; --primary:#a78bfa; --primary-dark:#c4b5fd;
+    --primary-soft:#3b2d6b; --accent:#fbbf24; --code-bg:#2d2447; --code-text:#f9a8d4;
+    --quote-bg:#3b2706; --quote-border:#f59e0b; --quote-text:#fcd34d;
+    --table-stripe:#160f29; --table-head-bg:linear-gradient(180deg,#2d2447 0%,#1b1530 100%);
+    --shadow-sm:0 1px 3px rgba(0,0,0,0.3); --shadow-md:0 4px 12px rgba(0,0,0,0.5);
+    --topbar-bg:linear-gradient(135deg,#5b21b6 0%,#312e81 100%);
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.7; font-size:15px; transition:background .3s,color .3s; }
+.topbar { position:sticky; top:0; z-index:100; background:var(--topbar-bg); color:var(--topbar-text);
+  padding:14px 24px; box-shadow:var(--shadow-md); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.topbar-info { flex:1; min-width:200px; }
+.topbar h1 { margin:0; font-size:20px; font-weight:700; }
+.topbar .subtitle { font-size:12px; opacity:.9; margin-top:2px; }
+.topbar-actions { display:flex; gap:8px; }
+.btn { background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25); color:#fff; padding:6px 12px;
+  border-radius:6px; cursor:pointer; font-size:13px; transition:all .15s; display:inline-flex; align-items:center; gap:4px; text-decoration:none; }
+.btn:hover { background:rgba(255,255,255,.25); transform:translateY(-1px); }
+.layout { display:grid; grid-template-columns:280px 1fr; max-width:1500px; margin:0 auto; }
+.sidebar { background:var(--card-bg); border-right:1px solid var(--border); padding:20px 14px;
+  position:sticky; top:70px; height:calc(100vh - 70px); overflow-y:auto; transition:transform .3s; }
+.sidebar h3 { margin:18px 0 8px 0; font-size:11px; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; padding-left:8px; }
+.sidebar h3:first-child { margin-top:0; }
+.sidebar ul { list-style:none; padding:0; margin:0; }
+.sidebar li { margin-bottom:3px; }
+.sidebar a { display:flex; align-items:baseline; gap:8px; padding:6px 10px; border-radius:6px; text-decoration:none;
+  color:var(--text); font-size:13px; transition:all .15s; border-left:3px solid transparent; }
+.sidebar a:hover, .sidebar a.active { background:var(--primary-soft); color:var(--primary); border-left-color:var(--primary); }
+.sidebar .nav-num { font-weight:700; font-size:12px; min-width:28px; color:var(--primary); }
+.sidebar .nav-title { font-size:12.5px; color:var(--text-light); flex:1; line-height:1.4; }
+.sidebar a:hover .nav-title, .sidebar a.active .nav-title { color:var(--primary); }
+.menu-toggle { display:none; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25); color:#fff;
+  width:36px; height:36px; border-radius:6px; cursor:pointer; font-size:18px; }
+.content { padding:24px 32px; min-width:0; }
+.intro-card { background:var(--card-bg); border-radius:12px; padding:24px 28px; margin-bottom:24px;
+  box-shadow:var(--shadow-sm); border:1px solid var(--border); }
+.intro-card h1 { margin:0 0 12px 0; font-size:26px; }
+.page { background:var(--card-bg); border-radius:12px; padding:28px 32px; margin-bottom:24px;
+  box-shadow:var(--shadow-sm); border:1px solid var(--border); transition:all .3s; }
+.page:hover { box-shadow:var(--shadow-md); }
+.page-header { display:flex; align-items:baseline; gap:16px; margin-bottom:16px; padding-bottom:12px;
+  border-bottom:2px solid var(--primary); flex-wrap:wrap; }
+.page-num { background:var(--primary); color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:600; white-space:nowrap; }
+.page h2 { margin:0; font-size:23px; color:var(--text); }
+.page h3 { color:var(--primary); font-size:17px; margin:20px 0 10px 0; padding-left:10px; border-left:3px solid var(--primary); }
+.page h4 { color:var(--text); font-size:15px; margin:16px 0 8px 0; }
+.page p { margin:8px 0; }
+.page ul, .page ol { padding-left:24px; margin:8px 0; }
+.page li { margin:4px 0; }
+.table-wrap { overflow-x:auto; margin:16px 0; border-radius:8px; border:1px solid var(--border); }
+.page table { width:100%; border-collapse:collapse; font-size:14px; background:var(--card-bg); }
+.page th { background:var(--table-head-bg); padding:10px 12px; text-align:left; border-bottom:2px solid var(--primary);
+  font-weight:600; color:var(--text); white-space:nowrap; }
+.page td { padding:8px 12px; border-bottom:1px solid var(--border); vertical-align:top; color:var(--text); }
+.page tbody tr:nth-child(even) { background:var(--table-stripe); }
+.page tbody tr:hover { background:var(--primary-soft); }
+.page tbody tr:last-child td { border-bottom:none; }
+.page code { background:var(--code-bg); padding:2px 6px; border-radius:4px;
+  font-family:"SF Mono",Consolas,Menlo,monospace; font-size:13px; color:var(--code-text); }
+.page pre { background:#1b1530; color:#e8e4f5; padding:16px; border-radius:8px; overflow-x:auto; margin:16px 0; }
+.page pre code { background:transparent; color:inherit; padding:0; font-size:13px; }
+.page blockquote { background:var(--quote-bg); border-left:4px solid var(--quote-border); padding:12px 16px;
+  margin:16px 0; border-radius:0 8px 8px 0; color:var(--quote-text); }
+.page strong { color:var(--primary); font-weight:600; }
+.page hr { border:none; border-top:1px dashed var(--border); margin:24px 0; }
+:target { scroll-margin-top:90px; }
+.backtop { position:fixed; right:24px; bottom:24px; width:44px; height:44px; border-radius:50%;
+  background:var(--primary); color:#fff; border:none; font-size:20px; cursor:pointer; box-shadow:var(--shadow-md);
+  display:none; align-items:center; justify-content:center; z-index:90; transition:transform .15s; }
+.backtop:hover { transform:translateY(-2px); }
+.backtop.show { display:flex; }
+@media (max-width:900px) {
+  .layout { grid-template-columns:1fr; }
+  .sidebar { position:fixed; top:70px; left:0; width:280px; height:calc(100vh - 70px); z-index:99;
+    transform:translateX(-100%); box-shadow:var(--shadow-md); }
+  .sidebar.open { transform:translateX(0); }
+  .menu-toggle { display:inline-flex; align-items:center; justify-content:center; }
+  .content { padding:16px; }
+  .page { padding:18px; }
+  .page h2 { font-size:19px; }
+  .topbar { padding:10px 14px; }
+  .topbar h1 { font-size:17px; }
+}
+@media (max-width:480px) {
+  .topbar-actions .btn-text { display:none; }
+  .page-header { flex-direction:column; align-items:flex-start; gap:8px; }
+}
+@media print {
+  .sidebar, .topbar, .menu-toggle, .backtop { display:none !important; }
+  .layout { grid-template-columns:1fr; }
+  .content { padding:0; }
+  .page { page-break-after:always; box-shadow:none; border:1px solid #ccc; border-radius:0; }
+}
+.sidebar::-webkit-scrollbar, .content::-webkit-scrollbar, .table-wrap::-webkit-scrollbar { width:8px; height:8px; }
+.sidebar::-webkit-scrollbar-thumb, .content::-webkit-scrollbar-thumb, .table-wrap::-webkit-scrollbar-thumb {
+  background:var(--border-strong); border-radius:4px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background:var(--primary); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()" aria-label="菜单">☰</button>
+  <div class="topbar-info">
+    <h1>🎲 组合数学 · 学习课件</h1>
+    <div class="subtitle">20 页 · 4 大模块 · 枚举组合学 → 生成函数 → 特殊序列 → 进阶专题</div>
+  </div>
+  <div class="topbar-actions">
+    <a class="btn" href="exercises.html"><span>📝</span><span class="btn-text">练习题</span></a>
+    <button class="btn" onclick="toggleTheme()"><span id="theme-icon">🌙</span><span class="btn-text" id="theme-text">深色</span></button>
+    <button class="btn" onclick="window.print()"><span>🖨</span><span class="btn-text">打印</span></button>
+  </div>
+</div>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<h3>📑 模块一 · 基础计数</h3>
+<ul>
+<li><a href="#page-1"><span class="nav-num">P1</span><span class="nav-title">组合数学概述</span></a></li>
+<li><a href="#page-2"><span class="nav-num">P2</span><span class="nav-title">两条基本计数原理</span></a></li>
+<li><a href="#page-3"><span class="nav-num">P3</span><span class="nav-title">排列（线/圆）</span></a></li>
+<li><a href="#page-4"><span class="nav-num">P4</span><span class="nav-title">组合</span></a></li>
+<li><a href="#page-5"><span class="nav-num">P5</span><span class="nav-title">多重集排列与组合</span></a></li>
+<li><a href="#page-6"><span class="nav-num">P6</span><span class="nav-title">二项式定理与恒等式</span></a></li>
+</ul>
+<h3>🔧 模块二 · 计数技术</h3>
+<ul>
+<li><a href="#page-7"><span class="nav-num">P7</span><span class="nav-title">鸽巢原理</span></a></li>
+<li><a href="#page-8"><span class="nav-num">P8</span><span class="nav-title">容斥原理</span></a></li>
+<li><a href="#page-9"><span class="nav-num">P9</span><span class="nav-title">递推关系（建模）</span></a></li>
+<li><a href="#page-10"><span class="nav-num">P10</span><span class="nav-title">线性递推求解</span></a></li>
+<li><a href="#page-11"><span class="nav-num">P11</span><span class="nav-title">普通生成函数</span></a></li>
+<li><a href="#page-12"><span class="nav-num">P12</span><span class="nav-title">指数生成函数</span></a></li>
+</ul>
+<h3>🔢 模块三 · 特殊序列</h3>
+<ul>
+<li><a href="#page-13"><span class="nav-num">P13</span><span class="nav-title">Catalan 数</span></a></li>
+<li><a href="#page-14"><span class="nav-num">P14</span><span class="nav-title">Stirling 数与 Bell 数</span></a></li>
+<li><a href="#page-15"><span class="nav-num">P15</span><span class="nav-title">整数划分</span></a></li>
+</ul>
+<h3>🚀 模块四 · 进阶专题</h3>
+<ul>
+<li><a href="#page-16"><span class="nav-num">P16</span><span class="nav-title">Burnside 与 Pólya 计数</span></a></li>
+<li><a href="#page-17"><span class="nav-num">P17</span><span class="nav-title">图论基础</span></a></li>
+<li><a href="#page-18"><span class="nav-num">P18</span><span class="nav-title">极值组合学</span></a></li>
+<li><a href="#page-19"><span class="nav-num">P19</span><span class="nav-title">概率方法初步</span></a></li>
+<li><a href="#page-20"><span class="nav-num">P20</span><span class="nav-title">知识网络与学习路径</span></a></li>
+</ul>
+</aside>
+
+<main class="content">
+
+<div class="intro-card">
+<h1>组合数学 · 20 页学习课件</h1>
+<blockquote><strong>来源</strong>：基于《组合数学学习资源研究报告》(2026-06-27) 的知识体系整理。<strong>覆盖</strong>：枚举组合学核心 → 生成函数 → 特殊计数序列 → 群作用计数 → 图论与极值/概率方法。<strong>结构</strong>：4 大模块 → 20 页。</blockquote>
+<div class="table-wrap"><table>
+<thead><tr><th>模块</th><th>页码</th><th>主题</th></tr></thead>
+<tbody>
+<tr><td>一、基础计数</td><td>P1–P6</td><td>计数原理、排列、组合、多重集、二项式定理</td></tr>
+<tr><td>二、计数技术</td><td>P7–P12</td><td>鸽巢、容斥、递推、生成函数</td></tr>
+<tr><td>三、特殊序列</td><td>P13–P15</td><td>Catalan、Stirling、整数划分</td></tr>
+<tr><td>四、进阶专题</td><td>P16–P20</td><td>Pólya 计数、图论、极值组合、概率方法、综合</td></tr>
+</tbody></table></div>
+</div>
+
+<section id="page-1" class="page">
+<div class="page-header"><span class="page-num">第 1 页</span><h2>组合数学概述</h2></div>
+<p><strong>什么是组合数学</strong>：研究离散结构的"计数、存在性、构造、优化"四类问题。</p>
+<div class="table-wrap"><table>
+<thead><tr><th>子领域</th><th>核心问题</th><th>典型工具</th></tr></thead>
+<tbody>
+<tr><td>枚举组合学</td><td>"有多少种？"</td><td>生成函数、递推、容斥</td></tr>
+<tr><td>极值组合学</td><td>"最大/最小？"</td><td>Ramsey、Turán</td></tr>
+<tr><td>代数组合学</td><td>用代数研究组合对象</td><td>群作用、表示论</td></tr>
+<tr><td>概率方法</td><td>用概率证存在性</td><td>期望线性、LLL</td></tr>
+<tr><td>图论</td><td>图的结构与性质</td><td>匹配、着色</td></tr>
+</tbody></table></div>
+<h3>四个核心问题类型</h3>
+<ol>
+<li><strong>存在性</strong>：满足条件的结构是否存在？（鸽巢、Ramsey）</li>
+<li><strong>计数</strong>：有多少个？（排列组合、生成函数）</li>
+<li><strong>构造</strong>：如何具体造出来？（拉丁方、设计）</li>
+<li><strong>优化</strong>：最优的是什么？（极值组合、组合优化）</li>
+</ol>
+<p><strong>学习主线</strong>：计数原理 → 排列组合 → 高级计数技术（容斥/递推/生成函数）→ 特殊数列 → 群作用计数 → 图论与现代方法。</p>
+</section>
+
+<section id="page-2" class="page">
+<div class="page-header"><span class="page-num">第 2 页</span><h2>两条基本计数原理</h2></div>
+<p>整个枚举组合学建立在两条原理之上。</p>
+<h3>加法原理（分类计数）</h3>
+<p>若完成一件事有 $k$ 类互斥的方法，第 $i$ 类有 $n_i$ 种方式，则总数 $N = n_1 + n_2 + \cdots + n_k$。</p>
+<p>集合语言：互不相交的有限集 $A_1,\dots,A_k$，则 $\left|\bigcup_i A_i\right| = \sum_i |A_i|$。</p>
+<h3>乘法原理（分步计数）</h3>
+<p>若完成一件事需依次 $k$ 步，第 $i$ 步有 $n_i$ 种方式（与之前选择无关），则 $N = n_1 \times n_2 \times \cdots \times n_k$。</p>
+<p>集合语言：$|A_1 \times \cdots \times A_k| = \prod_i |A_i|$。</p>
+<blockquote><strong>"分类用加法，分步用乘法"</strong>。先判断各方案是"并列（或）"还是"递进（且）"。</blockquote>
+<p><strong>例</strong>：从 A 到 B 有 2 条陆路、3 条水路。只走一种方式 $2+3=5$（分类）；先 A→B 再 B→C（B→C 有 4 条）则 $5\times4=20$（分步）。</p>
+</section>
+
+<section id="page-3" class="page">
+<div class="page-header"><span class="page-num">第 3 页</span><h2>排列（Permutation）</h2></div>
+<p><strong>排列</strong>：从 $n$ 个不同元素中取出 $k$ 个，按<strong>顺序</strong>排成一列。</p>
+<h3>线排列数</h3>
+<p>$$P(n,k) = n(n-1)\cdots(n-k+1) = \frac{n!}{(n-k)!}$$</p>
+<p>特例：全排列 $P(n,n) = n!$，约定 $0! = 1$。第 1 位有 $n$ 种选法，第 2 位 $n-1$……乘法原理即得。</p>
+<h3>圆排列（环排列）</h3>
+<p>$n$ 个元素排成圆圈，旋转视为相同：$$\text{圆排列数} = \frac{n!}{n} = (n-1)!$$ 取 $k$ 个作圆排列：$\dfrac{P(n,k)}{k} = \dfrac{n!}{k\,(n-k)!}$。</p>
+<blockquote><strong>直觉</strong>：线排列固定后，圆排列把 $n$ 个旋转等价的线排列算作 1 个，故除以 $n$。</blockquote>
+<h3>项链排列</h3>
+<p>若圆排列还允许<strong>翻转</strong>（镜像）等价，则项链数 $= \dfrac{(n-1)!}{2}$（$n \ge 3$）。</p>
+<p><strong>例</strong>：5 人围圆桌就座，不同坐法 $(5-1)! = 24$ 种。</p>
+</section>
+
+<section id="page-4" class="page">
+<div class="page-header"><span class="page-num">第 4 页</span><h2>组合（Combination）</h2></div>
+<p><strong>组合</strong>：从 $n$ 个不同元素中取出 $k$ 个，<strong>不计顺序</strong>。</p>
+<p>$$C(n,k) = \binom{n}{k} = \frac{P(n,k)}{k!} = \frac{n!}{k!\,(n-k)!}$$</p>
+<p><strong>排列 = 组合 × 排序</strong>：$P(n,k) = \binom{n}{k} \cdot k!$。</p>
+<h3>基本性质</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>性质</th><th>公式</th></tr></thead>
+<tbody>
+<tr><td>对称性</td><td>$\binom{n}{k} = \binom{n}{n-k}$</td></tr>
+<tr><td>Pascal 递推</td><td>$\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}$</td></tr>
+<tr><td>行和</td><td>$\sum_{k=0}^{n}\binom{n}{k} = 2^n$</td></tr>
+<tr><td>吸收公式</td><td>$k\binom{n}{k} = n\binom{n-1}{k-1}$</td></tr>
+</tbody></table></div>
+<p><strong>Pascal 递推的组合意义</strong>：取定元素 $x$。含 $x$ 的组合有 $\binom{n-1}{k-1}$ 个，不含 $x$ 的有 $\binom{n-1}{k}$ 个，加法原理即得。</p>
+<p>Pascal 三角第 $n$ 行第 $k$ 个数即 $\binom{n}{k}$，每数等于其上方两数之和。</p>
+</section>
+
+<section id="page-5" class="page">
+<div class="page-header"><span class="page-num">第 5 页</span><h2>多重集的排列与组合</h2></div>
+<p><strong>多重集</strong>：元素可重复。记 $S = \{n_1 \cdot a_1, \dots, n_k \cdot a_k\}$。</p>
+<h3>多重集的全排列</h3>
+<p>设 $n = n_1 + \cdots + n_k$，全排列数为<strong>多项式系数</strong>：$$\frac{n!}{n_1!\,n_2!\cdots n_k!} = \binom{n}{n_1,\dots,n_k}$$</p>
+<p><strong>例</strong>：MISSISSIPPI（M·1, I·4, S·4, P·2，共 11 字母）：$\dfrac{11!}{1!\,4!\,4!\,2!} = 34650$。</p>
+<h3>可重组合（多重集的 $k$-组合）</h3>
+<p>从 $k$ 类元素（每类无限多）中取 $r$ 个，不计顺序：$$\binom{k+r-1}{r} = \binom{k+r-1}{k-1}$$</p>
+<p><strong>隔板法推导</strong>：把 $r$ 个相同的球放进 $k$ 个有序盒子。$r$ 个星 + $(k-1)$ 个隔板共 $k+r-1$ 个位置，选 $k-1$ 个放隔板。</p>
+<blockquote><strong>隔板法</strong>是处理"相同物品分给不同对象"问题的万能工具。</blockquote>
+<p><strong>例</strong>：买 3 种口味冰淇淋共 5 个：$\binom{3+5-1}{5} = \binom{7}{5} = 21$ 种。</p>
+</section>
+
+<section id="page-6" class="page">
+<div class="page-header"><span class="page-num">第 6 页</span><h2>二项式定理与组合恒等式</h2></div>
+<h3>二项式定理</h3>
+<p>$$(x+y)^n = \sum_{k=0}^{n}\binom{n}{k}x^k y^{n-k}$$</p>
+<p>令 $x=y=1$ 得 $\sum_k\binom{n}{k}=2^n$；令 $x=-1,y=1$ 得 $\sum_k(-1)^k\binom{n}{k}=0$（$n\ge1$）。</p>
+<h3>牛顿广义二项式定理</h3>
+<p>对任意实数 $\alpha$ 与 $|x|<1$：$$(1+x)^{\alpha} = \sum_{k=0}^{\infty}\binom{\alpha}{k}x^k,\quad \binom{\alpha}{k}=\frac{\alpha(\alpha-1)\cdots(\alpha-k+1)}{k!}$$</p>
+<p>常用：$(1-x)^{-n} = \sum_{k=0}^{\infty}\binom{n+k-1}{k}x^k$。</p>
+<h3>重要组合恒等式</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>恒等式</th><th>名称</th></tr></thead>
+<tbody>
+<tr><td>$\sum_{k}\binom{m}{k}\binom{n}{r-k}=\binom{m+n}{r}$</td><td>Vandermonde 卷积</td></tr>
+<tr><td>$\sum_{k=0}^{n}\binom{k}{r}=\binom{n+1}{r+1}$</td><td>曲棍球棒</td></tr>
+<tr><td>$\sum_{k=0}^{n}\binom{n}{k}^2=\binom{2n}{n}$</td><td>平方和</td></tr>
+<tr><td>$\sum_{k=0}^{n}k\binom{n}{k}=n\,2^{n-1}$</td><td>加权和</td></tr>
+</tbody></table></div>
+<p><strong>组合证明思想</strong>：同一集合用两种方式计数 → 双计数法。</p>
+</section>
+
+<section id="page-7" class="page">
+<div class="page-header"><span class="page-num">第 7 页</span><h2>鸽巢原理（抽屉原理）</h2></div>
+<h3>三种形式</h3>
+<ul>
+<li><strong>简单形式</strong>：$n+1$ 个物体放入 $n$ 个盒子，至少有一盒含 $\ge 2$ 个。</li>
+<li><strong>加强形式</strong>：$N$ 个物体放入 $n$ 个盒子，至少有一盒含 $\ge \left\lceil N/n\right\rceil$ 个。</li>
+<li><strong>平均值形式</strong>：$n$ 个数平均值 $\bar{x}$，必有一个 $\ge \bar{x}$，也有一个 $\le \bar{x}$。</li>
+</ul>
+<h3>经典应用</h3>
+<ol>
+<li><strong>生日</strong>：367 人中必有两人同生日。</li>
+<li><strong>整除</strong>：任取 $n+1$ 个整数，必有两个之差是 $n$ 的倍数（按模 $n$ 余数分类）。</li>
+<li><strong>单调子列（Erdős–Szekeres）</strong>：任意 $n^2+1$ 个不同实数序列，必含长 $n+1$ 的单调子列。</li>
+<li><strong>熟人陌生人</strong>：6 人中必有 3 人互识或 3 人互不识（$R(3,3)=6$）。</li>
+</ol>
+<blockquote><strong>解题套路</strong>：① 找"物体" ② 设计"盒子"（关键且最难）③ 由鸽巢得结论。盒子常按"余数 / 配对 / 区间 / 颜色"构造。</blockquote>
+</section>
+
+<section id="page-8" class="page">
+<div class="page-header"><span class="page-num">第 8 页</span><h2>容斥原理（Inclusion–Exclusion）</h2></div>
+<h3>一般公式</h3>
+<p>$$\left|\bigcup_{i=1}^{n}A_i\right| = \sum_i|A_i| - \sum_{i<j}|A_i\cap A_j| + \cdots + (-1)^{n-1}|A_1\cap\cdots\cap A_n|$$</p>
+<p>补集形式（更常用）：$\left|\overline{A_1}\cap\cdots\cap\overline{A_n}\right| = |U| - \sum|A_i| + \sum|A_i\cap A_j| - \cdots$</p>
+<h3>应用一：错位排列（Derangement）</h3>
+<p>$n$ 个元素都不在原位的排列数：$$D_n = n!\sum_{k=0}^{n}\frac{(-1)^k}{k!}$$</p>
+<p>递推 $D_n = (n-1)(D_{n-1}+D_{n-2})$，且 $\dfrac{D_n}{n!}\to e^{-1}\approx0.368$。<br>$D_1=0,\,D_2=1,\,D_3=2,\,D_4=9,\,D_5=44$。</p>
+<h3>应用二：欧拉函数</h3>
+<p>$$\varphi(n) = n\prod_{p\mid n}\left(1-\frac{1}{p}\right)$$ 即 $1\sim n$ 中与 $n$ 互质的个数（对各素因子的"被整除"性质用容斥）。</p>
+</section>
+
+<section id="page-9" class="page">
+<div class="page-header"><span class="page-num">第 9 页</span><h2>递推关系（建立模型）</h2></div>
+<p><strong>递推关系</strong>：用前面的项表示当前项的方程，配合初值唯一确定数列。</p>
+<div class="table-wrap"><table>
+<thead><tr><th>问题</th><th>递推</th><th>初值</th></tr></thead>
+<tbody>
+<tr><td>Fibonacci 兔子</td><td>$F_n=F_{n-1}+F_{n-2}$</td><td>$F_0=0,F_1=1$</td></tr>
+<tr><td>Hanoi 塔</td><td>$H_n=2H_{n-1}+1$</td><td>$H_1=1$</td></tr>
+<tr><td>$n$ 直线分区域</td><td>$L_n=L_{n-1}+n$</td><td>$L_0=1$</td></tr>
+<tr><td>$n$ 位无连续两 0 串</td><td>$a_n=a_{n-1}+a_{n-2}$</td><td>$a_1=2,a_2=3$</td></tr>
+</tbody></table></div>
+<h3>建立递推的思路</h3>
+<ol>
+<li>设 $a_n$ 为规模 $n$ 的答案。</li>
+<li><strong>聚焦最后一步 / 第一个元素</strong>，按其取值分类。</li>
+<li>每类化归为更小规模的子问题，写出关系式。</li>
+<li>确定足够的初始条件。</li>
+</ol>
+<p><strong>例（Hanoi）</strong>：移 $n$ 盘 = 移上 $n-1$ 个到辅助柱 + 移最大盘 + 再移 $n-1$ 个回去，故 $H_n=2H_{n-1}+1$，解得 $H_n=2^n-1$。</p>
+</section>
+
+<section id="page-10" class="page">
+<div class="page-header"><span class="page-num">第 10 页</span><h2>线性递推的求解</h2></div>
+<h3>常系数齐次线性递推</h3>
+<p>$$a_n = c_1 a_{n-1} + c_2 a_{n-2} + \cdots + c_k a_{n-k}$$</p>
+<p><strong>特征方程</strong>：$x^k = c_1 x^{k-1} + \cdots + c_k$。</p>
+<ul>
+<li><strong>根互异</strong> $r_1,\dots,r_k$：通解 $a_n = \sum_{i=1}^{k} A_i\, r_i^{\,n}$。</li>
+<li><strong>重根</strong> $r$（重数 $m$）：贡献 $(A_0 + A_1 n + \cdots + A_{m-1}n^{m-1})r^n$。</li>
+</ul>
+<h3>例：Fibonacci 通项（Binet 公式）</h3>
+<p>特征方程 $x^2 = x + 1$，根 $\varphi=\dfrac{1+\sqrt5}{2},\ \psi=\dfrac{1-\sqrt5}{2}$：$$F_n = \frac{1}{\sqrt5}\left(\varphi^n - \psi^n\right)$$</p>
+<h3>非齐次递推</h3>
+<p>$a_n = c_1 a_{n-1}+\cdots+f(n)$ 的通解 = 齐次通解 + 一个特解。特解形式按 $f(n)$ 猜（多项式→多项式，指数 $b^n$→$Cb^n$，与特征根冲突时乘 $n$）。</p>
+</section>
+
+<section id="page-11" class="page">
+<div class="page-header"><span class="page-num">第 11 页</span><h2>普通生成函数（OGF）</h2></div>
+<blockquote>核心思想（Wilf）："生成函数是一根晾衣绳，把数列挂上去展示。"</blockquote>
+<p>数列 $\{a_n\}$ 的<strong>普通生成函数</strong>：$$G(x) = \sum_{n=0}^{\infty} a_n x^n$$</p>
+<div class="table-wrap"><table>
+<thead><tr><th>数列 $a_n$</th><th>生成函数</th></tr></thead>
+<tbody>
+<tr><td>$1,1,1,\dots$</td><td>$\dfrac{1}{1-x}$</td></tr>
+<tr><td>$a_n=n+1$</td><td>$\dfrac{1}{(1-x)^2}$</td></tr>
+<tr><td>$\binom{m}{n}$（变量 $n$）</td><td>$(1+x)^m$</td></tr>
+<tr><td>$b^n$</td><td>$\dfrac{1}{1-bx}$</td></tr>
+</tbody></table></div>
+<h3>用 OGF 解递推</h3>
+<p><strong>例</strong>：$a_n = 3a_{n-1}+2,\ a_0=1$。令 $G(x)=\sum a_n x^n$：$$G(x) = 1 + 3xG(x) + \frac{2x}{1-x}$$ 解得 $G(x)=\dfrac{1+x}{(1-3x)(1-x)}$，部分分式取系数得 $a_n = 2\cdot3^n - 1$。</p>
+<h3>用 OGF 解组合分配</h3>
+<p>求 $x_1+x_2+x_3 = r$（$0\le x_i\le 3$）的非负整数解数 $= [x^r](1+x+x^2+x^3)^3$。每因子对应一变量的取值范围。</p>
+</section>
+
+<section id="page-12" class="page">
+<div class="page-header"><span class="page-num">第 12 页</span><h2>指数生成函数（EGF）</h2></div>
+<p><strong>指数生成函数</strong>（适合"有序/有标号"问题）：$$E(x) = \sum_{n=0}^{\infty} a_n \frac{x^n}{n!}$$</p>
+<div class="table-wrap"><table>
+<thead><tr><th>数列</th><th>EGF</th></tr></thead>
+<tbody>
+<tr><td>$a_n=1$</td><td>$e^x$</td></tr>
+<tr><td>排列全体 $a_n=n!$</td><td>$\dfrac{1}{1-x}$</td></tr>
+<tr><td>错位排列 $D_n$</td><td>$\dfrac{e^{-x}}{1-x}$</td></tr>
+</tbody></table></div>
+<h3>OGF vs EGF</h3>
+<div class="table-wrap"><table>
+<thead><tr><th></th><th>OGF</th><th>EGF</th></tr></thead>
+<tbody>
+<tr><td>适合</td><td>无序选取、组合、分配</td><td>有序排列、有标号结构</td></tr>
+<tr><td>乘积意义</td><td>卷积 $\sum a_k b_{n-k}$</td><td>二项卷积 $\sum\binom{n}{k}a_k b_{n-k}$</td></tr>
+</tbody></table></div>
+<p><strong>例</strong>：由 $\{a,b,c\}$ 组成、每字母出现偶数次的长 $n$ 串个数。每字母 EGF 为 $\cosh x = \dfrac{e^x+e^{-x}}{2}$，三字母相乘 $\left(\dfrac{e^x+e^{-x}}{2}\right)^3$，取 $\dfrac{x^n}{n!}$ 的系数即答案。</p>
+</section>
+
+<section id="page-13" class="page">
+<div class="page-header"><span class="page-num">第 13 页</span><h2>Catalan 数</h2></div>
+<p>$$C_n = \frac{1}{n+1}\binom{2n}{n} = \binom{2n}{n}-\binom{2n}{n+1}$$</p>
+<p>前几项：$C_0=1,\,C_1=1,\,C_2=2,\,C_3=5,\,C_4=14,\,C_5=42,\,C_6=132$。</p>
+<h3>递推关系</h3>
+<p>$$C_{n+1} = \sum_{i=0}^{n} C_i\, C_{n-i},\qquad C_0=1$$ 生成函数 $C(x)=\dfrac{1-\sqrt{1-4x}}{2x}$。</p>
+<h3>Catalan 数的"化身"</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>组合对象</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>合法括号串</td><td>$n$ 对括号正确匹配的方式数</td></tr>
+<tr><td>Dyck 路</td><td>$(0,0)\to(2n,0)$ 不越 $x$ 轴的上下台阶路径</td></tr>
+<tr><td>二叉树</td><td>$n$ 个内部节点的满二叉树个数</td></tr>
+<tr><td>多边形三角剖分</td><td>$(n+2)$ 边凸多边形的三角剖分数</td></tr>
+<tr><td>出栈序列</td><td>$1\dots n$ 进栈的不同出栈序列数</td></tr>
+</tbody></table></div>
+<blockquote><strong>识别技巧</strong>：出现"不交叉、合法匹配、不越界、递归二分"结构时，答案往往是 Catalan 数。</blockquote>
+</section>
+
+<section id="page-14" class="page">
+<div class="page-header"><span class="page-num">第 14 页</span><h2>Stirling 数与 Bell 数</h2></div>
+<h3>第二类 Stirling 数 $S(n,k)$</h3>
+<p>把 $n$ 个<strong>不同</strong>元素划分成 $k$ 个<strong>非空、无标号</strong>子集的方式数。$$S(n,k) = k\cdot S(n-1,k) + S(n-1,k-1)$$</p>
+<p>显式（容斥）：$S(n,k) = \dfrac{1}{k!}\sum_{j=0}^{k}(-1)^j\binom{k}{j}(k-j)^n$。"盒子有区别"（满射）时为 $k!\,S(n,k)$。</p>
+<h3>第一类 Stirling 数 $c(n,k)$</h3>
+<p>把 $n$ 个元素排成 $k$ 个非空<strong>轮换</strong>的方式数：$$c(n,k) = (n-1)\,c(n-1,k) + c(n-1,k-1)$$ 满足 $\sum_k c(n,k) = n!$。</p>
+<h3>Bell 数 $B_n$</h3>
+<p>集合 $\{1,\dots,n\}$ 的<strong>所有划分</strong>总数：$$B_n = \sum_{k=0}^{n} S(n,k),\qquad B_{n+1}=\sum_{k=0}^{n}\binom{n}{k}B_k$$ 前几项：$B_0=1,\,B_1=1,\,B_2=2,\,B_3=5,\,B_4=15,\,B_5=52$。</p>
+</section>
+
+<section id="page-15" class="page">
+<div class="page-header"><span class="page-num">第 15 页</span><h2>整数划分</h2></div>
+<p><strong>整数划分</strong>：把正整数 $n$ 写成若干<strong>无序</strong>正整数之和，记划分数 $p(n)$。</p>
+<p>例：$p(4)=5$：$\;4=4=3+1=2+2=2+1+1=1+1+1+1$。$p(1..6)=1,2,3,5,7,11$。</p>
+<h3>生成函数（Euler）</h3>
+<p>$$\sum_{n=0}^{\infty} p(n)\,x^n = \prod_{k=1}^{\infty}\frac{1}{1-x^k}$$ 第 $k$ 个因子 $\dfrac{1}{1-x^k}$ 表示"用了几个 $k$"。</p>
+<h3>限制型划分</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>限制</th><th>生成函数</th></tr></thead>
+<tbody>
+<tr><td>各部分互不相同</td><td>$\prod_{k\ge1}(1+x^k)$</td></tr>
+<tr><td>各部分为奇数</td><td>$\prod_{k\ge1}\dfrac{1}{1-x^{2k-1}}$</td></tr>
+<tr><td>各部分 $\le m$</td><td>$\prod_{k=1}^{m}\dfrac{1}{1-x^k}$</td></tr>
+</tbody></table></div>
+<p><strong>Euler 定理</strong>：互异部分的划分数 = 奇数部分的划分数。<strong>Ferrers 图</strong>转置得共轭划分 ⇒ "恰 $k$ 个部分的划分数" = "最大部分恰为 $k$ 的划分数"。</p>
+</section>
+
+<section id="page-16" class="page">
+<div class="page-header"><span class="page-num">第 16 页</span><h2>Burnside 引理与 Pólya 计数</h2></div>
+<p>处理"在对称（旋转/翻转）下本质不同"的计数问题。本质不同的对象数 = <strong>轨道数</strong>。</p>
+<h3>Burnside 引理</h3>
+<p>$$\text{轨道数} = \frac{1}{|G|}\sum_{g\in G}|X^g|$$ 其中 $X^g$ 是被 $g$ <strong>固定</strong>的元素集合。</p>
+<blockquote><strong>一句话</strong>：轨道数 = 各群元素"不动点数"的平均值。</blockquote>
+<h3>Pólya 计数定理</h3>
+<p>对 $n$ 个位置用 $m$ 种颜色染色，置换群 $G$ 作用，本质不同染色数：$$N = \frac{1}{|G|}\sum_{g\in G} m^{\,c(g)}$$ 其中 $c(g)$ 是 $g$ 的<strong>轮换个数</strong>（每个轮换内同色）。</p>
+<h3>例：正方形顶点染色</h3>
+<p>正方形 4 顶点用 $m$ 色染，旋转群 $C_4$ 的轮换数为 $4,1,2,1$：$$N = \frac{1}{4}\left(m^4 + m + m^2 + m\right) = \frac{m^4+m^2+2m}{4}$$ $m=2$ 时 $N=6$。</p>
+</section>
+
+<section id="page-17" class="page">
+<div class="page-header"><span class="page-num">第 17 页</span><h2>图论基础</h2></div>
+<p><strong>图</strong> $G=(V,E)$：顶点集 $V$ 与边集 $E$。</p>
+<div class="table-wrap"><table>
+<thead><tr><th>概念</th><th>定义</th></tr></thead>
+<tbody>
+<tr><td>度 $\deg(v)$</td><td>关联于 $v$ 的边数</td></tr>
+<tr><td>握手定理</td><td>$\sum_{v}\deg(v) = 2|E|$</td></tr>
+<tr><td>完全图 $K_n$</td><td>任两点相邻，$|E|=\binom{n}{2}$</td></tr>
+<tr><td>二部图</td><td>$V$ 分两部，边只跨部</td></tr>
+</tbody></table></div>
+<p><strong>握手定理推论</strong>：奇度顶点个数必为偶数。</p>
+<h3>路、回路与树</h3>
+<ul>
+<li><strong>欧拉回路</strong>：经过每条边恰一次的闭迹。存在 ⟺ 连通且所有顶点度为偶。</li>
+<li><strong>哈密顿回路</strong>：经过每个顶点恰一次的圈（NP 难）。</li>
+<li><strong>树</strong> = 连通无圈图，$n$ 顶点时 $|E|=n-1$，任两点间有唯一路径。</li>
+</ul>
+<p><strong>Cayley 公式</strong>：$n$ 个有标号顶点的生成树总数为 $n^{n-2}$。<strong>欧拉公式</strong>：连通平面图 $V-E+F=2$。<strong>四色定理</strong>：平面图 4 色可正常着色。</p>
+</section>
+
+<section id="page-18" class="page">
+<div class="page-header"><span class="page-num">第 18 页</span><h2>极值组合学</h2></div>
+<h3>Ramsey 理论</h3>
+<blockquote><strong>核心</strong>：足够大的结构中必然出现有序的子结构（"完全的无序不可能"）。</blockquote>
+<p><strong>Ramsey 数</strong> $R(s,t)$：使任意 2-着色 $K_n$ 必含红 $K_s$ 或蓝 $K_t$ 的最小 $n$。$R(3,3)=6$，$R(4,4)=18$，$R(5,5)$ 未知（43–48）。上界 $R(s,t)\le\binom{s+t-2}{s-1}$。</p>
+<h3>Turán 定理</h3>
+<p>不含 $K_{r+1}$ 的 $n$ 顶点图最多 $\left(1-\dfrac{1}{r}\right)\dfrac{n^2}{2}$ 条边，极图是完全 $r$ 部图。$r=2$ 即 Mantel 定理：无三角形图最多 $\lfloor n^2/4\rfloor$ 条边。</p>
+<h3>Dilworth 定理</h3>
+<p>有限偏序集中，最大<strong>反链</strong>大小 = 划分为<strong>链</strong>所需的最少链数。</p>
+<blockquote>极值组合两类结果：<strong>存在性下界</strong>（Ramsey）与<strong>结构上界</strong>（Turán/Dilworth）。</blockquote>
+</section>
+
+<section id="page-19" class="page">
+<div class="page-header"><span class="page-num">第 19 页</span><h2>概率方法初步</h2></div>
+<p><strong>概率方法</strong>（Erdős 开创）：要证某对象存在，证明"随机选取时它以正概率出现"即可——非构造性存在性证明。</p>
+<h3>期望线性</h3>
+<p>$$\mathbb{E}\!\left[\sum_i X_i\right] = \sum_i \mathbb{E}[X_i]$$ 无需独立性，是最常用的工具。</p>
+<h3>基本论证模式</h3>
+<ol>
+<li><strong>期望论证</strong>：若 $\mathbb{E}[X]=\mu$，则必存在取值 $\ge\mu$ 也存在 $\le\mu$ 的样本点。</li>
+<li><strong>概率非零</strong>：若"坏事件"总概率 $<1$，则存在一个样本避开所有坏事件。</li>
+</ol>
+<h3>例：Ramsey 下界</h3>
+<p>若 $\binom{n}{k}2^{1-\binom{k}{2}} < 1$，则 $K_n$ 存在一种 2-着色不含单色 $K_k$，从而 $R(k,k) > n$，得指数下界 $R(k,k) > 2^{k/2}$。</p>
+<p><strong>Lovász Local Lemma</strong>：当众多坏事件"两两大多独立"且各自概率足够小时，仍有正概率全部避开。</p>
+</section>
+
+<section id="page-20" class="page">
+<div class="page-header"><span class="page-num">第 20 页</span><h2>知识网络与学习路径</h2></div>
+<h3>知识网络</h3>
+<pre><code>组合数学
+├── 基础计数
+│   ├── 加法/乘法原理
+│   ├── 排列（线/圆）、组合
+│   ├── 多重集（多项式系数、隔板法）
+│   └── 二项式定理 + 组合恒等式
+├── 计数技术
+│   ├── 鸽巢原理（存在性）
+│   ├── 容斥原理（错位排列、欧拉函数）
+│   ├── 递推关系（特征方程）
+│   └── 生成函数（OGF / EGF）
+├── 特殊序列
+│   ├── Catalan 数
+│   ├── Stirling / Bell 数
+│   └── 整数划分
+└── 进阶专题
+    ├── Burnside / Pólya 计数
+    ├── 图论（树、欧拉、平面、着色）
+    ├── 极值组合（Ramsey、Turán、Dilworth）
+    └── 概率方法（期望线性、LLL）</code></pre>
+<h3>推荐学习路径</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>阶段</th><th>教材/资源</th><th>重点</th></tr></thead>
+<tbody>
+<tr><td>入门</td><td>A Walk Through Combinatorics (Bóna)</td><td>排列组合、图论入门</td></tr>
+<tr><td>基础</td><td>组合数学 (Brualdi) / Applied Combinatorics</td><td>容斥、递推、生成函数</td></tr>
+<tr><td>进阶</td><td>generatingfunctionology (Wilf, 免费)</td><td>生成函数专精</td></tr>
+<tr><td>高级</td><td>Enumerative Combinatorics (Stanley)</td><td>枚举组合学核心</td></tr>
+<tr><td>中文</td><td>清华《组合数学》(学堂在线)</td><td>系统中文课程</td></tr>
+</tbody></table></div>
+<h3>解题方法论</h3>
+<ol>
+<li><strong>识别问题类型</strong>：计数 / 存在 / 构造 / 优化。</li>
+<li><strong>计数四步</strong>：分类(加)还是分步(乘)？有序还是无序？可重否？是否需扣除对称？</li>
+<li><strong>技术选择</strong>：直接计数 → 容斥 → 递推 → 生成函数（由易到难）。</li>
+<li><strong>双计数验证</strong>：换一个角度数同一对象，结果应相等。</li>
+</ol>
+</section>
+
+</main>
+</div>
+
+<button class="backtop" id="backtop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="回到顶部">↑</button>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const icon = document.getElementById('theme-icon');
+  const text = document.getElementById('theme-text');
+  if (current === 'dark') {
+    html.setAttribute('data-theme','light'); icon.textContent='🌙'; text.textContent='深色'; localStorage.setItem('theme','light');
+  } else {
+    html.setAttribute('data-theme','dark'); icon.textContent='☀️'; text.textContent='浅色'; localStorage.setItem('theme','dark');
+  }
+}
+(function(){
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme','dark');
+    document.getElementById('theme-icon').textContent='☀️';
+    document.getElementById('theme-text').textContent='浅色';
+  }
+})();
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+document.querySelectorAll('.sidebar a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 900) document.getElementById('sidebar').classList.remove('open');
+    document.querySelectorAll('.sidebar a').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+  });
+});
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.sidebar a').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+document.querySelectorAll('.page').forEach(p => observer.observe(p));
+window.addEventListener('scroll', () => {
+  document.getElementById('backtop').classList.toggle('show', window.scrollY > 400);
+});
+</script>
+</body>
+</html>

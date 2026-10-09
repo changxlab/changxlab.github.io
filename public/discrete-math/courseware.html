@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《离散数学》学习课件 v2 · 21 页 · 9 讲</title>
+<style>
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --accent: #f59e0b;
+  --bg: #fafafa;
+  --card-bg: #ffffff;
+  --text: #1f2937;
+  --text-light: #6b7280;
+  --border: #e5e7eb;
+  --code-bg: #f1f5f9;
+  --quote-bg: #fef3c7;
+  --quote-border: #f59e0b;
+  --success: #059669;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* 顶部 */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 16px 32px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.topbar h1 { margin: 0 0 4px 0; font-size: 22px; }
+.topbar .subtitle { font-size: 13px; opacity: 0.9; }
+
+/* 布局 */
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+/* 侧边导航 */
+.sidebar {
+  background: white;
+  border-right: 1px solid var(--border);
+  padding: 20px 14px;
+  position: sticky;
+  top: 76px;
+  height: calc(100vh - 76px);
+  overflow-y: auto;
+}
+.sidebar h3 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.sidebar ul { list-style: none; padding: 0; margin: 0; }
+.sidebar li { margin-bottom: 4px; }
+.sidebar a {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 13px;
+  transition: all 0.15s;
+}
+.sidebar a:hover { background: #eef2ff; color: var(--primary); }
+.sidebar a.active { background: var(--primary); color: #fff; }
+.sidebar a.active .nav-title,
+.sidebar a.active .nav-tag { color: rgba(255,255,255,.85); }
+.sidebar .nav-tag {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--primary);
+  min-width: 30px;
+}
+.sidebar .nav-title { font-size: 12px; color: var(--text-light); flex: 1; }
+.sidebar .nav-sep {
+  margin: 12px 4px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+/* 内容 */
+.content { padding: 24px 32px; min-width: 0; }
+.intro-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
+}
+.intro-card h2 { margin-top: 0; font-size: 22px; }
+.intro-card h3 {
+  color: var(--primary-dark);
+  font-size: 17px;
+  border-left: 3px solid var(--primary);
+  padding-left: 10px;
+  margin: 20px 0 10px;
+}
+.page {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
+}
+.page-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--primary);
+}
+.page-num {
+  background: var(--primary);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.page h2 { margin: 0; font-size: 23px; color: var(--text); }
+
+.page h3 {
+  color: var(--primary-dark);
+  font-size: 17px;
+  margin: 22px 0 10px 0;
+  padding-left: 10px;
+  border-left: 3px solid var(--primary);
+}
+.page h4 { color: var(--text); font-size: 15px; margin: 16px 0 8px 0; }
+.page p { margin: 8px 0; }
+.page ul, .page ol { padding-left: 24px; margin: 8px 0; }
+.page li { margin: 4px 0; }
+
+/* 表格 */
+.intro-card table, .page table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.intro-card th, .page th {
+  background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 2px solid var(--primary);
+  font-weight: 600;
+  color: var(--text);
+}
+.intro-card td, .page td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.page tbody tr:hover { background: #f9fafb; }
+.page tbody tr:last-child td { border-bottom: none; }
+
+/* 代码 */
+.page code {
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "SF Mono", Consolas, Menlo, monospace;
+  font-size: 13px;
+  color: #be185d;
+}
+.intro-card code { background: rgba(255,255,255,.6); padding: 1px 5px; border-radius: 4px; font-family: "SF Mono", Consolas, Menlo, monospace; font-size: 12.5px; }
+.page pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.page pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: 13px;
+}
+
+/* 引用 */
+.page blockquote, .intro-card blockquote {
+  background: var(--quote-bg);
+  border-left: 4px solid var(--quote-border);
+  padding: 12px 16px;
+  margin: 16px 0;
+  border-radius: 0 8px 8px 0;
+  color: #78350f;
+  font-size: 13.5px;
+}
+
+.page strong { color: var(--primary-dark); }
+.page hr { border: none; border-top: 1px dashed var(--border); margin: 24px 0; }
+
+/* 公式块 */
+.formula {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  overflow-x: auto;
+}
+
+/* 回到顶部 */
+.totop {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37,99,235,.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+  z-index: 200;
+}
+.totop.show { opacity: 1; pointer-events: auto; }
+
+footer.colophon {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 32px 48px;
+  color: var(--text-light);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* 打印 */
+@media print {
+  .sidebar, .topbar, .totop { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  .page {
+    page-break-after: always;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}
+
+:target { scroll-margin-top: 90px; }
+</style>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>🐒 离散数学 · 学习课件</h1>
+  <div class="subtitle">v2 · 21 页 · 9 讲 · 基于李昊老师《离散数学》(信息楼 312/341) + 《图论与组合优化》第一讲</div>
+</div>
+
+<div class="layout">
+<aside class="sidebar">
+<h3>📑 课程导航</h3>
+<ul id="nav">
+  <li><a href="#intro"><span class="nav-tag">导览</span><span class="nav-title">课件结构总览</span></a></li>
+  <li class="nav-sep">第一部分 · 数理逻辑</li>
+  <li><a href="#page-1"><span class="nav-tag">P1</span><span class="nav-title">封面与课程导览</span></a></li>
+  <li><a href="#page-2"><span class="nav-tag">P2</span><span class="nav-title">数理逻辑导览</span></a></li>
+  <li><a href="#page-3"><span class="nav-tag">P3</span><span class="nav-title">第1讲 命题逻辑基础</span></a></li>
+  <li><a href="#page-4"><span class="nav-tag">P4</span><span class="nav-title">第2讲 等值式（核心）</span></a></li>
+  <li><a href="#page-5"><span class="nav-tag">P5</span><span class="nav-title">第2讲 重言蕴涵与推理</span></a></li>
+  <li><a href="#page-6"><span class="nav-tag">P6</span><span class="nav-title">第3讲 范式</span></a></li>
+  <li><a href="#page-7"><span class="nav-tag">P7</span><span class="nav-title">第4讲 谓词逻辑</span></a></li>
+  <li><a href="#page-8"><span class="nav-tag">P8</span><span class="nav-title">数理逻辑小结</span></a></li>
+  <li class="nav-sep">第二部分 · 集合论</li>
+  <li><a href="#page-9"><span class="nav-tag">P9</span><span class="nav-title">集合论导览</span></a></li>
+  <li><a href="#page-10"><span class="nav-tag">P10</span><span class="nav-title">第5讲 集合及其运算</span></a></li>
+  <li><a href="#page-11"><span class="nav-tag">P11</span><span class="nav-title">第6讲 二元关系（上）</span></a></li>
+  <li><a href="#page-12"><span class="nav-tag">P12</span><span class="nav-title">第6讲 二元关系（下）</span></a></li>
+  <li><a href="#page-13"><span class="nav-tag">P13</span><span class="nav-title">函数（集合论视角）</span></a></li>
+  <li><a href="#page-14"><span class="nav-tag">P14</span><span class="nav-title">第7讲 集合的基数</span></a></li>
+  <li><a href="#page-15"><span class="nav-tag">P15</span><span class="nav-title">集合论小结</span></a></li>
+  <li class="nav-sep">第三部分 · 代数结构</li>
+  <li><a href="#page-16"><span class="nav-tag">P16</span><span class="nav-title">第8讲 群论引言</span></a></li>
+  <li><a href="#page-17"><span class="nav-tag">P17</span><span class="nav-title">第8讲 置换与置换群</span></a></li>
+  <li><a href="#page-18"><span class="nav-tag">P18</span><span class="nav-title">代数结构小结</span></a></li>
+  <li class="nav-sep">补充 · 组合数学</li>
+  <li><a href="#page-19"><span class="nav-tag">P19</span><span class="nav-title">第9讲 排列组合</span></a></li>
+  <li class="nav-sep">综合演练 · 速记</li>
+  <li><a href="#page-20"><span class="nav-tag">P20</span><span class="nav-title">综合练习与典型题</span></a></li>
+  <li><a href="#page-21"><span class="nav-tag">P21</span><span class="nav-title">考前速记卡</span></a></li>
+</ul>
+</aside>
+
+<main class="content">
+
+<div id="intro" class="intro-card">
+<h2>同等学力硕士《离散数学》学习课件</h2>
+<blockquote>
+<strong>数据源</strong>：<code>study_20260627/</code> 内 8 份 PDF（李昊）：① 命题逻辑(64p) ② 等值式(40p) ③ 范式(27p) ④ 谓词逻辑(30p) ⑤ 集合及其运算(25p) ⑥ 二元关系(66p) ⑦ 集合的基数(20p) ⑧ 群论引言(35p)，外加《图论与组合优化》第一讲《排列组合》。<br>
+<strong>覆盖</strong>：课程全部核心知识点　|　<strong>结构</strong>：3 大部分 + 1 补充 → 9 讲 → 21 页
+</blockquote>
+
+<h3>课件结构</h3>
+<table>
+<thead><tr><th>部分</th><th>讲次</th><th>页码</th></tr></thead>
+<tbody>
+<tr><td>课程导览</td><td>总论</td><td>P1–P2</td></tr>
+<tr><td>第一部分 数理逻辑</td><td>第 1–4 讲</td><td>P3–P8</td></tr>
+<tr><td>第二部分 集合论</td><td>第 5–7 讲</td><td>P9–P15</td></tr>
+<tr><td>第三部分 代数结构</td><td>第 8 讲</td><td>P16–P18</td></tr>
+<tr><td><strong>补充 组合数学</strong></td><td><strong>第 9 讲</strong></td><td><strong>P19</strong></td></tr>
+<tr><td>综合演练与速记</td><td>复习</td><td>P20–P21</td></tr>
+</tbody></table>
+
+<h3>v2 相对 v1 的变化</h3>
+<ul>
+<li>新增 P19《排列组合》（《图论与组合优化》第一讲）：计数原理 + 排列组合 + 圆周排列 + 牛顿二项式 + 6 个典型问题。</li>
+<li>原综合演练拆分扩展为 P20–P21。</li>
+</ul>
+</div>
+
+<section id="page-1" class="page">
+<div class="page-header"><span class="page-num">第 1 页</span><h2>封面与课程导览</h2></div>
+<p><strong>课程</strong>：离散数学（Discrete Mathematics）　<strong>授课</strong>：李昊　<strong>课时</strong>：信息楼 312/341</p>
+<p><strong>三大模块</strong>：数理逻辑 · 集合论 · 代数结构</p>
+<p><strong>等价说法</strong>：传统逻辑学 + 集合论 + 数论基础 + 算法设计 + 组合分析 + 离散概率 + 关系理论 + 图论与树 + 抽象代数 + 布尔代数 + 计算模型</p>
+<h3>为什么考</h3>
+<ul>
+<li>计算机专业的先行课程（程序设计、数据结构、操作系统、编译、AI、数据库、算法分析、理论计算机科学）</li>
+<li>程序 = 算法 + 数据；算法 = 逻辑 + 控制</li>
+<li>钱学森：电子计算机正是建立在数理逻辑基础上</li>
+<li>Dijkstra：年轻时没好好学逻辑，结果犯了一堆错</li>
+</ul>
+</section>
+
+<section id="page-2" class="page">
+<div class="page-header"><span class="page-num">第 2 页</span><h2>第一部分 数理逻辑导览</h2></div>
+<p><strong>目标</strong>：深刻理解命题、联结词、复合命题、命题公式、等值式、等值演算、推理及证明等概念，熟练进行等值演算与构造证明。</p>
+<h3>4 讲对应关系</h3>
+<table>
+<thead><tr><th>讲</th><th>主题</th><th>核心概念</th></tr></thead>
+<tbody>
+<tr><td>第1讲</td><td>命题逻辑</td><td>命题、联结词、合式公式、真值表</td></tr>
+<tr><td>第2讲</td><td>等值式</td><td>24 个等值式、化归、等价证明</td></tr>
+<tr><td>第3讲</td><td>范式</td><td>析取/合取范式、主析取/主合取范式</td></tr>
+<tr><td>第4讲</td><td>谓词逻辑</td><td>个体词、谓词、量词、前束范式</td></tr>
+</tbody></table>
+<p><strong>命题逻辑局限</strong>：无法表达“苏格拉底三段论”等含个体与总体的推理 → 引入一阶逻辑。</p>
+</section>
+
+<section id="page-3" class="page">
+<div class="page-header"><span class="page-num">第 3 页</span><h2>第1讲 命题逻辑基础</h2></div>
+<h3>命题</h3>
+<ul>
+<li>定义：能唯一确定真假值的陈述句</li>
+<li>例：① “2+2=3”（假）② “华盛顿是美国首都”（真）③ “我正在说假话”（悖论，非命题）</li>
+<li>非命题：疑问句、祈使句、感叹句、含自由变量的句子、悖论</li>
+</ul>
+<h3>5 个常用联结词</h3>
+<table>
+<thead><tr><th>符号</th><th>名称</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td>¬</td><td>否定</td><td>非 P</td></tr>
+<tr><td>∧</td><td>合取</td><td>P 且 Q</td></tr>
+<tr><td>∨</td><td>析取</td><td>P 或 Q（相容或）</td></tr>
+<tr><td>⊕ 或 ⊻</td><td>异或</td><td>P、Q 不可同真</td></tr>
+<tr><td>→</td><td>蕴涵</td><td>如果 P 则 Q（P 为充分条件，Q 为必要条件）</td></tr>
+<tr><td>↔</td><td>等价</td><td>P 当且仅当 Q</td></tr>
+</tbody></table>
+<h3>真值表要点</h3>
+<ul>
+<li>P→Q：仅当 P=T、Q=F 时为 F，其余 T</li>
+<li>P↔Q：P、Q 同真值时为 T</li>
+<li>优先级：¬ &gt; ∧ &gt; ∨ &gt; → &gt; ↔</li>
+</ul>
+<h3>合式公式（wff）</h3>
+<ol>
+<li>单个命题变元是 wff</li>
+<li>若 A 是 wff，则 ¬A 是 wff</li>
+<li>若 A、B 是 wff，则 (A∧B)/(A∨B)/(A→B)/(A↔B) 是 wff</li>
+<li>有限次使用 ①②③ 得到的是 wff</li>
+</ol>
+<h3>公式分类</h3>
+<ul>
+<li><strong>永真式（重言式）</strong>：所有赋值下恒 T（例：¬P∨P、P∨¬P）</li>
+<li><strong>永假式（矛盾式）</strong>：所有赋值下恒 F（例：¬P∧P）</li>
+<li><strong>可满足式</strong>：至少有一种赋值为 T</li>
+<li><strong>一般式</strong>：既非永真也非永假</li>
+</ul>
+</section>
+
+<section id="page-4" class="page">
+<div class="page-header"><span class="page-num">第 4 页</span><h2>第2讲 等值式（核心）</h2></div>
+<h3>等价定义</h3>
+<p>若 A、B 在所有真值指派下真值相同，则 A⇔B。等值定理：A⇔B 当且仅当 A↔B 是永真式。</p>
+<h3>24 个基本等值式</h3>
+<table>
+<thead><tr><th>律名</th><th>公式</th></tr></thead>
+<tbody>
+<tr><td>对合律</td><td>¬¬P = P</td></tr>
+<tr><td>幂等律</td><td>P∨P=P；P∧P=P</td></tr>
+<tr><td>结合律</td><td>(P∨Q)∨R=P∨(Q∨R)；(P∧Q)∧R=P∧(Q∧R)</td></tr>
+<tr><td>交换律</td><td>P∨Q=Q∨P；P∧Q=Q∧P</td></tr>
+<tr><td>分配律</td><td>P∨(Q∧R)=(P∨Q)∧(P∨R)；P∧(Q∨R)=(P∧Q)∨(P∧R)</td></tr>
+<tr><td>吸收律</td><td>P∨(P∧Q)=P；P∧(P∨Q)=P</td></tr>
+<tr><td>德摩根律</td><td>¬(P∨Q)=¬P∧¬Q；¬(P∧Q)=¬P∨¬Q</td></tr>
+<tr><td>同一律</td><td>P∨F=P；P∧T=P</td></tr>
+<tr><td>零律</td><td>P∨T=T；P∧F=F</td></tr>
+<tr><td>否定律</td><td>P∨¬P=T；P∧¬P=F</td></tr>
+</tbody></table>
+<h3>化归公式（必背）</h3>
+<ul>
+<li>P→Q ⇔ ¬P∨Q</li>
+<li>P→Q ⇔ ¬Q→¬P（逆否等价）</li>
+<li>P↔Q ⇔ (P→Q)∧(Q→P)</li>
+<li>P↔Q ⇔ (P∧Q)∨(¬P∧¬Q)</li>
+<li>P↔Q ⇔ ¬Q↔¬P</li>
+</ul>
+<h3>证明方法</h3>
+<ol>
+<li>真值表（变量 ≤3 时优先）</li>
+<li>等值变换 + 置换定律</li>
+<li>代入不变性 + 等值关系的传递性</li>
+</ol>
+<h3>等价式性质</h3>
+<p>自反性、对称性、传递性、置换保持等价。</p>
+</section>
+
+<section id="page-5" class="page">
+<div class="page-header"><span class="page-num">第 5 页</span><h2>第2讲 重言蕴涵与推理</h2></div>
+<h3>重言蕴涵式 A⇒B</h3>
+<p>若 A→B 是永真式，则 A 永真蕴涵 B。<strong>证明三法</strong>：</p>
+<ol>
+<li>真值表</li>
+<li>假设前件为真 → 推出后件为真</li>
+<li>假设后件为假 → 推出前件为假</li>
+</ol>
+<h3>16 个重要重言蕴涵式</h3>
+<table>
+<thead><tr><th>公式</th><th>推理模式</th></tr></thead>
+<tbody>
+<tr><td>P∧Q ⇒ P；P∧Q ⇒ Q</td><td>化简律</td></tr>
+<tr><td>P ⇒ P∨Q；Q ⇒ P∨Q</td><td>附加律</td></tr>
+<tr><td>¬P ⇒ P→Q；Q ⇒ P→Q</td><td>假前件/真后件律</td></tr>
+<tr><td>¬(P→Q) ⇒ P；¬(P→Q) ⇒ ¬Q</td><td>蕴涵否定律</td></tr>
+<tr><td>P, Q ⇒ P∧Q</td><td>合取引入律</td></tr>
+<tr><td>¬P∧(P∨Q) ⇒ Q</td><td><strong>析取三段论</strong></td></tr>
+<tr><td>P∧(P→Q) ⇒ Q</td><td><strong>假言推理 MP</strong></td></tr>
+<tr><td>¬Q∧(P→Q) ⇒ ¬P</td><td><strong>拒取式 MT</strong></td></tr>
+<tr><td>(P→Q)∧(Q→R) ⇒ P→R</td><td><strong>假言三段论 HS</strong></td></tr>
+<tr><td>(P∨Q)∧(P→R)∧(Q→R) ⇒ R</td><td><strong>构造性二难</strong></td></tr>
+<tr><td>A→B ⇒ (A∨C)→(B∨C)；A→B ⇒ (A∧C)→(B∧C)</td><td>单调性</td></tr>
+</tbody></table>
+<h3>推理规则</h3>
+<ul>
+<li><strong>P</strong>（引入前提）：可随时引用前提</li>
+<li><strong>T</strong>（引入结论）：若前步有 X⇒Y，可引入 Y</li>
+<li><strong>CP</strong>（条件论证）：若 H∧R ⇒ S，则 H ⇒ R→S</li>
+</ul>
+<h3>直接推理格式</h3>
+<pre><code>(1) P        P    前提
+(2) P→Q      P    前提
+(3) Q        T (1)(2) I    假言推理</code></pre>
+</section>
+
+<section id="page-6" class="page">
+<div class="page-header"><span class="page-num">第 6 页</span><h2>第3讲 范式</h2></div>
+<h3>范式（Normal Form）</h3>
+<p>命题公式的规范形式，约定只用联结词 ¬、∨、∧。</p>
+<h3>基本概念</h3>
+<ul>
+<li><strong>简单合取式</strong>：用 ∧ 联结命题变元或其否定</li>
+<li><strong>简单析取式</strong>：用 ∨ 联结命题变元或其否定</li>
+<li><strong>析取范式</strong>：A₁∨A₂∨…∨Aₙ，每个 Aᵢ 为合取式</li>
+<li><strong>合取范式</strong>：A₁∧A₂∧…∧Aₙ，每个 Aᵢ 为析取式</li>
+</ul>
+<h3>求法步骤</h3>
+<ol>
+<li>化归去掉 →、↔</li>
+<li>德摩根律把 ¬ 后移到命题变元前</li>
+<li>分配律、结合律、幂等律整理</li>
+</ol>
+<h3>主析取范式（DNF）</h3>
+<ul>
+<li><strong>小项 mᵢⱼ</strong>：n 个变元的合取式，每个变元或否定恰出现一次（共 2ⁿ 个）</li>
+<li><strong>性质</strong>：每组赋值有且仅有 1 个小项为 T</li>
+<li><strong>求法 Ⅰ</strong>：真值表中公式值为 T 的赋值所对应小项的析取</li>
+<li><strong>求法 Ⅱ</strong>：先用等价变换得析取范式，再用 (R∨¬R)=T 补齐变元</li>
+<li>例：P→Q = m₀₀∨m₀₁∨m₁₁ = (¬P∧¬Q)∨(¬P∧Q)∨(P∧Q)</li>
+</ul>
+<h3>主合取范式（CNF）</h3>
+<ul>
+<li><strong>大项 Mᵢⱼ</strong>：n 个变元的析取式，每个变元或否定恰出现一次</li>
+<li><strong>性质</strong>：每组赋值有且仅有 1 个大项为 F</li>
+<li><strong>求法</strong>：真值表中公式值为 F 的赋值所对应大项的合取</li>
+<li>例：P→Q = M₁₀ = ¬P∨Q</li>
+</ul>
+<h3>极小联结词完备集</h3>
+<p>{¬, ∧}、{¬, ∨}、{¬, →}、{↑(与非)}、{↓(或非)} 均是完备集。</p>
+</section>
+
+<section id="page-7" class="page">
+<div class="page-header"><span class="page-num">第 7 页</span><h2>第4讲 谓词逻辑（一阶逻辑）</h2></div>
+<h3>为什么需要谓词逻辑</h3>
+<p>命题逻辑的局限：无法表达含个体与总体的推理。例：“人固有一死，苏格拉底是人，因此苏格拉底固有一死”。</p>
+<ul>
+<li>P(x)：x 是人；D(x)：x 要死；S：苏格拉底</li>
+<li>(∀x(P(x)→D(x))) ∧ P(S) ⇒ D(S)</li>
+</ul>
+<h3>基本概念</h3>
+<ul>
+<li><strong>个体词</strong>：研究对象。a,b,c 为个体常项；x,y,z 为个体变项</li>
+<li><strong>个体域</strong>：个体变项的取值范围（特指/全总）</li>
+<li><strong>谓词</strong>：刻画个体性质或关系。大写字母表示，n 元谓词</li>
+<li><strong>量词</strong>：∀ 全称量词（“所有”）；∃ 存在量词（“存在”）</li>
+</ul>
+<h3>谓词公式的形成规则</h3>
+<ol>
+<li>n 元谓词是公式</li>
+<li>¬A 是公式</li>
+<li>(A∨B)/(A∧B)/(A→B)/(A↔B) 是公式</li>
+<li>∀xA(x)、∃xA(x) 是公式</li>
+<li>有限次使用以上规则得到的也是公式</li>
+</ol>
+<h3>量词等值定律</h3>
+<ul>
+<li>¬∀xA(x) ⇔ ∃x¬A(x)</li>
+<li>¬∃xA(x) ⇔ ∀x¬A(x)</li>
+<li>∀x(A(x)∧B(x)) ⇔ ∀xA(x)∧∀xB(x)</li>
+<li>∃x(A(x)∨B(x)) ⇔ ∃xA(x)∨∃xB(x)</li>
+<li>∀x(P∨B(x)) ⇔ P∨∀xB(x)（P 不含 x）</li>
+<li>∃x(P∧B(x)) ⇔ P∧∃xB(x)</li>
+</ul>
+<h3>量词顺序</h3>
+<p><strong>不能随便交换</strong>！∀x∃yL(x,y) 与 ∃y∀xL(x,y) 含义不同。</p>
+<h3>推理规则</h3>
+<ul>
+<li>UI（全称特化）：∀xA(x) ⇒ A(c)</li>
+<li>EG（存在推广）：A(c) ⇒ ∃xA(x)</li>
+<li>量词分配律 + MP/MT/HS 组合使用</li>
+</ul>
+</section>
+
+<section id="page-8" class="page">
+<div class="page-header"><span class="page-num">第 8 页</span><h2>第一部分 数理逻辑小结</h2></div>
+<h3>知识网络</h3>
+<pre><code>命题
+├── 原子命题
+├── 联结词（¬、∧、∨、→、↔）
+└── 复合命题
+    ├── 命题公式（合式公式）
+    ├── 公式分类（永真/永假/可满足/一般）
+    └── 等价公式
+        ├── 基本等值式（24 个）
+        ├── 化归公式
+        ├── 等值演算
+        ├── 范式（析取/合取/主析取/主合取）
+        └── 重言蕴涵式
+            ├── 直接推理（P、T）
+            └── 间接推理（CP）
+
+谓词逻辑
+├── 个体词 / 谓词 / 量词
+├── 谓词公式
+└── 量词等值与推理</code></pre>
+<h3>典型应用题</h3>
+<p><strong>真话者与假话者</strong>（用嵌套提问构造异或）：</p>
+<ul>
+<li>问：“如果我问另一名战士这扇门是否是死亡之门，他会回答‘是’，对吗？”</li>
+<li>答案：回答“是”→ 非死亡门；回答“否”→ 是死亡门</li>
+</ul>
+<p><strong>凶手推理</strong>：通过符号化 + 假言推理 + 析取三段论找出凶手。</p>
+</section>
+
+<section id="page-9" class="page">
+<div class="page-header"><span class="page-num">第 9 页</span><h2>第二部分 集合论导览</h2></div>
+<p><strong>目标</strong>：掌握集合及相关基本概念；熟练掌握集合、关系、函数的基本运算；了解基本的证明方法。</p>
+<h3>3 讲对应</h3>
+<table>
+<thead><tr><th>讲</th><th>主题</th><th>核心</th></tr></thead>
+<tbody>
+<tr><td>第5讲</td><td>集合及其运算</td><td>集合表示、运算、恒等式</td></tr>
+<tr><td>第6讲</td><td>二元关系</td><td>笛卡尔积、表示、性质、闭包、等价/偏序</td></tr>
+<tr><td>第7讲</td><td>集合的基数</td><td>等势、优势、可数集、基数</td></tr>
+</tbody></table>
+<p><strong>集合代数</strong> + <strong>关系</strong> + <strong>函数</strong> + <strong>集合的基数</strong> = 第二部分四大主题。</p>
+</section>
+
+<section id="page-10" class="page">
+<div class="page-header"><span class="page-num">第 10 页</span><h2>第5讲 集合及其运算</h2></div>
+<h3>集合的定义与表示</h3>
+<ul>
+<li>集合：不同对象汇集的整体</li>
+<li>表示法：列举法、描述法、Venn 图</li>
+<li>关系：∈（属于）、⊆（包含）、⊂（真包含）、=（相等）</li>
+</ul>
+<h3>基本运算</h3>
+<table>
+<thead><tr><th>运算</th><th>符号</th><th>定义</th></tr></thead>
+<tbody>
+<tr><td>并</td><td>A∪B</td><td>{ x | x∈A ∨ x∈B }</td></tr>
+<tr><td>交</td><td>A∩B</td><td>{ x | x∈A ∧ x∈B }</td></tr>
+<tr><td>差</td><td>A−B</td><td>{ x | x∈A ∧ x∉B }</td></tr>
+<tr><td>对称差</td><td>A⊕B</td><td>(A−B)∪(B−A) = (A∪B)−(A∩B)</td></tr>
+<tr><td>绝对补</td><td>~A</td><td>{ x | x∉A }（全集下）</td></tr>
+<tr><td>笛卡尔积</td><td>A×B</td><td>{ &lt;x,y&gt; | x∈A ∧ y∈B }</td></tr>
+</tbody></table>
+<h3>集合恒等式（核心）</h3>
+<ul>
+<li>交换律：并、交</li>
+<li>结合律：并、交</li>
+<li>分配律：并对交、交对并</li>
+<li>德摩根律：~(A∪B)=~A∩~B；~(A∩B)=~A∪~B</li>
+<li>吸收律：A∪(A∩B)=A；A∩(A∪B)=A</li>
+<li>同一律：A∪∅=A；A∩U=A</li>
+<li>补律：A∪~A=U；A∩~A=∅</li>
+</ul>
+<h3>容斥原理</h3>
+<p>|A₁∪A₂∪…∪Aₙ| = Σ|Aᵢ| − Σ|Aᵢ∩Aⱼ| + Σ|Aᵢ∩Aⱼ∩Aₖ| − … + (−1)ⁿ⁺¹|A₁∩…∩Aₙ|</p>
+<h3>集合的基数</h3>
+<ul>
+<li>有穷集：|A| = 元素个数</li>
+<li>子集数：|A|=n 时 P(A) 有 2ⁿ 个子集</li>
+</ul>
+</section>
+
+<section id="page-11" class="page">
+<div class="page-header"><span class="page-num">第 11 页</span><h2>第6讲 二元关系（上）</h2></div>
+<h3>笛卡尔积</h3>
+<p>A×B = { &lt;x,y&gt; | x∈A ∧ y∈B }</p>
+<ul>
+<li>A×B ≠ B×A（一般）</li>
+<li>若 A=∅ 或 B=∅，则 A×B=∅</li>
+</ul>
+<h3>二元关系定义</h3>
+<ul>
+<li>A×B 的任意子集 R 称为 A 到 B 的二元关系</li>
+<li>A=A 时，R 称为 A 上的二元关系</li>
+<li>|A|=n 时，A 上可定义 2^(n²) 个二元关系</li>
+</ul>
+<h3>三种表示</h3>
+<ul>
+<li><strong>集合表示</strong>：R={ &lt;x,y&gt; | … }</li>
+<li><strong>关系图</strong>：顶点表元素，有向边表有序对</li>
+<li><strong>关系矩阵</strong>：M_R = (rᵢⱼ)，rᵢⱼ=1 表示 &lt;aᵢ,aⱼ&gt;∈R</li>
+</ul>
+<h3>基本关系</h3>
+<ul>
+<li>全域关系 E_A：R = A×A</li>
+<li>恒等关系 I_A：R = { &lt;x,x&gt; | x∈A }（单位矩阵）</li>
+<li>空关系 ∅</li>
+</ul>
+<h3>关系的运算</h3>
+<ul>
+<li>逆：R⁻¹ = { &lt;y,x&gt; | &lt;x,y&gt;∈R }</li>
+<li>合成：R∘S = { &lt;x,z&gt; | ∃y(&lt;x,y&gt;∈R ∧ &lt;y,z&gt;∈S) }</li>
+<li>限制：R↾A = { &lt;x,y&gt; | &lt;x,y&gt;∈R ∧ x∈A }</li>
+<li>像：R[A] = { y | ∃x∈A, &lt;x,y&gt;∈R }</li>
+<li>幂：R⁰=I_A，R^(n+1)=Rⁿ∘R</li>
+</ul>
+<h3>性质定理</h3>
+<table>
+<thead><tr><th>性质</th><th>等价条件</th></tr></thead>
+<tbody>
+<tr><td>自反</td><td>I_A ⊆ R</td></tr>
+<tr><td>反自反</td><td>R ∩ I_A = ∅</td></tr>
+<tr><td>对称</td><td>R = R⁻¹</td></tr>
+<tr><td>反对称</td><td>R ∩ R⁻¹ ⊆ I_A</td></tr>
+<tr><td>传递</td><td>R∘R ⊆ R</td></tr>
+</tbody></table>
+</section>
+
+<section id="page-12" class="page">
+<div class="page-header"><span class="page-num">第 12 页</span><h2>第6讲 二元关系（下）</h2></div>
+<h3>闭包</h3>
+<ul>
+<li><strong>自反闭包</strong>：r(R) = R ∪ I_A</li>
+<li><strong>对称闭包</strong>：s(R) = R ∪ R⁻¹</li>
+<li><strong>传递闭包</strong>：t(R) = R ∪ R² ∪ R³ ∪ … ∪ Rᵏ（k≤|A|）</li>
+</ul>
+<h3>等价关系</h3>
+<p>满足自反、对称、传递的关系。</p>
+<ul>
+<li>等价类：[x]_R = { y | xRy }</li>
+<li>商集：A/R = { [x]_R | x∈A }</li>
+<li>划分 π 与等价关系 R 一一对应</li>
+</ul>
+<h3>偏序关系</h3>
+<p>满足自反、反对称、传递的关系，记作 ≼。</p>
+<ul>
+<li>偏序集 &lt;A,≼&gt;</li>
+<li>全序（线序）：任意两元素可比</li>
+<li>覆盖：x≺y 且不存在 z 使 x≺z≺y</li>
+<li><strong>哈斯图</strong>：省去自反环，用位置高低表示序，仅覆盖关系连边</li>
+</ul>
+<h3>特殊元素</h3>
+<table>
+<thead><tr><th>元素</th><th>定义</th></tr></thead>
+<tbody>
+<tr><td>极大元</td><td>无大于它的元素</td></tr>
+<tr><td>极小元</td><td>无小于它的元素</td></tr>
+<tr><td>最大元</td><td>≥ 所有元素</td></tr>
+<tr><td>最小元</td><td>≤ 所有元素</td></tr>
+<tr><td>上界</td><td>≥ 子集所有元素</td></tr>
+<tr><td>下界</td><td>≤ 子集所有元素</td></tr>
+<tr><td>上确界</td><td>最小上界（若存在则唯一）</td></tr>
+<tr><td>下确界</td><td>最大下界（若存在则唯一）</td></tr>
+</tbody></table>
+<p>注：最小元 ⇔ 下确界；最大元 ⇔ 上确界。但反之不成立。</p>
+</section>
+
+<section id="page-13" class="page">
+<div class="page-header"><span class="page-num">第 13 页</span><h2>函数（集合论视角）</h2></div>
+<h3>定义</h3>
+<p>f: A→B 是满足单值性的二元关系：∀x∈A, ∃!y∈B, &lt;x,y&gt;∈f。</p>
+<h3>性质</h3>
+<ul>
+<li><strong>单射</strong>（入射）：x₁≠x₂ ⇒ f(x₁)≠f(x₂)</li>
+<li><strong>满射</strong>：f(A)=B（值域 = 陪域）</li>
+<li><strong>双射</strong>：既是单射又是满射 ⇔ 可逆</li>
+</ul>
+<h3>运算</h3>
+<ul>
+<li>复合：(f∘g)(x) = f(g(x))，右结合</li>
+<li>逆：仅双射函数有逆 f⁻¹</li>
+</ul>
+<h3>等势（用于第7讲铺垫）</h3>
+<p>若 ∃ 双射 f: A→B，则 A≈B。</p>
+<ul>
+<li>≈ 满足自反、对称、传递</li>
+<li>Z≈N、Q≈N、N×N≈N</li>
+<li>任何实数区间都与 R 等势</li>
+<li>A≉P(A)（康托定理）</li>
+</ul>
+</section>
+
+<section id="page-14" class="page">
+<div class="page-header"><span class="page-num">第 14 页</span><h2>第7讲 集合的基数</h2></div>
+<h3>等势与优势</h3>
+<ul>
+<li>等势 A≈B：∃ 双射 f: A→B</li>
+<li>优势 A≼·B：∃ 单射 f: A→B</li>
+<li>真优势 A≺·B：A≼·B 且 A≠B</li>
+</ul>
+<h3>重要结果</h3>
+<ul>
+<li><strong>等势</strong>：N ≈ Z ≈ Q ≈ N×N ≈ P(N)（直觉上“可数无穷”）</li>
+<li><strong>等势</strong>：R ≈ [a,b] ≈ (c,d) ≈ {0,1}^N ≈ P(N)</li>
+<li><strong>真优势</strong>：N≺R；A≺P(A)（康托定理）</li>
+</ul>
+<h3>有穷与无穷</h3>
+<ul>
+<li>A 有穷 ⇔ A 等势于某自然数 n（n=|A|）</li>
+<li>N、R 都是无穷集</li>
+</ul>
+<h3>基数</h3>
+<ul>
+<li>有穷集 A：card A = |A|（与 A 等势的惟一自然数）</li>
+<li>自然数集 N：card N = ℵ₀（阿列夫零）</li>
+<li>实数集 R：card R = ℵ（阿列夫）</li>
+<li>ℵ₀ &lt; ℵ</li>
+</ul>
+<h3>可数集</h3>
+<ul>
+<li>定义：card A ≤ ℵ₀</li>
+<li>可数集的子集仍可数</li>
+<li>两个可数集的并可数</li>
+<li>可数集 × 可数集 可数</li>
+<li>可数个可数集的笛卡儿积可数</li>
+<li>无穷集的幂集不可数</li>
+</ul>
+<h3>连续统问题</h3>
+<p>N ≤ A ≤ R 但 A 与 R 不等势？</p>
+<ul>
+<li>1874 提出，1963 科恩证明与 ZFC 公理体系独立</li>
+<li>连续统假设：不存在严格介于 ℵ₀ 和 ℵ 之间的基数</li>
+</ul>
+</section>
+
+<section id="page-15" class="page">
+<div class="page-header"><span class="page-num">第 15 页</span><h2>第二部分 集合论小结</h2></div>
+<h3>知识网络</h3>
+<pre><code>集合
+├── 表示（列举/描述/Venn）
+├── 运算（∪/∩/−/⊕/~）
+├── 恒等式（24 个，含集合版本）
+├── 容斥原理
+├── 基数（有穷/无穷/可数）
+└── 关系
+    ├── 笛卡尔积
+    ├── 表示（集合/图/矩阵）
+    ├── 运算（逆/合成/限制/像/幂）
+    ├── 性质（自反/反自反/对称/反对称/传递）
+    ├── 闭包（r/s/t）
+    ├── 等价关系 → 等价类 → 商集 → 划分
+    └── 偏序关系 → 哈斯图 → 特殊元素</code></pre>
+<h3>重要考点</h3>
+<ol>
+<li>集合运算（特别是对称差 A⊕B）</li>
+<li>关系矩阵与关系图互化</li>
+<li>五种性质的判断</li>
+<li>求 t(R)</li>
+<li>等价类的计算</li>
+<li>偏序集哈斯图的绘制</li>
+<li>特殊元素的辨识</li>
+</ol>
+</section>
+
+<section id="page-16" class="page">
+<div class="page-header"><span class="page-num">第 16 页</span><h2>第8讲 代数结构之群论引言</h2></div>
+<h3>伽罗华与群论</h3>
+<ul>
+<li>1811-1832，巴黎人，21 岁死于决斗</li>
+<li>群论的开创者，解决了高次方程可根式求解的判定</li>
+<li>精神：置换的不变量是群论的核心思想</li>
+</ul>
+<h3>群（Group）的定义</h3>
+<p>非空集合 G 上定义“乘法”运算 ×，满足：</p>
+<ol>
+<li><strong>封闭性</strong>：∀a,b∈G, a×b∈G</li>
+<li><strong>结合律</strong>：∀a,b,c∈G, (a×b)×c = a×(b×c)</li>
+<li><strong>单位元</strong>：∃e∈G, ∀a∈G, e×a = a×e = a</li>
+<li><strong>逆元</strong>：∀a∈G, ∃a⁻¹∈G, a×a⁻¹ = a⁻¹×a = e</li>
+</ol>
+<h3>群的分类</h3>
+<ul>
+<li><strong>Abel 群</strong>：满足交换律；否则非 Abel</li>
+<li><strong>有限群 / 无限群</strong>：按 |G|</li>
+<li>({1,−1}, ×) 是 2 阶 Abel 群</li>
+<li>({0,1,…,n−1}, +ₙ) 记作 Zₙ</li>
+<li>(Z, +), (Q, +), (R, +) 是无限 Abel 群</li>
+<li>GL(n,R) = n 阶可逆矩阵全体关于乘法构成非 Abel 群</li>
+</ul>
+<h3>基本性质</h3>
+<ol>
+<li>单位元唯一</li>
+<li>每个元素的逆元唯一</li>
+<li>消去律：ab=ac ⇒ b=c；ba=ca ⇒ b=c</li>
+<li>元素 a 的阶 o(a)：使 aʳ=e 的最小正整数 r</li>
+</ol>
+</section>
+
+<section id="page-17" class="page">
+<div class="page-header"><span class="page-num">第 17 页</span><h2>第8讲 置换与置换群</h2></div>
+<h3>n 次置换</h3>
+<p>集合 X={1,2,…,n} 到自身的一一对应 f: i ↦ aᵢ，记作：</p>
+<div class="formula">$$f = \begin{pmatrix} 1 &amp; 2 &amp; \cdots &amp; n \\ a_1 &amp; a_2 &amp; \cdots &amp; a_n \end{pmatrix}$$</div>
+<h3>置换的运算（复合）</h3>
+<p>(f₁f₂)(i) = f₁(f₂(i)) — 先施行 f₂，再 f₁。X 上所有 n 次置换构成 n 次对称群 Sₙ，|Sₙ|=n!。</p>
+<h3>轮换表示</h3>
+<p>任何置换可唯一分解为不相交轮换之积：</p>
+<ul>
+<li>例：f = (1 3 2)(4 5)(6) 即不相交轮换</li>
+<li>(123) = (231) = (312)（圆排列等价）</li>
+</ul>
+<h3>奇偶性</h3>
+<ul>
+<li>对换 (i,j) 是 2 阶轮换</li>
+<li>任何置换 = 若干对换之积</li>
+<li><strong>奇偶性不变</strong>：分解为对换的个数的奇偶性是置换的本质属性</li>
+<li><strong>奇置换 / 偶置换</strong>：含奇数/偶数个对换</li>
+</ul>
+<h3>交错群 Aₙ</h3>
+<p>Sₙ 中所有偶置换构成 n 次交错群 Aₙ，|Aₙ|=n!/2（n≥2），且 Aₙ 是 Sₙ 的子群。</p>
+<h3>应用：14-15 滑块谜题</h3>
+<p>判断能否通过 0 与相邻数字的换位从布局 A 达到布局 B：</p>
+<ul>
+<li>看 A→B 对应的置换的奇偶性</li>
+<li>0 走回原位需偶数次换位</li>
+<li>奇置换 ⇒ 不可能</li>
+</ul>
+</section>
+
+<section id="page-18" class="page">
+<div class="page-header"><span class="page-num">第 18 页</span><h2>第三部分 代数结构小结</h2></div>
+<h3>知识网络</h3>
+<pre><code>代数结构
+├── 群论
+│   ├── 定义（封闭/结合/单位/逆）
+│   ├── 分类（Abel/非Abel、有限/无限）
+│   ├── 基本性质（单位元唯一、消去律、阶）
+│   ├── 置换与置换群 Sₙ
+│   │   ├── 轮换表示
+│   │   ├── 奇偶性
+│   │   └── 交错群 Aₙ
+│   └── 子群
+└── 其他代数系统（环、域、布尔代数 等）</code></pre>
+<h3>同等学力考试范围</h3>
+<ul>
+<li>群的基本概念与判定</li>
+<li>置换的计算与奇偶性</li>
+<li>子群判定</li>
+<li>一般代数系统的认知（不深入）</li>
+</ul>
+</section>
+
+<section id="page-19" class="page">
+<div class="page-header"><span class="page-num">第 19 页</span><h2>第9讲 排列组合（补充讲次）</h2></div>
+<h3>研究对象</h3>
+<p>组合数学关心“按一定方式配置一组事物”，主要考虑：</p>
+<table>
+<thead><tr><th>方面</th><th>问题</th><th>典型例</th></tr></thead>
+<tbody>
+<tr><td>存在性</td><td>配置是否存在？</td><td>8×8 棋盘挖去 1 黑 1 白能否骨牌覆盖</td></tr>
+<tr><td>计数与分类</td><td>有多少种？</td><td>八面体顶点染色方案数</td></tr>
+<tr><td>构造算法</td><td>如何构造？</td><td>Hamilton 圈近似算法</td></tr>
+<tr><td>算法优化</td><td>哪种最优？</td><td>时空复杂度对比</td></tr>
+</tbody></table>
+<h3>两个基本计数原理</h3>
+<ul>
+<li><strong>加法原理</strong>（分类）：m₁+m₂+…+mₙ（事件互相独立）</li>
+<li><strong>乘法原理</strong>（分步）：m₁×m₂×…×mₙ（步骤互相独立）</li>
+</ul>
+<h3>排列与组合</h3>
+<table>
+<thead><tr><th>名称</th><th>公式</th><th>关键</th></tr></thead>
+<tbody>
+<tr><td><strong>排列</strong> P(n,r)</td><td>n! / (n−r)!</td><td>按次序</td></tr>
+<tr><td><strong>组合</strong> C(n,r)</td><td>n! / (r!(n−r)!)</td><td>不计次序</td></tr>
+<tr><td><strong>圆周排列</strong> Q(n,r)</td><td>P(n,r) / r</td><td>旋转等价</td></tr>
+</tbody></table>
+<p><strong>关键关系</strong>：P(n,r) = r! × C(n,r)</p>
+<h3>经典例题</h3>
+<ul>
+<li>例 1.4：6 字母组成 4 字母单词 —— 不重复 P(6,4)=360；可重复 6⁴=1296</li>
+<li>例 1.5：{1,…,9} 选数字，4、5、6 不相邻的 7 位数 —— 总数 P(9,7)=181440，相邻数 6×5×P(6,4)=10800，不相邻 = <strong>181440 − 10800 = 170640</strong></li>
+<li>例 1.7：5 对夫妻围圆桌夫妻相邻 = <strong>4! × 2⁵ = 768</strong></li>
+<li>广场 6 入口 9 辆车入场方式 = <strong>14! / 5!</strong></li>
+</ul>
+<h3>牛顿二项式公式</h3>
+<div class="formula">$$(x+y)^n = \sum_{k=0}^{n} \binom{n}{k} x^k y^{n-k}$$</div>
+<p>推广：</p>
+<div class="formula">$$(1+x)^{-n} = \sum_{k=0}^{\infty} (-1)^k \binom{n+k-1}{k} x^k, \qquad (1-x)^{-n} = \sum_{k=0}^{\infty} \binom{n+k-1}{k} x^k$$</div>
+<h3>六个组合数学典型问题</h3>
+<ol>
+<li><strong>分派问题</strong>：15 个方块分到 25 格（10 空）= 25! / (25−15)! = 25×24×…×11</li>
+<li><strong>染色问题</strong>：正方形 4 顶点 3 色 = 3⁴ = 81 = (r+b+g)⁴ 展开式各项系数和</li>
+<li><strong>36 军官问题</strong>：6 阶正交拉丁方不存在（1901 Tarry）；n=4k+2 (k≥2) 可构造</li>
+<li><strong>中国邮路问题</strong>（管梅谷 1962）：偶度点 Euler 闭迹；奇度点配对加重复边</li>
+<li><strong>四色问题</strong>（1850 提出，1976 证明）：地图相邻国家异色只需 4 色</li>
+<li><strong>棋盘覆盖</strong>：m×n 棋盘完全覆盖 ⇔ m、n 中至少一者为偶；标准 8×8 共 <strong>12,988,816</strong> 种覆盖</li>
+</ol>
+<h3>一一对应</h3>
+<p>计数 A 难而 B 易时，若 A、B 一一对应，则 |A| = |B|。</p>
+</section>
+
+<section id="page-20" class="page">
+<div class="page-header"><span class="page-num">第 20 页</span><h2>综合练习与典型题</h2></div>
+<h3>题型 1：命题逻辑推理</h3>
+<pre><code>例：P→Q, Q→R, P ⇒ R（假言三段论）
+(1) P        P
+(2) P→Q      P
+(3) Q        T(1)(2) I
+(4) Q→R      P
+(5) R        T(3)(4) I</code></pre>
+<h3>题型 2：主析取范式与主合取范式</h3>
+<pre><code>例：P→Q 的主析取范式 = m₀₀∨m₀₁∨m₁₁
+                   = (¬P∧¬Q)∨(¬P∧Q)∨(P∧Q)
+    P→Q 的主合取范式 = M₁₀ = ¬P∨Q</code></pre>
+<h3>题型 3：谓词逻辑推理</h3>
+<pre><code>例：苏格拉底三段论
+前提：∀x(P(x)→D(x))，P(S)
+求证：D(S)
+证明：
+(1) ∀x(P(x)→D(x))   P
+(2) P(S)             P
+(3) P(S)→D(S)        T(1) UI
+(4) D(S)             T(2)(3) I</code></pre>
+<h3>题型 4：关系性质判断</h3>
+<ul>
+<li>看对角线：自反 / 反自反</li>
+<li>看对称位置：对称 / 反对称</li>
+<li>看传递性：M²⊆M（传递闭包判断）</li>
+</ul>
+<h3>题型 5：哈斯图与特殊元素</h3>
+<ul>
+<li>自反环去掉</li>
+<li>仅画覆盖关系的边</li>
+<li>用高度表示序</li>
+<li>极大/极小/最大/最小/上确界/下确界辨识</li>
+</ul>
+<h3>题型 6：集合基数</h3>
+<ul>
+<li>card N = ℵ₀，card R = ℵ</li>
+<li>判定可数性：找双射或用可数集性质</li>
+<li>连续统问题（了解即可）</li>
+</ul>
+<h3>题型 7：置换计算与奇偶性</h3>
+<ul>
+<li>分解为轮换</li>
+<li>判断奇偶性</li>
+<li>应用：n 阶魔方、15-谜题</li>
+</ul>
+</section>
+
+<section id="page-21" class="page">
+<div class="page-header"><span class="page-num">第 21 页</span><h2>考前速记卡</h2></div>
+<h3>命题逻辑</h3>
+<ul>
+<li><strong>6 个联结词</strong>：¬ ∧ ∨ ⊕ → ↔</li>
+<li><strong>24 个等值式</strong>：对幂结交分吸摩同零否</li>
+<li><strong>化归</strong>：→⇔¬∨；↔⇔双→；逆否等价</li>
+<li><strong>主要推理模式</strong>：化简、附加、合取引入、MP、MT、HS、构造性二难</li>
+<li><strong>CP 规则</strong>：附加前提 → 推出结论 → 包成蕴含</li>
+</ul>
+<h3>谓词逻辑</h3>
+<ul>
+<li><strong>量词转换</strong>：¬∀=∃¬；¬∃=∀¬</li>
+<li><strong>量词分配</strong>：∀ 对 ∧；∃ 对 ∨（方向不可反）</li>
+<li><strong>量词顺序</strong>：∀∃ ≠ ∃∀</li>
+</ul>
+<h3>集合与关系</h3>
+<ul>
+<li><strong>集合运算</strong>：∪ ∩ − ⊕</li>
+<li><strong>容斥</strong>：加减交替</li>
+<li><strong>关系表示</strong>：集合/图/矩阵 三合一</li>
+<li><strong>5 性质</strong>：自反/反自反/对称/反对称/传递</li>
+<li><strong>闭包公式</strong>：r(R)=R∪I；s(R)=R∪R⁻¹；t(R)=R∪R²∪…∪Rᵏ</li>
+<li><strong>偏序 3 性质</strong>：自反+反对称+传递</li>
+<li><strong>哈斯图</strong>：去环、位置高低、仅覆盖连边</li>
+</ul>
+<h3>集合的基数</h3>
+<ul>
+<li><strong>N≈Z≈Q≈N×N</strong>：可数无穷，基数 ℵ₀</li>
+<li><strong>R≈P(N)≈[a,b]</strong>：连续统，基数 ℵ</li>
+<li><strong>ℵ₀ &lt; ℵ</strong></li>
+<li><strong>可数集性质</strong>：子集、并、笛卡儿积仍可数</li>
+</ul>
+<h3>代数结构</h3>
+<ul>
+<li><strong>群 4 条件</strong>：封闭、结合、单位、逆</li>
+<li><strong>|Sₙ|=n!；|Aₙ|=n!/2</strong></li>
+<li><strong>奇偶性</strong>：分解为对换个数奇偶不变</li>
+</ul>
+<h3>组合数学</h3>
+<ul>
+<li><strong>加法/乘法原理</strong>：分类相加、分步相乘</li>
+<li><strong>排列组合</strong>：P(n,r)=n!/(n−r)!；C(n,r)=n!/(r!(n−r)!)；P=r!·C</li>
+<li><strong>圆周排列</strong>：Q(n,r)=P(n,r)/r</li>
+</ul>
+<h3>解题步骤</h3>
+<ol>
+<li><strong>审题</strong>：先识别是哪个模块</li>
+<li><strong>符号化</strong>：自然语言 → 命题/谓词/集合</li>
+<li><strong>方法选择</strong>：真值表 / 等值演算 / 推理规则 / 矩阵</li>
+<li><strong>检查</strong>：用性质公式反向验证</li>
+</ol>
+</section>
+
+</main>
+</div>
+
+<footer class="colophon">
+本课件基于李昊老师《离散数学》8 讲课件（信息楼 312/341）以及《图论与组合优化》第一讲《排列组合》整理，覆盖同等学力硕士离散数学考试核心知识点。v2 版本新增 P19《排列组合》补充讲次。
+</footer>
+
+<button class="totop" id="totop" title="回到顶部">↑</button>
+
+<script>
+// 回到顶部
+const totop = document.getElementById('totop');
+window.addEventListener('scroll', () => {
+  totop.classList.toggle('show', window.scrollY > 400);
+});
+totop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// 滚动高亮当前导航项
+const links = Array.from(document.querySelectorAll('#nav a'));
+const targets = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = '#' + e.target.id;
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+targets.forEach(t => observer.observe(t));
+</script>
+</body>
+</html>

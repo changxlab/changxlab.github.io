@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高级并行计算学习资料研究报告 — Hermes Research</title>
+<style>
+:root {
+  --bg: #0d1117; --fg: #c9d1d9; --accent: #58a6ff;
+  --border: #30363d; --card-bg: #161b22; --muted: #8b949e;
+  --tag-bg: #1f2937; --tag-fg: #58a6ff;
+  --green: #3fb950; --orange: #d2991d; --red: #f85149;
+  --purple: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+  line-height: 1.7; max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem;
+}
+h1 { font-size: 2rem; color: #f0f6fc; margin-bottom: 0.25rem; letter-spacing: -0.02em; }
+h1 span { color: var(--accent); }
+h2 {
+  font-size: 1.35rem; color: #f0f6fc; margin: 2.5rem 0 1rem;
+  padding-left: 0.75rem; border-left: 3px solid var(--accent);
+}
+h3 { font-size: 1.1rem; color: #e6edf3; margin: 1.5rem 0 0.75rem; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.meta { color: var(--muted); font-size: 0.88rem; margin-bottom: 2rem; }
+
+/* Hero */
+.hero {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;
+}
+.hero p { margin-bottom: 0.6rem; font-size: 0.95rem; }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
+.tag {
+  font-size: 0.82rem; padding: 0.2rem 0.65rem; border-radius: 20px;
+  background: var(--tag-bg); color: var(--tag-fg); white-space: nowrap;
+}
+.tag.green { color: var(--green); }
+.tag.orange { color: var(--orange); }
+.tag.red { color: var(--red); }
+.tag.purple { color: var(--purple); }
+
+/* TOC */
+.toc {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.25rem 1.5rem; margin: 1.5rem 0;
+}
+.toc h3 { margin-top: 0; font-size: 1rem; }
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem 1rem; }
+.toc-grid a { font-size: 0.9rem; }
+
+/* Cards & Tables */
+.card {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.25rem; margin: 1rem 0;
+}
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+th { text-align: left; padding: 0.55rem 0.75rem; background: var(--card-bg);
+  border-bottom: 2px solid var(--border); color: #f0f6fc; font-weight: 600; }
+td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(88,166,255,0.04); }
+
+/* Signal boxes */
+.signal, .warn, .highlight {
+  border-radius: 6px; padding: 0.8rem 1rem; margin: 0.5rem 0; font-size: 0.9rem;
+}
+.signal { background: rgba(63,185,80,0.1); border-left: 3px solid var(--green); }
+.warn { background: rgba(210,153,29,0.1); border-left: 3px solid var(--orange); }
+.highlight { background: rgba(88,166,255,0.1); border-left: 3px solid var(--accent); }
+
+/* Learning path */
+.path-card {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.5rem; margin: 1rem 0;
+}
+.path-card h4 { color: var(--accent); font-size: 1rem; margin-bottom: 0.5rem; }
+.step { display: flex; gap: 0.75rem; margin: 0.6rem 0; font-size: 0.9rem; }
+.step-num {
+  min-width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  background: rgba(88,166,255,0.15); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.8rem; flex-shrink: 0;
+}
+
+/* Footer */
+footer {
+  margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+  color: var(--muted); font-size: 0.82rem; text-align: center;
+}
+footer a { color: var(--muted); }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+ul, ol { padding-left: 1.5rem; margin: 0.5rem 0; }
+li { margin: 0.25rem 0; }
+code { background: rgba(110,118,129,0.15); padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.9em; }
+strong { color: #f0f6fc; }
+pre {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: 0.85rem;
+  line-height: 1.5; margin: 1rem 0;
+}
+</style>
+</head>
+<body>
+
+<h1><span>⚡</span> 高级并行计算学习资料研究报告</h1>
+<p class="meta">
+  📅 2026-06-27 &nbsp;·&nbsp; 🔬 Hermes Research &nbsp;·&nbsp;
+  范围：公开课 · 教材 · 练习 · 文章 · 博客 · 在线平台
+</p>
+
+<div class="hero">
+  <p><strong>🥇 一句话总结：</strong>以 <strong>Stanford CS149</strong> 为主线课程、<strong>Kirk &amp; Hwu PMPP</strong> 为核心教材、配合 GitHub 开源作业和 NVIDIA DLI 动手实验，是目前最完整的并行计算自学路径。</p>
+  <div class="tag-cloud">
+    <span class="tag orange">🔥 CS149 旗舰课</span>
+    <span class="tag green">CUDA / GPU</span>
+    <span class="tag">MPI / OpenMP</span>
+    <span class="tag purple">内存一致性</span>
+    <span class="tag green">免费资源</span>
+    <span class="tag">Lock-free</span>
+    <span class="tag orange">HPC</span>
+    <span class="tag purple">中文社区</span>
+  </div>
+</div>
+
+<div class="toc">
+  <h3>📑 目录</h3>
+  <div class="toc-grid">
+    <a href="#s1">1. 核心公开课</a>
+    <a href="#s5">5. 在线学习平台与认证</a>
+    <a href="#s2">2. 经典教材与参考书</a>
+    <a href="#s6">6. GitHub Awesome 策展仓库</a>
+    <a href="#s3">3. 编程练习与项目实战</a>
+    <a href="#s7">7. 中文社区资源</a>
+    <a href="#s4">4. 深度文章与博客</a>
+    <a href="#s8">8. 推荐学习路线</a>
+    <a href="#s9">9. 信号解读</a>
+    <a href="#appendix">附录：快速链接索引</a>
+  </div>
+</div>
+
+<!-- ========== SECTION 1 ========== -->
+<h2 id="s1">1. 核心公开课</h2>
+
+<h3>1.1 🔥 CMU 15-418 / Stanford CS149 — 并行计算旗舰课</h3>
+<table>
+  <tr><th style="width:20%">维度</th><th>详情</th></tr>
+  <tr><td><strong>授课教师</strong></td><td>Kayvon Fatahalian, Kunle Olukotun (Stanford)</td></tr>
+  <tr><td><strong>难度</strong></td><td><span class="tag red">⭐⭐⭐⭐⭐</span> 硬核，需体系结构 + C++ 基础</td></tr>
+  <tr><td><strong>预估学时</strong></td><td>150 小时</td></tr>
+  <tr><td><strong>课程网站</strong></td><td><a href="https://www.cs.cmu.edu/afs/cs/academic/class/15418-s18/www/index.html">CMU 15-418 (2018)</a> · <a href="https://gfxcourses.stanford.edu/cs149/fall23/">CS149 (Fall 2023)</a></td></tr>
+  <tr><td><strong>视频</strong></td><td><a href="https://youtube.com/playlist?list=PLoROMvodv4rMp7MTFr4hQsDEcX7Bx6Odp">YouTube 播放列表 (2023, 24h)</a></td></tr>
+  <tr><td><strong>作业</strong></td><td>5 个编程作业：CPU 性能分析 → 任务图调度 → CUDA 渲染器 → OpenMP + Spark</td></tr>
+  <tr><td><strong>GitHub</strong></td><td><a href="https://github.com/stanford-cs149">stanford-cs149</a> · <a href="https://github.com/PKUFlyingPig/CS149-parallel-computing">PKUFlyingPig/CS149</a></td></tr>
+</table>
+
+<div class="card">
+  <h4 style="color:var(--accent);margin-bottom:0.5rem;">📋 课程大纲精选（CS149 Fall 2023）</h4>
+  <ul>
+    <li>Lecture 1: Why Parallelism? 为什么需要并行</li>
+    <li>Lecture 2 &amp; 4: Modern Multi-Core Processor &amp; Parallel Programming Basics</li>
+    <li>Lecture 7: <strong>GPU Architecture and CUDA Programming</strong></li>
+    <li>Lecture 8: Data-Parallel Thinking</li>
+    <li>Lecture 9: Distributed Data-Parallel Computing Using Spark</li>
+    <li>Lecture 10: Efficiently Evaluating DNNs on GPUs</li>
+    <li>Lecture 11–12: Cache Coherence &amp; Memory Consistency</li>
+    <li>Lecture 15–16: Domain-Specific Languages &amp; Transactional Memory</li>
+  </ul>
+</div>
+
+<div class="highlight"><strong>🥇 推荐理由：</strong>全球公认最好的并行计算入门+进阶课程。CMU 版本讲座更全，Stanford 版本作业更时尚。建议看 CMU 录播 + 做 CS149 作业。</div>
+
+<h3>更多公开课一览</h3>
+<table>
+  <tr><th>课程</th><th>机构</th><th>难度</th><th>重点内容</th><th>链接</th></tr>
+  <tr>
+    <td><strong>CME 213</strong></td>
+    <td>Stanford</td>
+    <td>⭐⭐⭐⭐</td>
+    <td>C++ threads, OpenMP, CUDA, MPI 全覆盖</td>
+    <td><a href="https://explorecourses.stanford.edu/search?q=CME+213">课程页</a></td>
+  </tr>
+  <tr>
+    <td><strong>6.172</strong></td>
+    <td>MIT</td>
+    <td>⭐⭐⭐⭐⭐</td>
+    <td>性能工程，Cilk 并行语言（Leiserson 授课）</td>
+    <td><a href="https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/">OCW</a></td>
+  </tr>
+  <tr>
+    <td><strong>CS267</strong></td>
+    <td>UC Berkeley</td>
+    <td>⭐⭐⭐⭐⭐</td>
+    <td>应用→架构完整并行链，MPI/OpenMP/CUDA</td>
+    <td><a href="https://sites.google.com/lbl.gov/cs267-spr2024">课程页</a></td>
+  </tr>
+  <tr>
+    <td><strong>CS 179</strong></td>
+    <td>Caltech</td>
+    <td>⭐⭐⭐⭐</td>
+    <td>NVIDIA CUDA 编程，GPU 架构与优化</td>
+    <td><a href="https://courses.cms.caltech.edu/cs179">课程页</a></td>
+  </tr>
+  <tr>
+    <td><strong>AdvPar 2025</strong></td>
+    <td>LMU Munich</td>
+    <td>⭐⭐⭐⭐</td>
+    <td>内存一致性、C++ 原子类型、lock-free</td>
+    <td><a href="https://www.nm.ifi.lmu.de/teaching/Vorlesungen/2025ss/AdvPar.html">课程页</a></td>
+  </tr>
+</table>
+
+<!-- ========== SECTION 2 ========== -->
+<h2 id="s2">2. 经典教材与参考书</h2>
+
+<h3>2.1 入门/概论级</h3>
+<table>
+  <tr><th>#</th><th>书名</th><th>作者</th><th>特点</th></tr>
+  <tr>
+    <td>1</td>
+    <td><strong>An Introduction to Parallel Programming</strong></td>
+    <td>Peter S. Pacheco</td>
+    <td>最佳入门，MPI + Pthreads + OpenMP，代码丰富</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><strong>Introduction to Parallel Computing</strong></td>
+    <td>Grama, Gupta, Karypis, Kumar</td>
+    <td>偏理论入门，适合理解并行算法设计原则</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><strong>Patterns for Parallel Programming</strong></td>
+    <td>Mattson, Sanders, Massingill</td>
+    <td>设计模式视角，适合架构师思维</td>
+  </tr>
+</table>
+
+<h3>2.2 GPU/CUDA 专项</h3>
+<table>
+  <tr><th>#</th><th>书名</th><th>作者</th><th>特点</th></tr>
+  <tr>
+    <td class="tag orange">🔥 4</td>
+    <td><strong>Programming Massively Parallel Processors (4th Ed)</strong></td>
+    <td>David B. Kirk, Wen-mei W. Hwu</td>
+    <td><strong>CUDA 圣经</strong>，第4版更新至最新架构</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td><strong>CUDA by Example</strong></td>
+    <td>Jason Sanders, Edward Kandrot</td>
+    <td>CUDA 快速上手实践书，案例驱动</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td><strong>Professional CUDA C Programming</strong></td>
+    <td>Cheng, Grossman, McKercher</td>
+    <td>进阶，多 GPU、流、优化策略</td>
+  </tr>
+</table>
+
+<h3>2.3 进阶/专题</h3>
+<table>
+  <tr><th>#</th><th>书名</th><th>作者</th><th>特点</th></tr>
+  <tr>
+    <td class="tag orange">🔥 7</td>
+    <td><strong>The Art of Multiprocessor Programming</strong></td>
+    <td>Maurice Herlihy, Nir Shavit</td>
+    <td>多核同步与并发圣经，lock-free、transactional memory</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td><strong>Intro to HPC for Scientists and Engineers</strong></td>
+    <td>Georg Hager, Gerhard Wellein</td>
+    <td>科学与工程的 HPC 实用指南</td>
+  </tr>
+  <tr>
+    <td class="tag green">9</td>
+    <td><strong>Is Parallel Programming Hard, And, If So, What Can You Do About It?</strong></td>
+    <td>Paul E. McKenney</td>
+    <td>Linux RCU 作者，完全免费！</td>
+  </tr>
+</table>
+
+<h3>2.4 体系结构/底层基础</h3>
+<table>
+  <tr><th>#</th><th>书名</th><th>作者</th><th>特点</th></tr>
+  <tr>
+    <td>10</td>
+    <td><strong>Computer Architecture: A Quantitative Approach</strong></td>
+    <td>Hennessy &amp; Patterson</td>
+    <td>体系结构经典，含并行架构章节</td>
+  </tr>
+  <tr>
+    <td class="tag orange">11</td>
+    <td><strong>What Every Programmer Should Know About Memory</strong></td>
+    <td>Ulrich Drepper</td>
+    <td>114页，内存/缓存/NUMA — 并行优化必读</td>
+  </tr>
+</table>
+
+<!-- ========== SECTION 3 ========== -->
+<h2 id="s3">3. 编程练习与项目实战</h2>
+
+<h3>3.1 Stanford CS149 官方作业</h3>
+<table>
+  <tr><th>作业</th><th>内容</th><th>技术栈</th><th>仓库</th></tr>
+  <tr>
+    <td><strong>Assignment 1</strong></td>
+    <td>分析四核 CPU 并行程序性能</td>
+    <td>C++, perf, SIMD</td>
+    <td><a href="https://github.com/stanford-cs149/asst1">asst1</a></td>
+  </tr>
+  <tr>
+    <td><strong>Assignment 2</strong></td>
+    <td>批量任务图调度系统</td>
+    <td>C++, 多线程同步</td>
+    <td><a href="https://github.com/stanford-cs149/asst2">asst2</a></td>
+  </tr>
+  <tr>
+    <td><strong>Assignment 3</strong></td>
+    <td>CUDA 并行渲染器（彩色圆）</td>
+    <td>CUDA, GPU</td>
+    <td><a href="https://github.com/kykim0/asst3">asst3</a></td>
+  </tr>
+  <tr>
+    <td><strong>Assignment 4</strong></td>
+    <td>OpenMP + Spark 大数据并行</td>
+    <td>OpenMP, Spark</td>
+    <td><a href="https://github.com/stanford-cs149/asst4">asst4</a></td>
+  </tr>
+</table>
+
+<h3>3.2 教材配套练习与项目合集</h3>
+<table>
+  <tr><th>资源</th><th>说明</th><th>链接</th></tr>
+  <tr>
+    <td><span class="tag orange">🔥</span> <strong>PMPP 习题全解</strong></td>
+    <td>Kirk &amp; Hwu 教材第4版全部章节习题解答</td>
+    <td><a href="https://github.com/tugot17/pmpp">tugot17/pmpp</a></td>
+  </tr>
+  <tr>
+    <td><strong>Hybrid OpenMP+MPI 练习</strong></td>
+    <td>CSC/PRACE 混合编程练习，含骨架代码</td>
+    <td><a href="https://github.com/csc-training/hybrid-openmp-mpi">csc-training</a></td>
+  </tr>
+  <tr>
+    <td><strong>OMP+MPI+CUDA 三合一</strong></td>
+    <td>Bellman-Ford 最短路径的三种并行实现</td>
+    <td><a href="https://github.com/zslwyuan/Parallel-Computing-Tutorials-OMP-MPI-CUDA">zslwyuan</a></td>
+  </tr>
+  <tr>
+    <td><strong>Bilkent CS426 项目集</strong></td>
+    <td>完整学期并行计算课程项目</td>
+    <td><a href="https://github.com/faruku-io/CS426-Parallel-Computing">faruku-io</a></td>
+  </tr>
+  <tr>
+    <td><strong>PyData 并行教程</strong></td>
+    <td>Python 并行计算教程材料</td>
+    <td><a href="https://github.com/pydata/parallel-tutorial">pydata</a></td>
+  </tr>
+  <tr>
+    <td><strong>OpenMP 课程练习</strong></td>
+    <td>AUTh 大学 OpenMP 示例与练习</td>
+    <td><a href="https://github.com/niksterg/openmp-course">niksterg</a></td>
+  </tr>
+</table>
+
+<h3>3.3 在线评测与挑战</h3>
+<ul>
+  <li><strong>NVIDIA CUDA LEET</strong> — Discord 上的 CUDA 编程竞赛，写 fast kernel 比拼性能</li>
+  <li><strong>HackerRank</strong> — 多线程、并发编程专项练习</li>
+  <li><strong>LeetCode Concurrency</strong> — 信号量、锁、条件变量等并发编程题</li>
+</ul>
+
+<!-- ========== SECTION 4 ========== -->
+<h2 id="s4">4. 深度文章与博客</h2>
+
+<table>
+  <tr><th>博客/文章</th><th>作者/来源</th><th>主题</th><th>链接</th></tr>
+  <tr>
+    <td><span class="tag orange">🔥</span> <strong>I want a good parallel computer</strong></td>
+    <td>Raph Levien</td>
+    <td>GPU 计算模型局限性与未来并行计算机愿景</td>
+    <td><a href="https://raphlinus.github.io/gpu/2025/03/21/good-parallel-computer.html">链接</a></td>
+  </tr>
+  <tr>
+    <td><span class="tag orange">🔥</span> <strong>What Every Programmer Should Know About Memory</strong></td>
+    <td>Ulrich Drepper</td>
+    <td>114页：内存/缓存/NUMA，并行性能基础</td>
+    <td><a href="https://people.freebsd.org/~lstewart/articles/cpumemory.pdf">PDF</a></td>
+  </tr>
+  <tr>
+    <td><strong>30 Years of HPC Programming</strong></td>
+    <td>Brad Chamberlain</td>
+    <td>HPC 编程 30 年变迁深度反思</td>
+    <td><a href="https://chapel-lang.org/blog/posts/30years">链接</a></td>
+  </tr>
+  <tr>
+    <td><strong>NVIDIA Technical Blog</strong></td>
+    <td>NVIDIA</td>
+    <td>GPU 编程、CUDA 优化、HPC 最新技术</td>
+    <td><a href="https://developer.nvidia.com/blog/tag/parallel-programming">链接</a></td>
+  </tr>
+  <tr>
+    <td><strong>LLM in HPC (2026)</strong></td>
+    <td>ScienceDirect</td>
+    <td>大语言模型在 HPC 并行化与优化中的应用</td>
+    <td><a href="https://www.sciencedirect.com/science/article/pii/S0167739X26002529">论文</a></td>
+  </tr>
+</table>
+
+<div class="card">
+  <h4 style="color:var(--accent);margin-bottom:0.5rem;">💬 社区精选</h4>
+  <ul>
+    <li><a href="https://www.reddit.com/r/CUDA/">r/CUDA</a> — CUDA 学习路径、GPU 编程讨论</li>
+    <li><a href="https://www.reddit.com/r/HPC/">r/HPC</a> — 高性能计算社区</li>
+    <li><a href="https://news.ycombinator.com/item?id=47759436">HN: 30 Years of HPC</a> — HPC 编程演变社区大讨论</li>
+  </ul>
+</div>
+
+<!-- ========== SECTION 5 ========== -->
+<h2 id="s5">5. 在线学习平台与认证</h2>
+
+<h3>5.1 NVIDIA Deep Learning Institute (DLI)</h3>
+<table>
+  <tr><th>课程</th><th>内容</th><th>时长</th></tr>
+  <tr>
+    <td><strong>Fundamentals of Accelerated Computing with CUDA C++</strong></td>
+    <td>CUDA C++ 加速计算基础</td>
+    <td>8h</td>
+  </tr>
+  <tr>
+    <td><strong>Accelerating CUDA C++ Apps with Multiple GPUs</strong></td>
+    <td>多 GPU 编程</td>
+    <td>8h</td>
+  </tr>
+  <tr>
+    <td><strong>Scaling CUDA C++ Apps to Multiple Nodes</strong></td>
+    <td>多节点扩展</td>
+    <td>8h</td>
+  </tr>
+</table>
+
+<div class="highlight"><strong>💡 免费资源：</strong>NVIDIA DLI 经常提供免费 self-paced 课程名额，含 GPU 云端实验环境和证书。<a href="https://learn.nvidia.com">learn.nvidia.com</a></div>
+
+<h3>5.2 其他在线资源</h3>
+<ul>
+  <li><strong>Princeton Research Computing</strong> — MPI 和 OpenMP 从入门到进阶教程汇总：<a href="https://researchcomputing.princeton.edu/education/external-online-resources/mpi">MPI</a> · <a href="https://researchcomputing.princeton.edu/education/external-online-resources/openmp">OpenMP</a></li>
+  <li><strong>UL HPC Tutorials</strong> — OpenMP/MPI 可扩展科学计算实战：<a href="https://ulhpc-tutorials.readthedocs.io/en/latest/parallel/basics">链接</a></li>
+  <li><strong>OpenMP 5小时完整教程</strong> — <a href="https://www.youtube.com/watch?v=FjCFT5ojQSk">YouTube</a></li>
+</ul>
+
+<!-- ========== SECTION 6 ========== -->
+<h2 id="s6">6. GitHub Awesome 策展仓库</h2>
+
+<table>
+  <tr><th>仓库</th><th>说明</th><th>链接</th></tr>
+  <tr>
+    <td><span class="tag orange">🔥</span> <strong>awesome-high-performance-computing</strong></td>
+    <td><strong>最全面的 HPC 策展</strong>（600+ commits）：软件、硬件、课程、博客、期刊</td>
+    <td><a href="https://github.com/trevor-vincent/awesome-high-performance-computing">GitHub</a></td>
+  </tr>
+  <tr>
+    <td><strong>awesome-parallel-computing</strong></td>
+    <td>并行计算精选：库、数据结构、课程、论文</td>
+    <td><a href="https://github.com/taskflow/awesome-parallel-computing">GitHub</a></td>
+  </tr>
+  <tr>
+    <td><strong>cs-video-courses</strong></td>
+    <td>全 CS 课程视频索引，含并行/分布式分类</td>
+    <td><a href="https://github.com/Developer-Y/cs-video-courses">GitHub</a></td>
+  </tr>
+</table>
+
+<!-- ========== SECTION 7 ========== -->
+<h2 id="s7">7. 中文社区资源</h2>
+
+<table>
+  <tr><th>资源</th><th>作者/平台</th><th>要点</th><th>链接</th></tr>
+  <tr>
+    <td><span class="tag orange">🔥</span> <strong>高性能计算学习路线</strong></td>
+    <td>heptagonhust</td>
+    <td><strong>最全面中文 HPC 路线</strong>：Linux → SIMD → Cache → MPI → CUDA</td>
+    <td><a href="https://heptagonhust.github.io/HPC-roadmap">链接</a></td>
+  </tr>
+  <tr>
+    <td><strong>并行计算学习路线</strong></td>
+    <td>orion-orion (博客园)</td>
+    <td>给高性能计算方向同学的基础课程+文档+项目</td>
+    <td><a href="https://www.cnblogs.com/orion-orion/p/15376727.html">链接</a></td>
+  </tr>
+  <tr>
+    <td><strong>CS 自学社区</strong></td>
+    <td>learncs.site</td>
+    <td>CS149 等课程的中文学习指引</td>
+    <td><a href="https://www.learncs.site/docs/roadmap">链接</a></td>
+  </tr>
+  <tr>
+    <td><strong>爱课程 - 并行计算</strong></td>
+    <td>国家精品课程</td>
+    <td>国内高校并行计算中文课程</td>
+    <td><a href="https://www.icourses.cn/sCourse/course_3058.html">链接</a></td>
+  </tr>
+  <tr>
+    <td><strong>CS 名校课程合集</strong></td>
+    <td>forthespada</td>
+    <td>MIT/CMU/Stanford 等名校课程索引</td>
+    <td><a href="https://github.com/forthespada/Awsome-Courses">GitHub</a></td>
+  </tr>
+</table>
+
+<!-- ========== SECTION 8 ========== -->
+<h2 id="s8">8. 推荐学习路线</h2>
+
+<div class="path-card">
+  <h4>📌 前置基础</h4>
+  <p style="color:var(--muted);margin-bottom:0.5rem;">在开始高级并行计算之前确认已掌握：</p>
+  <div class="tag-cloud">
+    <span class="tag green">计算机体系结构</span>
+    <span class="tag green">C/C++ 编程</span>
+    <span class="tag green">操作系统基础</span>
+    <span class="tag green">数据结构与算法</span>
+  </div>
+  <p style="font-size:0.85rem;margin-top:0.8rem;">具体：缓存层次、流水线、SIMD、进程/线程、虚拟内存、上下文切换</p>
+</div>
+
+<div class="path-card">
+  <h4>Phase 1: 基础并行 <span style="color:var(--muted);font-weight:normal;">(4–6 周)</span></h4>
+  <div class="step"><span class="step-num">1</span><span>📖 教材：Pacheco — An Introduction to Parallel Programming</span></div>
+  <div class="step"><span class="step-num">2</span><span>🎥 视频：MIT 6.172 (前半) 或 Stanford CME 213</span></div>
+  <div class="step"><span class="step-num">3</span><span>💻 练习：OpenMP 教程 + Hybrid OpenMP/MPI 混合编程练习</span></div>
+  <div class="step"><span class="step-num">4</span><span>🎯 掌握：共享内存并行、消息传递、Amdahl's Law、加速比分析</span></div>
+</div>
+
+<div class="path-card">
+  <h4>Phase 2: GPU 并行 + 深度性能 <span style="color:var(--muted);font-weight:normal;">(6–8 周)</span></h4>
+  <div class="step"><span class="step-num">1</span><span>📖 教材：Kirk &amp; Hwu — PMPP (第4版)</span></div>
+  <div class="step"><span class="step-num">2</span><span>🎥 视频：Stanford CS149 Lecture 7–10 (GPU + CUDA)</span></div>
+  <div class="step"><span class="step-num">3</span><span>💻 练习：CS149 asst3 (CUDA 渲染器) + PMPP 章节习题</span></div>
+  <div class="step"><span class="step-num">4</span><span>🎯 掌握：CUDA 编程模型、内存层次优化、warp/block 调度</span></div>
+</div>
+
+<div class="path-card">
+  <h4>Phase 3: 进阶专题 <span style="color:var(--muted);font-weight:normal;">(8+ 周)</span></h4>
+  <div class="step"><span class="step-num">1</span><span>📖 教材：Herlihy &amp; Shavit — The Art of Multiprocessor Programming</span></div>
+  <div class="step"><span class="step-num">2</span><span>🎥 视频：Stanford CS149 后半 (内存一致性、事务内存)</span></div>
+  <div class="step"><span class="step-num">3</span><span>💻 练习：CS149 asst2 (任务图调度) + asst4 (Spark)</span></div>
+  <div class="step"><span class="step-num">4</span><span>🎯 掌握：lock-free 数据结构、内存一致性模型、分布式数据并行</span></div>
+</div>
+
+<div class="highlight">
+  <strong>💡 学习建议：</strong>以 CS149 为主线，跟着写代码（只看不写等于没学），善用 Intel VTune / NVIDIA Nsight / perf 等性能分析器可视化瓶颈。30% 理论 + 70% 动手是最佳配比。
+</div>
+
+<!-- ========== SECTION 9 ========== -->
+<h2 id="s9">9. 信号解读</h2>
+
+<h3>🔵 强信号</h3>
+
+<div class="signal">
+  <strong>1. GPU 是现在，AI 加速器是未来。</strong> NVIDIA DLI 课程爆炸式增长、CUDA 生态持续扩展，GPU 并行编程已成必备技能而非可选项。
+</div>
+
+<div class="signal">
+  <strong>2. CS149 是"一门课通关"。</strong> 课程横跨 CPU 多核 → GPU → 分布式，理论和实践完美结合。全球学习者一致推荐为最佳入门+进阶路线。
+</div>
+
+<div class="signal">
+  <strong>3. 中文 HPC 社区正在成熟。</strong> heptagonhust 的 HPC 学习路线、csdiy.wiki 等高质量中文资源，让中文学习者无需完全依赖英文渠道。
+</div>
+
+<div class="signal">
+  <strong>4. PMPP 第4版 + 习题全解 = 自学神器。</strong> Kirk &amp; Hwu 教材有完整 GitHub 习题解答，自学 CUDA 不再需要课堂环境。
+</div>
+
+<h3>🟠 注意事项</h3>
+
+<div class="warn">
+  <strong>5. 并行计算"理论 vs 实践"鸿沟大。</strong> 纸上谈兵容易，实际写出 scalable 的并行程序需要大量调优经验。建议 30% 理论 + 70% 动手。
+</div>
+
+<div class="warn">
+  <strong>6. 中文课程偏理论。</strong> 爱课程等国内平台以讲授并行算法为主，缺少 CS149 级别的动手作业。建议以国外课程为主，中文资料作辅助。
+</div>
+
+<div class="warn">
+  <strong>7. Rust 并行生态值得关注。</strong> 虽然当前主流教材仍以 C++/CUDA 为主，但 Rust 的内存安全模型在并行编程中有天然优势。
+</div>
+
+<h3>🔴 需警惕</h3>
+
+<div class="signal" style="background:rgba(248,81,73,0.1);border-left:3px solid var(--red);">
+  <strong>8. CUDA 锁定风险。</strong> NVIDIA 生态强大也意味着厂商锁定。建议同时了解 OpenCL/SYCL/ROCm 等开放标准。
+</div>
+
+<div class="signal" style="background:rgba(248,81,73,0.1);border-left:3px solid var(--red);">
+  <strong>9. "AI 自动并行化"的炒作。</strong> 虽然 LLM 开始被用于代码并行化辅助，但复杂场景的手动优化仍不可替代。不要指望 AI 替你写高性能 CUDA kernel。
+</div>
+
+<!-- ========== APPENDIX ========== -->
+<h2 id="appendix">附录：快速链接索引</h2>
+
+<h3>🎓 课程主页</h3>
+<ul>
+  <li><a href="https://gfxcourses.stanford.edu/cs149/fall23/">Stanford CS149 Fall 2023</a> · <a href="https://youtube.com/playlist?list=PLoROMvodv4rMp7MTFr4hQsDEcX7Bx6Odp">YouTube</a></li>
+  <li><a href="https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/">MIT 6.172 OCW</a></li>
+  <li><a href="https://sites.google.com/lbl.gov/cs267-spr2024">UC Berkeley CS267</a></li>
+  <li><a href="https://courses.cms.caltech.edu/cs179">Caltech CS 179</a></li>
+</ul>
+
+<h3>📚 教材</h3>
+<ul>
+  <li><a href="https://www.oreilly.com/library/view/programming-massively-parallel/9780323984638/">PMPP 4th Edition</a></li>
+  <li><a href="https://github.com/tugot17/pmpp">PMPP 习题全解</a></li>
+  <li><a href="https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html">Is Parallel Programming Hard? (免费)</a></li>
+</ul>
+
+<h3>💻 作业仓库</h3>
+<ul>
+  <li><a href="https://github.com/stanford-cs149">Stanford CS149 官方作业</a></li>
+  <li><a href="https://github.com/PKUFlyingPig/CS149-parallel-computing">PKUFlyingPig CS149 学习记录</a></li>
+  <li><a href="https://github.com/csc-training/hybrid-openmp-mpi">Hybrid OpenMP+MPI 练习</a></li>
+</ul>
+
+<h3>🌐 策展仓库</h3>
+<ul>
+  <li><a href="https://github.com/trevor-vincent/awesome-high-performance-computing">Awesome HPC</a></li>
+  <li><a href="https://github.com/taskflow/awesome-parallel-computing">Awesome Parallel Computing</a></li>
+</ul>
+
+<h3>🇨🇳 中文资源</h3>
+<ul>
+  <li><a href="https://heptagonhust.github.io/HPC-roadmap">HPC 学习路线 (heptagonhust)</a></li>
+  <li><a href="https://www.cnblogs.com/orion-orion/p/15376727.html">并行计算学习路线 (博客园)</a></li>
+  <li><a href="https://csdiy.wiki">CS 自学指南 (csdiy.wiki)</a></li>
+</ul>
+
+<h3>📝 必读文章</h3>
+<ul>
+  <li><a href="https://people.freebsd.org/~lstewart/articles/cpumemory.pdf">What Every Programmer Should Know About Memory (PDF)</a></li>
+  <li><a href="https://raphlinus.github.io/gpu/2025/03/21/good-parallel-computer.html">I want a good parallel computer (Raph Levien)</a></li>
+  <li><a href="https://chapel-lang.org/blog/posts/30years">30 Years of HPC Programming (Chapel)</a></li>
+</ul>
+
+<hr>
+
+<footer>
+  <p>📋 报告生成于 2026-06-27 &nbsp;·&nbsp; Hermes Research Series</p>
+  <p>
+    资源有效性和链接可能随时间变化，建议验证最新版本。
+    <a href="https://github.com/wukong-ai-code/share">GitHub</a>
+  </p>
+</footer>
+
+</body>
+</html>
