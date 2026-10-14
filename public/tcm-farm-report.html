@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f8f1">
+  <title>AI-driven Process Adaptive TCM Farm</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Barlow:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #183b2d;
+      --green: #47772e;
+      --green-line: #73945a;
+      --green-pale: #f1f5e9;
+      --blue: #28658b;
+      --blue-line: #6090ae;
+      --navy: #062c5b;
+      --teal: #347d7e;
+      --purple: #786096;
+      --orange: #d98924;
+      --body: #26302b;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body { background: #e9eee7; color: var(--body); font-family: "Barlow Semi Condensed", "Arial Narrow", sans-serif; }
+    button { font: inherit; }
+    .viewport { min-height: 100svh; display: grid; place-items: safe center; padding: 16px; overflow: auto; }
+    .report-shell { position: relative; width: 1440px; height: 800px; flex: none; }
+    .report {
+      position: absolute; inset: 0 auto auto 0; width: 1440px; height: 800px;
+      overflow: hidden; isolation: isolate; transform-origin: top left;
+      background: #fffefa; box-shadow: 0 3px 28px #213a2020;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h2, h3 { font-weight: 700; }
+    svg { display: block; flex: none; }
+    .lucide { width: 30px; height: 30px; stroke-width: 1.55; }
+    .title { position: absolute; top: 17px; left: 190px; right: 190px; text-align: center; }
+    .title h1 { font-family: "Barlow", Arial, sans-serif; color: #0b3328; font-size: 38px; line-height: 1.15; font-weight: 700; letter-spacing: 0; }
+    .title p { margin-top: 7px; font-family: "Barlow", Arial, sans-serif; color: #3c6735; font-size: 23px; line-height: 1.2; font-style: italic; font-weight: 600; }
+    .landscape { position: absolute; z-index: -2; inset: auto 0 0; height: 143px; overflow: hidden; }
+    .landscape img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 64%; opacity: .18; filter: saturate(.7); mask-image: linear-gradient(transparent, #000 80%); }
+    .landscape::before, .landscape::after { content: ""; position: absolute; inset: 0; }
+    .landscape::before { z-index: 1; background: #a6c5af99; clip-path: polygon(0 36%, 3% 27%, 7% 42%, 11% 39%, 17% 58%, 23% 53%, 32% 73%, 44% 65%, 55% 77%, 68% 66%, 78% 73%, 88% 46%, 95% 42%, 100% 31%, 100% 100%, 0 100%); }
+    .landscape::after { z-index: 2; background: #adc582a3; clip-path: polygon(0 71%, 8% 81%, 16% 87%, 24% 83%, 33% 94%, 53% 96%, 65% 90%, 79% 91%, 91% 81%, 100% 64%, 100% 100%, 0 100%); }
+    .edge-plants { position: absolute; right: 12px; bottom: 12px; display: flex; align-items: end; gap: 0; color: #7ba077; opacity: .55; z-index: -1; }
+    .edge-plants .lucide { width: 39px; height: 93px; stroke-width: 2.4; }
+    .edge-plants .lucide:last-child { width: 58px; height: 171px; }
+    .flow-lines { position: absolute; inset: 0; width: 1440px; height: 800px; z-index: 1; pointer-events: none; }
+    .flow-lines > path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .flow-lines .operations-flow { stroke: var(--green); stroke-width: 2.3; marker-end: url(#arrow-green); }
+    .flow-lines .insight-flow { stroke: var(--blue-line); stroke-width: 2.4; marker-end: url(#arrow-blue); }
+    .flow-lines .feedback-flow { stroke: var(--blue); stroke-width: 1.9; stroke-dasharray: 2 4; marker-end: url(#arrow-blue); }
+    .flow-lines .main-flow { stroke: #476e77; stroke-width: 2.5; marker-end: url(#arrow-main); }
+    .section { position: absolute; z-index: 2; }
+    .section-label { position: absolute; top: -11px; background: #fffefa; padding: 0 8px; color: var(--green); font-size: 14px; font-weight: 700; line-height: 20px; white-space: nowrap; }
+    .side-section { top: 118px; height: 354px; border: 1.7px solid #8aa578; border-radius: 32px; padding: 23px 14px 16px; }
+    .data-collection { left: 202px; width: 218px; }
+    .data-collection .section-label { left: 48px; }
+    .smart-operations { left: 1006px; width: 210px; }
+    .smart-operations .section-label { left: 12px; }
+    .side-item { display: flex; align-items: center; gap: 10px; min-height: 76px; }
+    .side-item + .side-item { margin-top: 3px; }
+    .icon-medallion { width: 61px; height: 61px; flex: none; display: grid; place-items: center; border: 1.35px solid #9bac89; border-radius: 50%; background: radial-gradient(ellipse at 40% 35%, #ffffff, #f4f5e9); color: var(--green); box-shadow: inset 0 0 0 4px #ffffffa8; }
+    .icon-medallion .lucide { width: 42px; height: 42px; }
+    .side-item:nth-of-type(2) .icon-medallion { color: var(--blue); border-color: #8cabb8; background: #f3f7f7; }
+    .side-item:nth-of-type(3) .icon-medallion { color: #aa762e; border-color: #c1ae82; background: #fbf7ec; }
+    .side-copy { max-width: 127px; }
+    .side-copy h3 { font-size: 13px; line-height: 1.13; color: #294c2b; }
+    .side-copy p { margin-top: 3px; font-size: 12.8px; line-height: 1.17; font-weight: 500; }
+    .smart-operations .side-item { gap: 8px; }
+    .smart-operations .icon-medallion { width: 58px; height: 58px; }
+    .smart-operations .side-copy { max-width: 117px; }
+    .smart-operations .side-copy h3 { font-size: 12.5px; }
+    .smart-operations .side-copy p { font-size: 12.5px; }
+    .smart-operations .side-item:nth-of-type(1) .icon-medallion { color: var(--blue); border-color: #94a9b9; }
+    .smart-operations .side-item:nth-of-type(2) .icon-medallion,
+    .smart-operations .side-item:nth-of-type(3) .icon-medallion { color: var(--green); border-color: #93a679; }
+    .smart-operations .side-item:nth-of-type(4) .icon-medallion { color: #a37e34; border-color: #c6b68a; }
+    .ecosystem { left: 458px; top: 117px; width: 530px; height: 211px; border: 2px solid #6c8a55; border-radius: 10px 10px 72px 72px / 10px 10px 29px 29px; }
+    .farm-picture { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: inherit; }
+    .ecosystem-heading { position: absolute; z-index: 2; left: 76px; right: 76px; top: -23px; padding: 5px 9px 7px; text-align: center; border-radius: 10px; background: linear-gradient(#467627, #285416); color: #fff; box-shadow: 0 2px 3px #1c37171a; }
+    .ecosystem-heading h2 { font-size: 20px; line-height: 1.15; }
+    .ecosystem-heading p { margin-top: 3px; font-size: 14px; font-weight: 500; line-height: 1.15; white-space: nowrap; }
+    .herb-row { display: flex; position: absolute; bottom: -2px; left: 31px; right: 31px; justify-content: space-between; z-index: 3; }
+    .herb { width: 45px; height: 45px; display: grid; place-items: center; border: 1.5px solid #8c9a61; border-radius: 50%; color: #708c42; background: #fbfbef; box-shadow: 0 1px 2px #2d491633; }
+    .herb .lucide { width: 33px; height: 33px; stroke-width: 1.6; }
+    .herb:nth-child(4), .herb:nth-child(7), .herb:nth-child(8), .herb:nth-child(9) { color: #97729d; }
+    .platform { left: 443px; top: 349px; width: 547px; height: 121px; background: linear-gradient(#f5faff, #edf5fa); border: 1.8px solid #709bb7; border-radius: 12px; box-shadow: 0 0 4px #9fbad233; }
+    .platform-heading { position: absolute; top: -16px; left: 129px; right: 119px; padding: 5px 8px 6px; border-radius: 10px; text-align: center; color: #fff; background: linear-gradient(#347ba2, #1b5980); }
+    .platform-heading h2 { font-size: 19px; line-height: 1.1; }
+    .platform-heading p { font-size: 12.5px; line-height: 1.15; margin-top: 2px; font-weight: 500; }
+    .platform-items { position: absolute; inset: 39px 8px 10px; display: grid; grid-template-columns: repeat(6, 1fr); }
+    .feature { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 0 5px; color: #2b6383; }
+    .feature + .feature { border-left: 1px solid #a9c1d2; }
+    .feature .lucide { width: 35px; height: 35px; }
+    .feature p { color: #253947; font-size: 11.7px; line-height: 1.14; font-weight: 600; }
+    .platform .feature:nth-child(1), .platform .feature:nth-child(3) { color: #5b9565; }
+    .decision-engine { left: 423px; top: 489px; width: 576px; height: 109px; border: 1.7px solid #6d849f; border-radius: 12px; background: linear-gradient(#f5f8fc, #eef3f9); }
+    .engine-heading { position: absolute; top: -1px; left: -1px; right: -1px; height: 36px; padding-top: 3px; color: #fff; text-align: center; background: var(--navy); border-radius: 11px 11px 0 0; }
+    .engine-heading h2 { font-size: 18px; line-height: 1.03; }
+    .engine-heading p { margin-top: 1px; font-size: 12.4px; line-height: 1.1; }
+    .engine-items { position: absolute; inset: 43px 6px 9px; display: grid; grid-template-columns: repeat(6, 1fr); }
+    .engine-items .feature { padding: 0 8px; gap: 3px; }
+    .engine-items .lucide { width: 31px; height: 31px; stroke-width: 1.4; }
+    .engine-items .feature p { font-size: 11.5px; line-height: 1.05; }
+    .engine-items .feature:last-child { color: #90a5b7; }
+    .vision { left: 17px; top: 270px; width: 163px; height: 426px; border: 1.5px solid #98ad83; border-radius: 25px; padding: 15px 13px 14px; background: linear-gradient(#f3f6ebeb, #f5f8f1bd 72%, #e5efe580); }
+    .vision > .icon-medallion { margin: 0 auto 10px; width: 53px; height: 53px; }
+    .vision > .icon-medallion .lucide { width: 35px; height: 35px; fill: #7ea44c33; }
+    .vision h2 { text-align: center; font-size: 15px; line-height: 1.2; color: #36552c; }
+    .vision > p { margin-top: 6px; font-size: 12.6px; line-height: 1.22; font-weight: 500; }
+    .vision-values { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 9px; }
+    .vision-values li { display: flex; align-items: center; gap: 7px; color: #385b4e; font-weight: 600; font-size: 12.7px; line-height: 1.14; }
+    .vision-values .lucide { width: 27px; height: 27px; padding: 3px; color: #537d39; background: #dfecc7; border: 1px solid #bdd1a2; border-radius: 50%; }
+    .outcomes { left: 367px; top: 619px; width: 666px; height: 77px; display: grid; grid-template-columns: 212px 205px 206px; justify-content: space-between; }
+    .outcome { display: flex; align-items: center; gap: 11px; padding: 9px 12px; border: 1.7px solid #8da57b; border-radius: 13px; background: #f0f5e9; box-shadow: 0 1px 3px #34512211; }
+    .outcome > .lucide { width: 48px; height: 48px; color: #688e3e; stroke-width: 1.3; }
+    .outcome h3 { color: #4e7033; font-size: 16px; line-height: 1.03; }
+    .outcome p { font-size: 12.9px; line-height: 1.15; margin-top: 5px; font-weight: 500; }
+    .outcome.adaptive { border-color: #7dafad; background: #e7f4f2; }
+    .outcome.adaptive > .lucide { color: #438d8c; fill: #5fa5a126; }
+    .outcome.adaptive h3 { color: #327c7e; }
+    .outcome.learning { border-color: #a18aaf; background: #f1ecf6; }
+    .outcome.learning > .lucide { color: #9374a6; }
+    .outcome.learning h3 { color: #6b5088; }
+    .legend { left: 1046px; top: 538px; width: 169px; height: 88px; border: 1.5px dashed #88a1b1; border-radius: 13px; background: #fbfcfb; padding: 10px 10px; display: grid; align-content: center; gap: 9px; }
+    .legend p { display: flex; align-items: center; gap: 8px; font-size: 10.6px; font-weight: 600; line-height: 1; white-space: nowrap; }
+    .legend svg { width: 28px; height: 10px; overflow: visible; }
+    .partnership { left: 1235px; top: 270px; width: 148px; height: 426px; padding: 45px 11px 0; border: 1.5px solid #99ae84; border-radius: 25px; text-align: center; background: linear-gradient(#f2f6eded, #f8faf3c7 73%, #e5efe555); }
+    .partnership h2 { font-size: 14px; color: #3f6034; }
+    .amway { position: relative; margin: 19px 8px 0; color: #12356c; font-family: Arial, sans-serif; font-size: 31px; font-style: italic; font-weight: 700; line-height: 1.1; }
+    .amway::after { content: ""; position: absolute; bottom: -5px; left: 4px; right: 0; height: 8px; border-top: 3px solid #b73243; border-radius: 50%; transform: rotate(-5deg); }
+    .handshake { margin: 24px auto 17px; width: 59px; height: 44px; color: #759e3d; fill: #8fb95733; stroke-width: 2; }
+    .wur { display: flex; gap: 5px; align-items: center; text-align: left; color: #164367; }
+    .wur .lucide { width: 27px; height: 34px; color: #38823a; stroke-width: 2.8; }
+    .wur strong { font-family: "Barlow", sans-serif; font-size: 11px; font-weight: 700; display: block; }
+    .wur span { display: block; margin-top: 2px; font-size: 8px; font-weight: 600; }
+    .partnership > p { margin-top: 28px; font-size: 12.6px; color: #345d4c; font-weight: 600; line-height: 1.45; }
+    .people { display: flex; justify-content: center; margin-top: 22px; color: #7ca184; opacity: .65; }
+    .people .lucide { width: 32px; height: 77px; stroke-width: 5.5; }
+    .people .lucide:nth-child(2) { height: 69px; margin-top: 8px; }
+    .impact { left: 238px; top: 718px; width: 960px; height: 69px; border: 1.5px solid #a0b68d; border-radius: 20px; background: #fffffaf0; padding: 14px 14px 10px; }
+    .impact h2 { position: absolute; top: -9px; left: 380px; right: 380px; background: #f7faf3; text-align: center; color: #3d6138; font-family: "Barlow", sans-serif; font-size: 14px; line-height: 1; letter-spacing: 0; white-space: nowrap; }
+    .impact-items { display: grid; grid-template-columns: .95fr 1.08fr 1fr 1.08fr .94fr 1.12fr; height: 100%; }
+    .impact-item { display: flex; align-items: center; gap: 8px; padding: 0 11px; }
+    .impact-item:first-child { padding-left: 3px; }
+    .impact-item + .impact-item { border-left: 1px solid #cbd6c1; }
+    .impact-item .lucide { width: 42px; height: 42px; padding: 7px; color: #3f743e; border: 1px solid #91a886; border-radius: 50%; stroke-width: 2; }
+    .impact-item p { font-size: 10.8px; line-height: 1.18; font-weight: 600; }
+    .impact-item:nth-child(5) .lucide { color: #386e91; border-color: #86a6b8; }
+    .impact-item:nth-child(6) .lucide { color: #3f7f7f; border-color: #85aba4; }
+    .toolbar { position: fixed; z-index: 10; bottom: 15px; right: 17px; display: flex; gap: 3px; padding: 5px; border: 1px solid #c3d0c1; border-radius: 8px; background: #fffffff2; box-shadow: 0 2px 12px #23432312; }
+    .toolbar button { display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 4px; color: #35543e; background: transparent; cursor: pointer; }
+    .toolbar button:hover { background: #edf3e9; }
+    .toolbar button:focus-visible { outline: 2px solid #4a7b39; outline-offset: 1px; }
+    .toolbar button:disabled { opacity: .35; cursor: default; }
+    .toolbar .lucide { width: 19px; height: 19px; stroke-width: 1.8; }
+    .language-switch { display: flex; gap: 2px; padding-right: 6px; margin-right: 3px; border-right: 1px solid #d5dfd0; }
+    .language-switch button { width: 42px; font-size: 13px; font-weight: 600; }
+    .language-switch button[aria-pressed="true"] { color: white; background: #47772e; }
+    html:lang(zh-CN) body { font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif; }
+    html:lang(zh-CN) .title h1, html:lang(zh-CN) .title p,
+    html:lang(zh-CN) .impact h2 { font-family: inherit; letter-spacing: 0; }
+    html:lang(zh-CN) .title h1 { font-size: 36px; }
+    html:lang(zh-CN) .title p { font-size: 21px; }
+    html:lang(zh-CN) .section-label { font-size: 14px; }
+    html:lang(zh-CN) .side-copy h3, html:lang(zh-CN) .smart-operations .side-copy h3 { font-size: 12px; line-height: 1.35; }
+    html:lang(zh-CN) .side-copy p, html:lang(zh-CN) .smart-operations .side-copy p { font-size: 11.5px; line-height: 1.45; }
+    html:lang(zh-CN) .ecosystem-heading h2 { font-size: 20px; line-height: 1.35; }
+    html:lang(zh-CN) .ecosystem-heading p { font-size: 12px; }
+    html:lang(zh-CN) .platform-heading h2 { font-size: 17px; line-height: 1.25; }
+    html:lang(zh-CN) .platform-heading p { font-size: 11.5px; }
+    html:lang(zh-CN) .feature p, html:lang(zh-CN) .engine-items .feature p { font-size: 11px; line-height: 1.3; }
+    html:lang(zh-CN) .engine-heading h2 { font-size: 17px; line-height: 1.2; }
+    html:lang(zh-CN) .engine-heading p { font-size: 11.5px; }
+    html:lang(zh-CN) .vision > p { font-size: 12px; line-height: 1.65; }
+    html:lang(zh-CN) .vision-values li { font-size: 11.5px; line-height: 1.4; }
+    html:lang(zh-CN) .outcome h3 { font-size: 14px; line-height: 1.35; }
+    html:lang(zh-CN) .outcome p { font-size: 11px; line-height: 1.35; margin-top: 3px; }
+    html:lang(zh-CN) .impact-item p { font-size: 10px; line-height: 1.4; }
+    html:lang(zh-CN) .legend p { font-size: 11px; line-height: 1.45; }
+    html:lang(zh-CN) .partnership > p { font-size: 12px; line-height: 1.6; }
+    @media (prefers-reduced-motion: no-preference) { .toolbar button { transition: background-color .15s; } }
+    @media print {
+      @page { size: A3 landscape; margin: 9mm; }
+      html, body { width: 1440px; height: 800px; min-height: 0; background: white; }
+      body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .viewport { display: block; min-height: 0; width: 1440px; padding: 0; overflow: visible; }
+      .report-shell { width: 1440px !important; height: 800px !important; margin: 0; break-inside: avoid; }
+      .report { transform: none !important; box-shadow: none; }
+      .toolbar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="viewport">
+    <div class="report-shell">
+      <article class="report" aria-labelledby="report-title">
+        <header class="title">
+          <h1 id="report-title">AI-driven Process Adaptive TCM Farm</h1>
+          <p>A Farm of the Future for Standardized, Traceable and Sustainable TCM Production</p>
+        </header>
+
+        <div class="landscape" aria-hidden="true"><img src="organic-green-farm.webp" alt=""></div>
+        <div class="edge-plants" aria-hidden="true"><i data-lucide="sprout"></i><i data-lucide="wheat"></i></div>
+
+        <svg class="flow-lines" viewBox="0 0 1440 800" aria-hidden="true">
+          <defs>
+            <marker id="arrow-green" viewBox="0 0 8 8" refX="6.2" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 8 4 L 0 8 Z" fill="#47772e" stroke="none"/></marker>
+            <marker id="arrow-blue" viewBox="0 0 8 8" refX="6.2" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 8 4 L 0 8 Z" fill="#6090ae" stroke="none"/></marker>
+            <marker id="arrow-main" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#476e77" stroke="none"/></marker>
+          </defs>
+          <path class="operations-flow" d="M 404 179 H 429 Q 446 179 446 194 V 203 Q 446 216 457 216"/>
+          <path class="operations-flow" d="M 404 254 H 426 Q 437 254 437 269 V 278 Q 437 292 455 292"/>
+          <path class="operations-flow" d="M 404 332 H 427 Q 438 332 438 316 V 309 Q 438 298 456 298"/>
+          <path class="insight-flow" d="M 419 391 H 440"/>
+          <path class="operations-flow" d="M 988 215 H 991 Q 1003 215 1003 201 V 191 Q 1003 176 1027 176"/>
+          <path class="operations-flow" d="M 988 290 H 993 Q 1003 290 1003 274 V 267 Q 1003 253 1027 253"/>
+          <path class="operations-flow" d="M 987 298 H 993 Q 1003 298 1003 312 Q 1003 326 1027 326"/>
+          <path class="operations-flow" d="M 988 308 H 993 Q 1008 308 1008 342 V 376 Q 1008 391 1027 391"/>
+          <path class="main-flow" d="M 693 474 V 483"/>
+          <path class="insight-flow" d="M 479 598 V 615"/>
+          <path class="insight-flow" d="M 705 598 V 615"/>
+          <path class="insight-flow" d="M 945 598 V 615"/>
+          <path class="feedback-flow" d="M 398 619 V 430 Q 398 405 420 405 H 435"/>
+          <path class="feedback-flow" d="M 398 543 H 417"/>
+          <path class="feedback-flow" d="M 1023 619 V 428 Q 1023 405 1004 405 H 997"/>
+          <path class="feedback-flow" d="M 1023 548 H 1005"/>
+        </svg>
+
+        <section class="section side-section data-collection" aria-labelledby="data-title">
+          <h2 id="data-title" class="section-label">DATA COLLECTION</h2>
+          <div class="side-item"><span class="icon-medallion"><i data-lucide="radio-tower"></i></span><div class="side-copy"><h3>Field Sensors</h3><p>Soil &middot; Climate &middot;<br>Water &middot; Crop</p></div></div>
+          <div class="side-item"><span class="icon-medallion"><i data-lucide="plane"></i></span><div class="side-copy"><h3>Drone &amp; UAV</h3><p>Aerial Imaging<br>&amp; Monitoring</p></div></div>
+          <div class="side-item"><span class="icon-medallion"><i data-lucide="tractor"></i></span><div class="side-copy"><h3>Machinery &amp; Robots</h3><p>Smart Equipment<br>&amp; Robotics</p></div></div>
+          <div class="side-item"><span class="icon-medallion"><i data-lucide="cloud-sun"></i></span><div class="side-copy"><h3>Weather / Soil /<br>Satellite Data</h3><p>External Data<br>Integration</p></div></div>
+        </section>
+
+        <section class="section ecosystem" aria-labelledby="ecosystem-title">
+          <img class="farm-picture" src="organic-green-farm.webp" alt="Green medicinal plants in a diverse organic farm ecosystem" width="1260" height="318">
+          <header class="ecosystem-heading"><h2 id="ecosystem-title">ORGANIC TCM FARM ECOSYSTEM</h2><p>Mixed Cropping &middot; Biodiversity &middot; Regenerative &middot; Low-Input</p></header>
+          <div class="herb-row" aria-hidden="true"><span class="herb"><i data-lucide="wheat"></i></span><span class="herb"><i data-lucide="leaf"></i></span><span class="herb"><i data-lucide="sprout"></i></span><span class="herb"><i data-lucide="flower-2"></i></span><span class="herb"><i data-lucide="flower"></i></span><span class="herb"><i data-lucide="wheat"></i></span><span class="herb"><i data-lucide="flower-2"></i></span><span class="herb"><i data-lucide="sprout"></i></span><span class="herb"><i data-lucide="flower-2"></i></span></div>
+        </section>
+
+        <section class="section side-section smart-operations" aria-labelledby="operations-title">
+          <h2 id="operations-title" class="section-label">SMART OPERATIONS</h2>
+          <div class="side-item"><span class="icon-medallion"><i data-lucide="droplets"></i></span><div class="side-copy"><h3>Precision Irrigation</h3><p>Variable-rate<br>&amp; Water Saving</p></div></div>
+          <div class="side-item"><span class="icon-medallion"><i data-lucide="sprout"></i></span><div class="side-copy"><h3>Smart Fertility</h3><p>Optimal Nutrition<br>for Soil &amp; Crop</p></div></div>
+          <div class="side-item"><span class="icon-medallion"><i data-lucide="scan-search"></i></span><div class="side-copy"><h3>Intelligent Pest &amp;<br>Disease Management</h3><p>Early Detection<br>&amp; Biocontrol</p></div></div>
+          <div class="side-item"><span class="icon-medallion"><i data-lucide="tractor"></i></span><div class="side-copy"><h3>Mechanization &amp;<br>Autonomous Operations</h3><p>Weeding &middot; Planting &middot;<br>Harvesting</p></div></div>
+        </section>
+
+        <section class="section platform" aria-labelledby="platform-title">
+          <header class="platform-heading"><h2 id="platform-title">FMIS + DIGITAL TWIN PLATFORM</h2><p>Integrated Farm Management Information System</p></header>
+          <div class="platform-items">
+            <div class="feature"><i data-lucide="layers-3"></i><p>Field Maps<br>(Multi-layer)</p></div>
+            <div class="feature"><i data-lucide="clipboard-list"></i><p>Crop Records &amp;<br>Operations</p></div>
+            <div class="feature"><i data-lucide="shield-check"></i><p>Traceability &amp;<br>Quality</p></div>
+            <div class="feature"><i data-lucide="workflow"></i><p>Digital Workflows<br>&amp; Task Maps</p></div>
+            <div class="feature"><i data-lucide="database-backup"></i><p>Data Integration<br>&amp; Storage</p></div>
+            <div class="feature"><i data-lucide="chart-no-axes-combined"></i><p>Dashboards<br>&amp; Analytics</p></div>
+          </div>
+        </section>
+
+        <section class="section decision-engine" aria-labelledby="engine-title">
+          <header class="engine-heading"><h2 id="engine-title">AI DECISION ENGINE</h2><p>From Data to Actionable Insights</p></header>
+          <div class="engine-items">
+            <div class="feature"><i data-lucide="scan-line"></i><p>Pest &amp; Disease<br>Prediction</p></div>
+            <div class="feature"><i data-lucide="chart-no-axes-combined"></i><p>Yield<br>Estimation</p></div>
+            <div class="feature"><i data-lucide="droplet"></i><p>Irrigation<br>Optimization</p></div>
+            <div class="feature"><i data-lucide="bot"></i><p>Robot Task<br>Planning</p></div>
+            <div class="feature"><i data-lucide="settings-2"></i><p>Process<br>Optimization</p></div>
+            <div class="feature"><i data-lucide="triangle-alert"></i><p>Risk &amp; Anomaly<br>Detection</p></div>
+          </div>
+        </section>
+
+        <aside class="section vision" aria-labelledby="vision-title">
+          <span class="icon-medallion"><i data-lucide="leaf"></i></span>
+          <h2 id="vision-title">OUR VISION</h2>
+          <p>To co-develop the world's first AI-driven Process Adaptive Organic TCM Farm that sets a new standard for medicinal crop production through technology, sustainability, and continuous innovation.</p>
+          <ul class="vision-values">
+            <li><i data-lucide="leaf"></i><span>Regenerative<br>&amp; Sustainable</span></li>
+            <li><i data-lucide="brain-circuit"></i><span>Data-driven<br>&amp; AI-enabled</span></li>
+            <li><i data-lucide="shield-check"></i><span>Standardized<br>&amp; Traceable</span></li>
+            <li><i data-lucide="network"></i><span>Collaborative<br>&amp; Scalable</span></li>
+          </ul>
+        </aside>
+
+        <section class="section outcomes" aria-label="Farm outcomes">
+          <div class="outcome"><i data-lucide="sprout"></i><div><h3>STANDARDIZED<br>PRODUCTION</h3><p>Consistent protocols<br>&amp; quality</p></div></div>
+          <div class="outcome adaptive"><i data-lucide="shield-check"></i><div><h3>ADAPTIVE FARM<br>MANAGEMENT</h3><p>Data-driven actions<br>in real time</p></div></div>
+          <div class="outcome learning"><i data-lucide="brain"></i><div><h3>CONTINUOUS<br>LEARNING</h3><p>Feedback loop for<br>ongoing improvement</p></div></div>
+        </section>
+
+        <aside class="section legend" aria-label="Flow legend">
+          <p><svg viewBox="0 0 30 10" aria-hidden="true"><path d="M 0 5 H 27" stroke="#47772e" stroke-width="2"/><path d="m 23 1 7 4 -7 4" fill="#47772e"/></svg><span>Data &amp; Operations Flow</span></p>
+          <p><svg viewBox="0 0 30 10" aria-hidden="true"><path d="M 0 5 H 27" stroke="#6090ae" stroke-width="2"/><path d="m 23 1 7 4 -7 4" fill="#6090ae"/></svg><span>Insights &amp; Decisions Flow</span></p>
+          <p><svg viewBox="0 0 30 10" aria-hidden="true"><path d="M 0 5 H 27" stroke="#28658b" stroke-width="2" stroke-dasharray="2 3"/><path d="m 23 1 7 4 -7 4" fill="#28658b"/></svg><span>Feedback &amp; Learning Loop</span></p>
+        </aside>
+
+        <aside class="section partnership" aria-labelledby="partnership-title">
+          <h2 id="partnership-title">OUR PARTNERSHIP</h2>
+          <div class="amway" aria-label="Amway">Amway</div>
+          <i data-lucide="handshake" class="handshake"></i>
+          <div class="wur" aria-label="Wageningen University and Research"><i data-lucide="book-open"></i><div><strong>WAGENINGEN</strong><span>UNIVERSITY &amp; RESEARCH</span></div></div>
+          <p>Together for a<br>Healthier People and a<br>Sustainable Planet</p>
+          <div class="people" aria-hidden="true"><i data-lucide="person-standing"></i><i data-lucide="person-standing"></i><i data-lucide="person-standing"></i></div>
+        </aside>
+
+        <footer class="section impact" aria-labelledby="impact-title">
+          <h2 id="impact-title">DELIVERING IMPACT</h2>
+          <div class="impact-items">
+            <div class="impact-item"><i data-lucide="leaf"></i><p>High-Quality<br>Organic TCM</p></div>
+            <div class="impact-item"><i data-lucide="award"></i><p>Full Traceability<br>&amp; Transparency</p></div>
+            <div class="impact-item"><i data-lucide="download"></i><p>Lower Inputs<br>&amp; Costs</p></div>
+            <div class="impact-item"><i data-lucide="sprout"></i><p>Higher Biodiversity<br>&amp; Soil Health</p></div>
+            <div class="impact-item"><i data-lucide="brain-circuit"></i><p>AI-enabled<br>Decision Making</p></div>
+            <div class="impact-item"><i data-lucide="globe"></i><p>Scalable Model for<br>Global Replication</p></div>
+          </div>
+        </footer>
+      </article>
+    </div>
+  </main>
+  <nav class="toolbar" aria-label="Report tools">
+    <div class="language-switch" role="group" aria-label="Language">
+      <button type="button" data-language="zh" lang="zh-CN" aria-label="切换到中文" aria-pressed="false" title="中文">中文</button>
+      <button type="button" data-language="en" lang="en" aria-label="Switch to English" aria-pressed="true" title="English">EN</button>
+    </div>
+    <button type="button" id="zoom-out" title="Zoom out" aria-label="Zoom out"><i data-lucide="minus"></i></button>
+    <button type="button" id="fit-page" title="Fit page" aria-label="Fit page"><i data-lucide="scan"></i></button>
+    <button type="button" id="zoom-in" title="Zoom in" aria-label="Zoom in"><i data-lucide="plus"></i></button>
+    <button type="button" id="print-report" title="Print / Save as PDF" aria-label="Print or save as PDF"><i data-lucide="printer"></i></button>
+  </nav>
+  <script>
+    const report = document.querySelector('.report');
+    const shell = document.querySelector('.report-shell');
+    const zoomOut = document.querySelector('#zoom-out');
+    const zoomIn = document.querySelector('#zoom-in');
+    let zoom = 1;
+    let fitted = true;
+
+    const chineseCopy = [
+      ['#report-title', 'AI驱动的过程自适应中药材农场'],
+      ['.title p', '面向未来的标准化、可追溯与可持续中药材生产农场'],
+      ['#data-title', '数据采集'],
+      ['.data-collection .side-item:nth-of-type(1) h3', '田间传感器'],
+      ['.data-collection .side-item:nth-of-type(1) p', '土壤 · 气候\n水分 · 作物'],
+      ['.data-collection .side-item:nth-of-type(2) h3', '无人机监测'],
+      ['.data-collection .side-item:nth-of-type(2) p', '航空影像\n与田间监测'],
+      ['.data-collection .side-item:nth-of-type(3) h3', '农机与机器人'],
+      ['.data-collection .side-item:nth-of-type(3) p', '智能农业装备\n与机器人技术'],
+      ['.data-collection .side-item:nth-of-type(4) h3', '气象 / 土壤 /\n卫星数据'],
+      ['.data-collection .side-item:nth-of-type(4) p', '外部数据\n融合接入'],
+      ['#ecosystem-title', '有机中药材农场生态系统'],
+      ['.ecosystem-heading p', '混合种植 · 生物多样性 · 再生农业 · 低投入'],
+      ['#operations-title', '智慧作业'],
+      ['.smart-operations .side-item:nth-of-type(1) h3', '精准灌溉'],
+      ['.smart-operations .side-item:nth-of-type(1) p', '变量灌溉\n与节水管理'],
+      ['.smart-operations .side-item:nth-of-type(2) h3', '智慧施肥'],
+      ['.smart-operations .side-item:nth-of-type(2) p', '优化土壤\n与作物营养'],
+      ['.smart-operations .side-item:nth-of-type(3) h3', '智能病虫害管理'],
+      ['.smart-operations .side-item:nth-of-type(3) p', '早期识别\n与生物防治'],
+      ['.smart-operations .side-item:nth-of-type(4) h3', '机械化与\n自主作业'],
+      ['.smart-operations .side-item:nth-of-type(4) p', '除草 · 种植\n与采收'],
+      ['#platform-title', '农场管理 + 数字孪生平台'],
+      ['.platform-heading p', '一体化农场管理信息系统（FMIS）'],
+      ['.platform .feature:nth-child(1) p', '地块地图\n（多图层）'],
+      ['.platform .feature:nth-child(2) p', '种植档案\n与作业记录'],
+      ['.platform .feature:nth-child(3) p', '溯源管理\n与品质保障'],
+      ['.platform .feature:nth-child(4) p', '数字化工作流\n与任务地图'],
+      ['.platform .feature:nth-child(5) p', '数据集成\n与存储'],
+      ['.platform .feature:nth-child(6) p', '可视化看板\n与分析'],
+      ['#engine-title', 'AI智能决策引擎'],
+      ['.engine-heading p', '从数据到可执行的洞察'],
+      ['.engine-items .feature:nth-child(1) p', '病虫害\n预测'],
+      ['.engine-items .feature:nth-child(2) p', '产量\n预估'],
+      ['.engine-items .feature:nth-child(3) p', '灌溉\n优化'],
+      ['.engine-items .feature:nth-child(4) p', '机器人\n任务规划'],
+      ['.engine-items .feature:nth-child(5) p', '生产流程\n优化'],
+      ['.engine-items .feature:nth-child(6) p', '风险与\n异常检测'],
+      ['#vision-title', '我们的愿景'],
+      ['.vision > p', '共同打造全球首个AI驱动的过程自适应有机中药材农场，以科技、可持续发展与持续创新，树立药用作物生产的新标准。'],
+      ['.vision-values li:nth-child(1) span', '再生农业\n与可持续发展'],
+      ['.vision-values li:nth-child(2) span', '数据驱动\n与AI赋能'],
+      ['.vision-values li:nth-child(3) span', '标准化\n与全程可追溯'],
+      ['.vision-values li:nth-child(4) span', '协同合作\n与规模化推广'],
+      ['.outcome:nth-child(1) h3', '标准化生产'],
+      ['.outcome:nth-child(1) p', '统一生产规范\n与品质标准'],
+      ['.outcome:nth-child(2) h3', '自适应农场管理'],
+      ['.outcome:nth-child(2) p', '数据驱动\n实时决策与行动'],
+      ['.outcome:nth-child(3) h3', '持续学习'],
+      ['.outcome:nth-child(3) p', '反馈闭环\n推动持续改进'],
+      ['.legend p:nth-child(1) span', '数据与作业流'],
+      ['.legend p:nth-child(2) span', '洞察与决策流'],
+      ['.legend p:nth-child(3) span', '反馈与学习闭环'],
+      ['#partnership-title', '合作伙伴'],
+      ['.partnership > p', '携手共创\n人类健康\n与地球可持续的未来'],
+      ['#impact-title', '创造价值'],
+      ['.impact-item:nth-child(1) p', '高品质\n有机中药材'],
+      ['.impact-item:nth-child(2) p', '全程可追溯\n与透明化'],
+      ['.impact-item:nth-child(3) p', '降低投入\n与生产成本'],
+      ['.impact-item:nth-child(4) p', '提升生物多样性\n与土壤健康'],
+      ['.impact-item:nth-child(5) p', 'AI赋能\n科学决策'],
+      ['.impact-item:nth-child(6) p', '可规模化模式\n支持全球复制']
+    ];
+    const localizedContent = chineseCopy.map(([selector, chinese]) => {
+      const element = document.querySelector(selector);
+      const english = Array.from(element.childNodes, node => node.nodeName === 'BR' ? '\n' : node.textContent).join('');
+      return { element, en: english, zh: chinese };
+    });
+    const localizedAttributes = [
+      ['.toolbar', 'aria-label', 'Report tools', '报告工具'],
+      ['.language-switch', 'aria-label', 'Language', '语言'],
+      ['.outcomes', 'aria-label', 'Farm outcomes', '农场发展成果'],
+      ['.legend', 'aria-label', 'Flow legend', '流程图例'],
+      ['.wur', 'aria-label', 'Wageningen University and Research', '瓦赫宁根大学与研究中心'],
+      ['.farm-picture', 'alt', 'Green medicinal plants in a diverse organic farm ecosystem', '有机农场生态系统中的绿色药用植物'],
+      ['#zoom-out', 'title', 'Zoom out', '缩小'],
+      ['#zoom-in', 'title', 'Zoom in', '放大'],
+      ['#fit-page', 'title', 'Fit page', '适应页面'],
+      ['#print-report', 'title', 'Print / Save as PDF', '打印 / 另存为 PDF']
+    ];
+
+    function setLanguage(language) {
+      const locale = language === 'en' ? 'en' : 'zh';
+      document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en';
+      for (const entry of localizedContent) {
+        const content = document.createDocumentFragment();
+        entry[locale].split('\n').forEach((line, index) => {
+          if (index > 0) content.append(document.createElement('br'));
+          content.append(document.createTextNode(line));
+        });
+        entry.element.replaceChildren(content);
+      }
+      for (const [selector, attribute, english, chinese] of localizedAttributes) {
+        const element = document.querySelector(selector);
+        const value = locale === 'zh' ? chinese : english;
+        element.setAttribute(attribute, value);
+        if (attribute === 'title') element.setAttribute('aria-label', value);
+      }
+      document.querySelectorAll('[data-language]').forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.language === locale));
+      });
+      document.title = document.querySelector('#report-title').textContent;
+      try { localStorage.setItem('tcm-report-language', locale); } catch {}
+    }
+
+    document.querySelectorAll('[data-language]').forEach(button => {
+      button.addEventListener('click', () => setLanguage(button.dataset.language));
+    });
+    let initialLanguage = 'zh';
+    try { initialLanguage = localStorage.getItem('tcm-report-language') || 'zh'; } catch {}
+    setLanguage(initialLanguage);
+
+    function renderScale() {
+      report.style.transform = `scale(${zoom})`;
+      shell.style.width = `${1440 * zoom}px`;
+      shell.style.height = `${800 * zoom}px`;
+      zoomOut.disabled = zoom <= 0.2;
+      zoomIn.disabled = zoom >= 2;
+    }
+
+    function fitPage() {
+      fitted = true;
+      zoom = Math.max(0.2, Math.min((window.innerWidth - 32) / 1440, (window.innerHeight - 32) / 800, 1.5));
+      renderScale();
+    }
+
+    function changeZoom(factor) {
+      fitted = false;
+      zoom = Math.max(0.2, Math.min(2, zoom * factor));
+      renderScale();
+    }
+
+    zoomOut.addEventListener('click', () => changeZoom(1 / 1.2));
+    zoomIn.addEventListener('click', () => changeZoom(1.2));
+    document.querySelector('#fit-page').addEventListener('click', fitPage);
+    document.querySelector('#print-report').addEventListener('click', () => window.print());
+    window.addEventListener('resize', () => { if (fitted) fitPage(); });
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) lucide.createIcons({ attrs: { 'aria-hidden': 'true' } });
+      fitPage();
+    });
+    fitPage();
+  </script>
+</body>
+</html>
