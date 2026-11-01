@@ -65,9 +65,6 @@
     const player = document.getElementById('player');
     const status = document.getElementById('status');
 
-    player.addEventListener('loadstart', () => {
-      status.textContent = '正在加载视频，请稍候…';
-    });
     player.addEventListener('waiting', () => {
       status.textContent = '正在缓冲视频，请稍候…';
     });
