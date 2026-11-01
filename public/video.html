@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>视频播放 · Neural Lab</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #19243b, #080b12 65%);
+      color: #edf2fa;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.7;
+    }
+    main { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0; }
+    a { color: #9edcff; }
+    h1 { margin: 24px 0 8px; font-size: clamp(28px, 5vw, 42px); }
+    p { color: #bdc8da; }
+    video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 75vh;
+      background: #000;
+      border: 1px solid #354158;
+      border-radius: 16px;
+      margin-top: 24px;
+    }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 16px; }
+    button {
+      padding: 10px 18px;
+      border: 1px solid #536984;
+      border-radius: 10px;
+      background: #1c2b42;
+      color: #edf2fa;
+      font: inherit;
+      cursor: pointer;
+    }
+    button:hover { background: #2c405e; }
+    a:focus-visible, button:focus-visible { outline: 3px solid #9edcff; outline-offset: 4px; }
+    code { overflow-wrap: anywhere; color: #edf2fa; }
+    #status { min-height: 1.7em; }
+    .hint { border-top: 1px solid #354158; margin-top: 28px; padding-top: 16px; }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="页面导航"><a href="./">← 返回首页</a></nav>
+    <h1>视频播放</h1>
+    <p>WebM 视频 · 使用播放器控制播放、音量、进度与全屏。</p>
+    <video id="player" controls playsinline preload="none" src="./media/video.webm" aria-label="WebM 视频播放器" aria-describedby="status">
+      您的浏览器不支持 HTML5 视频，请使用较新版本的浏览器或下载视频观看。
+    </video>
+    <p id="status" role="status" aria-live="polite">点击播放器的播放按钮开始。为节省流量，页面不会预加载视频。</p>
+    <div class="actions">
+      <button id="reload" type="button">重新加载</button>
+      <a href="./media/video.webm" download>下载 WebM 视频</a>
+    </div>
+    <p class="hint">视频待上传：请将文件命名为 <code>video.webm</code>，放到仓库的 <code>public/media/</code> 目录，部署完成后即可播放。大视频首次播放可能需要等待缓冲。</p>
+    <noscript><p>JavaScript 未启用，仍可使用原生播放器；视频尚未上传时，请稍后刷新页面。</p></noscript>
+  </main>
+  <script>
+    const player = document.getElementById('player');
+    const status = document.getElementById('status');
+
+    player.addEventListener('loadstart', () => {
+      status.textContent = '正在加载视频，请稍候…';
+    });
+    player.addEventListener('waiting', () => {
+      status.textContent = '正在缓冲视频，请稍候…';
+    });
+    player.addEventListener('canplay', () => {
+      status.textContent = '视频已就绪，可以播放。';
+    });
+    player.addEventListener('playing', () => {
+      status.textContent = '正在播放。';
+    });
+    player.addEventListener('pause', () => {
+      if (!player.error && !player.ended) status.textContent = '已暂停。';
+    });
+    player.addEventListener('ended', () => {
+      status.textContent = '播放结束，可以再次播放。';
+    });
+    player.addEventListener('error', () => {
+      status.textContent = '无法播放：视频可能尚未上传、网络连接异常，或浏览器不支持此 WebM 编码。请确认 public/media/video.webm 已上传并部署，或下载后使用本地播放器观看。';
+    });
+    document.getElementById('reload').addEventListener('click', () => {
+      player.load();
+      status.textContent = '已重置播放器，请点击播放按钮重试。';
+    });
+  </script>
+</body>
+</html>
